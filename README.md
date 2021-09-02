@@ -187,6 +187,7 @@ operating systems.  However, only the following platforms are officially
 supported by this course.
 * Ubuntu Linux
 * MacOS with [Homebrew](https://brew.sh)
+* IntelliJ on Windows
 
 Instructions for Ubuntu should work without change for any Debian-based Linux 
 distribution (Ubuntu, PopOS!, Debian, Mint).  
