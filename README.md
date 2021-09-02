@@ -269,7 +269,7 @@ public/private keypair (if you don't already have one) as follows:
    * Your private key is in `~/.ssh/id_rsa`.  **Keep this file secret and safe!**
 
 Next, you'll need to provide your **public** key to the server.   
-1. Go to [https://microbase.cse.buffalo.edu/](https://microbase.cse.buffalo.edu/)
+1. Go to [https://microbase.odin.cse.buffalo.edu/](https://microbase.odin.cse.buffalo.edu/)
 2. Enter your UB email address
 3. Click the link in your email.  The token will be valid for 5 hours.
 4. In the Key Management section of the page, enter a name for your computer in the appropriate box
