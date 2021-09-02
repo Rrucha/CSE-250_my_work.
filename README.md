@@ -339,7 +339,7 @@ rows that contain cells with commas (see the CSV representation rules below).
 
 A good way to test this functionality is to ensure that the first row of the dataset,
 which contains the header, should return a copy of the row.  The second row of the
-dataset, which contains successive blank entries, should still return a row with 51 
+dataset, which contains successive blank entries, should still return a row with 31 
 entries, but should have two empty values for the `ELECTRIC_UTILITY` and 
 `PURCHASE_TYPE` fields, respectively.  Feel free to add the tests provided in this 
 handout.
@@ -350,7 +350,7 @@ Scala function:
 rowArrayToSolarInstallation(rowArray: Array[String]): SolarInstallation
 ```
 with the following behavior:
-* Assume that the input `rowArray` is an `Array` containing 51 entries, corresponding to a row that was correctly processed through `splitArrayToRowArray`.
+* Assume that the input `rowArray` is an `Array` containing 31 entries, corresponding to a row that was correctly processed through `splitArrayToRowArray`.
 * Return the `SolarInstallation` object that corresponds to the data stored within the row.
 
 Note that `SolarInstallation` is only meant to hold a limited number of headers from 
