@@ -1,6 +1,6 @@
 # Project 0: Hello World in Scala!
 
-**Due: Wednesday 09/08/21 Before 5:00 PM**
+**Due: Wednesday 09/15/21 Before 5:00 PM**
 
 **Total Points = 30**
 
