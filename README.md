@@ -324,11 +324,11 @@ visualization, and transformation, as well as for machine learning.
 **Problem 1** *(15 points)*: In the object `cse250.pa0.DataProcessor` define the
 Scala function:
 ```scala
-splitArrayToRowArray(rowData: Array[String]): Array[String]
+splitArrayToRowArray(splitHeaderRow: Array[String]): Array[String]
 ```
 with the following behavior:
-* Assume that `rowData` is the result from taking some line from the Solar Installations dataset and invoking `split(',')`.
-* Given `rowData`, place the data into an `Array` corresponding to the columns that would result from opening the original dataset file with a spreadsheet application.
+* Assume that `splitHeaderRow` is the result from taking some line from the Solar Installations dataset and invoking `split(',')`.
+* Given `splitHeaderRow`, place the data into an `Array` corresponding to the columns that would result from opening the original dataset file with a spreadsheet application.
 
 Note that every row processed should produce a return result that contains the same 
 number of column entries as the header row for the document.  This means that each
