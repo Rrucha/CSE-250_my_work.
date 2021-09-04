@@ -81,7 +81,6 @@ object SolarInstallation
    */
   val HEADERS = Seq(
     "REPORTING_PERIOD",
-    "DATE_TIME",
     "PROJECT_NUMBER",
     "LEGACY_PROJECT_NUMBER",
     "CITY",
