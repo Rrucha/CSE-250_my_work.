@@ -23,7 +23,7 @@ class SolarInstallation
    * Key-value pairs representing data about the solar site.  See [[SolarInstallation.HEADERS]] for a list of
    * allowable keys, and [[SolarInstallation.REQUIRED_HEADERS]] for a list of mandatory keys.
    */
-  val fields: mutable.Map[String, String] = new mutable.HashMap[String, String]
+  var fields: mutable.Map[String, String] = new mutable.HashMap[String, String]
 
   /**
    * Generate a human-readable representation of the installation
@@ -142,6 +142,7 @@ object SolarInstallation
     "AFFORDABLE_SOLAR",
     "COMMUNITY_DISTRIBUTED_GENERATION",
     "GREEN_JOBS_GREEN_NEW_YORK_PARTICIPANT",
+
   )
 
 }

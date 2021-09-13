@@ -54,6 +54,7 @@ object Main {
     val totalKWHAnnually = DataProcessor.computeTotalExpectedKWHAnnualProduction(dataset.toArray)
     println(s"Number of Inverter Manufacturers: $inverterManufacturers")
     println(s"Expected Annual Production: $totalKWHAnnually KWH")
+    
   }
 
 }
