@@ -49,18 +49,11 @@ object Main {
       inputFile.close()
       outputFile.close()
     }
-    val ss = dataset.toArray.drop(1)
-    println(s"ss.length = ${ss.length}")
-    println(ss(0).fields)
-    println(ss(1).fields)
-    println(ss(2).fields)
 
     val inverterManufacturers = DataProcessor.computeUniqueInverterManufacturers(dataset.toArray)
     val totalKWHAnnually = DataProcessor.computeTotalExpectedKWHAnnualProduction(dataset.toArray)
-
     println(s"Number of Inverter Manufacturers: $inverterManufacturers")
     println(s"Expected Annual Production: $totalKWHAnnually KWH")
   }
 
 }
-

@@ -26,7 +26,6 @@ import cse250.objects.SolarInstallation
 import scala.collection.mutable
 
 
-
 object DataProcessor {
 
   def splitArrayToRowArray(splitHeaderRow: Array[String]): Array[String]={
@@ -35,69 +34,64 @@ object DataProcessor {
     var indexoffirstquote : Int = -1
     var lastquote: String= ""
     var indexoflastquote: Int = -1
-    var ListofA: List[String] = List()
-    var ListofindexofA: List[Int] = List()
+
     var list1: List[Int] = List()
 
-    var luck: Int = -1
+    var luck: Int = 0
 
-    var firstquote2: String =""
-    var indexoffirstquote2 : Int = -1
-    var lastquote2: String= ""
-    var indexoflastquote2: Int = -1
+
 
     var Acc: Array[String] = Array()
     var Answer: Array[String] = Array()
     val len : Int = splitHeaderRow.length
-  if (splitHeaderRow.length == 31) {
-    splitHeaderRow.map(_.trim)
-  }
+    if (splitHeaderRow.length == 31) {
+      splitHeaderRow.map(_.trim)
+    }
 
     else{
-    for (i <- splitHeaderRow){
-      val ind : Int = splitHeaderRow.indexOf(i)
-     if (i.contains('"')){
-       // val indexofi = splitHeaderRow.indexOf(i)
+      for (i <- splitHeaderRow){
+        val ind : Int = splitHeaderRow.indexOf(i)
+        if (i.contains('"')){
+          // val indexofi = splitHeaderRow.indexOf(i)
 
-        if (i(0) == '"'){
-          firstquote = i
-          indexoffirstquote = splitHeaderRow.indexOf(firstquote)
-          list1 = list1 :+ indexoffirstquote
-          luck = 2
-        }
-
-
-        if (i(i.length-1) == '"') {
-          lastquote = i
-          indexoflastquote = splitHeaderRow.indexOf(lastquote)
-          // val oof = splitHeaderRow(indexofi-1) + "," + splitHeaderRow(indexofi)
-          //  val oof2 = oof.substring(2, oof.length() - 1)
-          var oof3 = ""
-          var oof = 0
-          var oof4 = ""
-          var oof5 = ""
-          for (a <- Range(indexoffirstquote, (indexoflastquote + 1))) {
-            //println(splitHeaderRow(a))
-
-            oof3 = oof3 + "," + splitHeaderRow(a)
-
+          if (i(0) == '"' && luck ==0){
+            firstquote = i
+            indexoffirstquote = splitHeaderRow.indexOf(firstquote)
+            list1 = list1 :+ indexoffirstquote
+            luck = 2
           }
 
-          oof3 = oof3.replace(",\"","")
-          oof4 =  oof3.replace("\"\"","\"")
-          oof = oof4.lastIndexOf("\"")
-          val splits = oof4.splitAt(oof)
-        oof5 = splits._1 + splits._2.drop(1)
-          Acc = Acc :+ oof5
-          luck = 0
-        }
 
-      }
-     else if (luck != 2){
-       Acc = Acc :+ i
+          if (i(i.length-1) == '"' && luck ==2) {
+            lastquote = i
+            indexoflastquote = splitHeaderRow.indexOf(lastquote)
+            // val oof = splitHeaderRow(indexofi-1) + "," + splitHeaderRow(indexofi)
+            //  val oof2 = oof.substring(2, oof.length() - 1)
+            var oof3 = ""
+            var oof = 0
+            var oof4 = ""
+            var oof5 = ""
+            for (a <- Range(indexoffirstquote, (indexoflastquote + 1))) {
+              //println(splitHeaderRow(a))
+
+              oof3 = oof3 + "," + splitHeaderRow(a)
+
+            }
+
+            oof3 = oof3.replace(",\"","")
+            oof4 =  oof3.replace("\"\"","\"")
+            oof = oof4.lastIndexOf("\"")
+
+            Acc = Acc :+ oof4.dropRight(1)
+            luck = 0
+          }
+
         }
-    }
-    Acc
+        else if (luck != 2){
+          Acc = Acc :+ i
+        }
+      }
+      Acc
     }
   }
 
@@ -112,20 +106,22 @@ object DataProcessor {
     for (i <- head.indices) {
 
 
-          if (head(i) != "LEGACY_PROJECT_NUMBER" && head(i) != "PROGRAM_TYPE" && head(i) != "ELECTRIC_UTILITY" && head(i) !=  "SOLICITATION" && head(i) != "REMOTE_NET_METERING" && head(i) != "GEOREFERENCE") {
-            val keys: String = head(i)
-            val values: String = rowData(i)
+      if (head(i) != "LEGACY_PROJECT_NUMBER" && head(i) != "PROGRAM_TYPE" && head(i) != "ELECTRIC_UTILITY" && head(i) !=  "SOLICITATION" && head(i) != "REMOTE_NET_METERING" && head(i) != "GEOREFERENCE") {
+        val keys: String = head(i)
+        val values: String = rowData(i)
 
-            dd = mutable.HashMap(keys -> values)
-            acc.fields = acc.fields ++ dd
+        dd = mutable.HashMap(keys -> values)
+        acc.fields = acc.fields ++ dd
 
 
-        }
+      }
     }
 
 
     acc
   }
+
+
 
   def computeUniqueInverterManufacturers(dataset: Array[SolarInstallation]): Int = {
     var acc: Int = 0
@@ -152,18 +148,22 @@ object DataProcessor {
   }
 
   def computeTotalExpectedKWHAnnualProduction(dataset: Array[SolarInstallation]): Float = {
-    var acc: Float = 0
+
     val data = dataset.drop(1)
-    for (k <- Range(0,data.length-1)) {
-      for(key <- data(k).fields.keys) {
+    var acc: Float = 0.0f
+    for (k <- data) {
+      for(key <- k.fields.keys) {
         if (key == "EXPECTED_KWH_ANNUAL_PRODUCTION" ){
 
-          if (data(k).fields(key) == "" || data(k).fields(key).toFloat < 0){
-
+          if (k.fields(key) == "" || k.fields(key).toFloat <= 0){
+           acc = acc
           }
           else{
-            acc = acc + data(k).fields(key).toFloat
+            acc =  k.fields(key).toFloat + acc
           }
+
+        }
+        else{
 
         }
       }
@@ -191,8 +191,17 @@ object DataProcessor {
     val testData = "First Cell,Second Cell,\"\"\"Best\"\" the, kool \"\"Best\"\" Around\",\"Comma, Cell\",\"\"\"Object-Orientation, Abstraction, and Data Structures Using Scala\"\"\""
     val Splittest = testData.split(',')
     val row = splitArrayToRowArray(Splittest)
+    println(row(0))
+    println(row(1))
+    println(row(2))
+    println(row(3))
+    println(row(4))
 
 
+    val failedline = "08/31/2021,0000196776,,\"Cooperstown,\",Otsego,NY,13326,Residential,Residential/Small Commercial,PON 2112,NYS Electric and Gas,Purchase,07/16/2019,09/03/2019,Complete,Kasselman Solar LLC,Enphase Energy Inc.,IQ7PLUS-72-x-US [240V],6,LG Electronics Inc.,LG365Q1C-A5,6,7506.00,766.00,2.19,1958.00,,No,No,No,POINT (-74.908187 42.717237)".split(",")
+    val we =  DataProcessor.splitArrayToRowArray(failedline)
+
+    println(we(3))
 
 
 
