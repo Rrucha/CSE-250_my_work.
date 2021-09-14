@@ -28,11 +28,11 @@ import scala.collection.mutable
 
 object DataProcessor {
 
-  def splitArrayToRowArray(splitHeaderRow: Array[String]): Array[String] = {
+  def splitArrayToRowArray(splitHeaderRow: Array[String]): Array[String]={
 
-    var firstquote: String = ""
-    var indexoffirstquote: Int = -1
-    var lastquote: String = ""
+    var firstquote: String =""
+    var indexoffirstquote : Int = -1
+    var lastquote: String= ""
     var indexoflastquote: Int = -1
 
     var list1: List[Int] = List()
@@ -40,73 +40,76 @@ object DataProcessor {
     var luck: Int = 0
 
 
+
     var Acc: Array[String] = Array()
     var Answer: Array[String] = Array()
-    val len: Int = splitHeaderRow.length
+    val len : Int = splitHeaderRow.length
 
 
-    for (i <- splitHeaderRow) {
-      val ind: Int = splitHeaderRow.indexOf(i)
-      if (i.contains('"')) {
-        // val indexofi = splitHeaderRow.indexOf(i)
 
-        if (i(0) == '"' && luck == 0) {
-          firstquote = i
-          indexoffirstquote = splitHeaderRow.indexOf(firstquote)
-          list1 = list1 :+ indexoffirstquote
-          luck = 2
-        }
+      for (i <- splitHeaderRow){
+        val ind : Int = splitHeaderRow.indexOf(i)
+        if (i.contains('"')){
+          // val indexofi = splitHeaderRow.indexOf(i)
 
-
-        if (i(i.length - 1) == '"' && luck == 2) {
-          lastquote = i
-          indexoflastquote = splitHeaderRow.indexOf(lastquote)
-          // val oof = splitHeaderRow(indexofi-1) + "," + splitHeaderRow(indexofi)
-          //  val oof2 = oof.substring(2, oof.length() - 1)
-          var oof3 = ""
-          var oof = 0
-          var oof4 = ""
-          var oof5 = ""
-          for (a <- Range(indexoffirstquote, (indexoflastquote + 1))) {
-            //println(splitHeaderRow(a))
-
-            oof3 = oof3 + "," + splitHeaderRow(a)
-
+          if (i(0) == '"' && luck ==0){
+            firstquote = i
+            indexoffirstquote = splitHeaderRow.indexOf(firstquote)
+            list1 = list1 :+ indexoffirstquote
+            luck = 2
           }
 
-          oof3 = oof3.replace(",\"", "")
-          oof4 = oof3.replace("\"\"", "\"")
-          oof = oof4.lastIndexOf("\"")
-          val splits = oof4.splitAt(oof)
-          oof5 = splits._1 + splits._2.replaceFirst("\"", "")
-          Acc = Acc :+ oof5
-          luck = 0
-        }
 
-      }
-      else if (luck != 2) {
-        Acc = Acc :+ i
-      }
+          if (i(i.length-1) == '"' && luck ==2) {
+            lastquote = i
+            indexoflastquote = splitHeaderRow.indexOf(lastquote)
+            // val oof = splitHeaderRow(indexofi-1) + "," + splitHeaderRow(indexofi)
+            //  val oof2 = oof.substring(2, oof.length() - 1)
+            var oof3 = ""
+            var oof = 0
+            var oof4 = ""
+            var oof5 = ""
+            for (a <- Range(indexoffirstquote, (indexoflastquote + 1))) {
+              //println(splitHeaderRow(a))
+
+              oof3 = oof3 + "," + splitHeaderRow(a)
+
+            }
+
+            oof4 = oof3.replaceFirst(",\"","")
+            oof4 =  oof4.replace("\"\"","\"")
+            oof = oof4.lastIndexOf("\"")
+            val splits = oof4.splitAt(oof)
+            oof5 = splits._1 + splits._2.replaceFirst("\"","")
+            Acc = Acc :+ oof5
+            luck = 0
+          }
+
+        }
+        else if (luck != 2){
+          Acc = Acc :+ i
+        }
 
 
     }
 
-    if (Acc.length < 31) {
-      while (Acc.length <= 31) {
+    if(Acc.length < 31){
+      while(Acc.length < 31){
         Acc = Acc :+ ","
       }
       Acc
     }
-    else if (Acc.length > 31) {
-      while (Acc.length <= 31) {
+    else if (Acc.length >31){
+      while(Acc.length > 31){
         Acc = Acc.drop(1)
       }
       Acc
     }
-    else {
+    else{
       Acc
     }
   }
+
 
 
   def rowArrayToSolarInstallation(rowData: Array[String]): SolarInstallation = {
@@ -118,12 +121,12 @@ object DataProcessor {
     for (i <- head.indices) {
 
 
-      if (head(i) != "LEGACY_PROJECT_NUMBER" && head(i) != "PROGRAM_TYPE" && head(i) != "ELECTRIC_UTILITY" && head(i) != "SOLICITATION" && head(i) != "REMOTE_NET_METERING" && head(i) != "GEOREFERENCE") {
+      if (head(i) != "LEGACY_PROJECT_NUMBER" && head(i) != "PROGRAM_TYPE" && head(i) != "ELECTRIC_UTILITY" && head(i) !=  "SOLICITATION" && head(i) != "REMOTE_NET_METERING" && head(i) != "GEOREFERENCE") {
         val keys: String = head(i)
         val values: String = rowData(i)
 
         dd = mutable.HashMap(keys -> values)
-        acc.fields = dd ++ acc.fields
+        acc.fields =   dd ++ acc.fields
 
 
       }
@@ -134,25 +137,26 @@ object DataProcessor {
   }
 
 
+
   def computeUniqueInverterManufacturers(dataset: Array[SolarInstallation]): Int = {
     var acc: Int = 0
     val data = dataset.drop(1)
 
     val Checking1 = new Array[String](data.length)
     val Checking = new Array[String](data.length)
-    for (k <- Range(0, data.length - 1)) {
-      for (key <- data(k).fields.keys) {
+    for (k <- Range(0,data.length-1)) {
+     for (key <- data(k).fields.keys) {
 
-        Checking1(k) = key
-        if (key == "PRIMARY_INVERTER_MANUFACTURER") {
+          Checking1(k) =  key
+          if (key == "PRIMARY_INVERTER_MANUFACTURER" ){
 
-          if (!Checking.contains(data(k).fields(key)) && data(k).fields(key) != "") {
-            Checking(k) = data(k).fields(key)
-            acc = acc + 1
+            if (!Checking.contains(data(k).fields(key)) && data(k).fields(key) != ""){
+              Checking(k) = data(k).fields(key)
+              acc = acc + 1
+            }
           }
         }
-      }
-    }
+       }
 
 
     acc
@@ -163,22 +167,20 @@ object DataProcessor {
     val data = dataset.drop(1)
     var acc: Float = 0.0f
     for (k <- data) {
-      for (key <- k.fields.keys) {
-        if (key == "EXPECTED_KWH_ANNUAL_PRODUCTION") {
+      for(key <- k.fields.keys) {
+        if (key == "EXPECTED_KWH_ANNUAL_PRODUCTION" ){
 
-          if (k.fields(key) == "" || k.fields(key).toFloat <= 0) {
-            acc = acc
+          if (k.fields(key) == "" || k.fields(key).toFloat <= 0){
+           acc = acc
           }
-          else {
-            acc = k.fields(key).toFloat + acc
+          else{
+            acc =  k.fields(key).toFloat + acc
           }
 
         }
       }
     }
-    acc
+  acc
   }
-
-
 
 }
