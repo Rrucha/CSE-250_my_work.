@@ -11,8 +11,8 @@ package cse250.pa0
  * http://creativecommons.org/licenses/by-nc-sa/4.0/.
  *
  * Submission author
- * UBIT:
- * Person#:
+ * UBIT: Rruchasi
+ * Person#: 50355134
  *
  * Collaborators (include UBIT name of each, comma separated):
  * UBIT:
@@ -35,47 +35,65 @@ object DataProcessor {
     var indexoffirstquote : Int = -1
     var lastquote: String= ""
     var indexoflastquote: Int = -1
-    var Acc: Array[String] = Array()
+    var ListofA: List[String] = List()
+    var ListofindexofA: List[Int] = List()
+    var list1: List[Int] = List()
 
+    var luck: Int = -1
+
+    var firstquote2: String =""
+    var indexoffirstquote2 : Int = -1
+    var lastquote2: String= ""
+    var indexoflastquote2: Int = -1
+
+    var Acc: Array[String] = Array()
+    var Answer: Array[String] = Array()
+    val len : Int = splitHeaderRow.length
   if (splitHeaderRow.length == 31) {
     splitHeaderRow.map(_.trim)
   }
 
     else{
     for (i <- splitHeaderRow){
-      if (i.contains('"')){
-
-      }
-     else if (i.contains('"')){
+      val ind : Int = splitHeaderRow.indexOf(i)
+     if (i.contains('"')){
        // val indexofi = splitHeaderRow.indexOf(i)
 
         if (i(0) == '"'){
           firstquote = i
           indexoffirstquote = splitHeaderRow.indexOf(firstquote)
+          list1 = list1 :+ indexoffirstquote
+          luck = 2
         }
-        if (i(i.length-1) == '"'){
+
+
+        if (i(i.length-1) == '"') {
           lastquote = i
-          indexoflastquote  = splitHeaderRow.indexOf(lastquote)
-
-        // val oof = splitHeaderRow(indexofi-1) + "," + splitHeaderRow(indexofi)
-        //  val oof2 = oof.substring(2, oof.length() - 1)
+          indexoflastquote = splitHeaderRow.indexOf(lastquote)
+          // val oof = splitHeaderRow(indexofi-1) + "," + splitHeaderRow(indexofi)
+          //  val oof2 = oof.substring(2, oof.length() - 1)
           var oof3 = ""
+          var oof = 0
           var oof4 = ""
-          for (a <- Range(indexoffirstquote,(indexoflastquote+1))){
+          var oof5 = ""
+          for (a <- Range(indexoffirstquote, (indexoflastquote + 1))) {
             //println(splitHeaderRow(a))
-            oof3 = oof3 +  ","+ splitHeaderRow(a)
-          }
-          oof4 = oof3.substring(2, oof3.length()-1)
-          Acc = Acc :+  oof4
 
+            oof3 = oof3 + "," + splitHeaderRow(a)
+
+          }
+
+          oof3 = oof3.replace(",\"","")
+          oof4 =  oof3.replace("\"\"","\"")
+          oof = oof4.lastIndexOf("\"")
+          val splits = oof4.splitAt(oof)
+        oof5 = splits._1 + splits._2.drop(1)
+          Acc = Acc :+ oof5
+          luck = 0
         }
-        else if (i(0) == '"'){
-           }
-        else{
-          Acc = Acc :+ i
-           }
+
       }
-      else{
+     else if (luck != 2){
        Acc = Acc :+ i
         }
     }
@@ -93,56 +111,58 @@ object DataProcessor {
 
     for (i <- head.indices) {
 
-        if (i != 2 && i != 8 && i != 9 && i != 10 && i != 26 && i != 30) {
 
-          val keys: String = head(i)
-          val values: String = rowData(i)
+          if (head(i) != "LEGACY_PROJECT_NUMBER" && head(i) != "PROGRAM_TYPE" && head(i) != "ELECTRIC_UTILITY" && head(i) !=  "SOLICITATION" && head(i) != "REMOTE_NET_METERING" && head(i) != "GEOREFERENCE") {
+            val keys: String = head(i)
+            val values: String = rowData(i)
 
-          dd = mutable.HashMap(keys -> values)
-          acc.fields = acc.fields ++ dd
+            dd = mutable.HashMap(keys -> values)
+            acc.fields = acc.fields ++ dd
+
 
         }
     }
+
 
     acc
   }
 
   def computeUniqueInverterManufacturers(dataset: Array[SolarInstallation]): Int = {
     var acc: Int = 0
-    var Checking1 : List[String] = List()
-    var Checking : List[String] = List()
-    for (k <- Range(0,dataset.length)) {
-       for (i  <- dataset(k).fields.keys ){
-          Checking1 = Checking1 :+ i
-          if (i == "PRIMARY_INVERTER_MANUFACTURER" ){
-            val value = dataset(k).fields.getOrElse(i,"")
-            if (Checking.contains(value) || value == ""){
-               acc = acc + 0
-            }
-            else{
-              Checking = Checking :+ value
+    val data = dataset.drop(1)
+
+    val Checking1 = new Array[String](data.length)
+    val Checking = new Array[String](data.length)
+    for (k <- Range(0,data.length-1)) {
+     for (key <- data(k).fields.keys) {
+
+          Checking1(k) =  key
+          if (key == "PRIMARY_INVERTER_MANUFACTURER" ){
+
+            if (!Checking.contains(data(k).fields(key)) && data(k).fields(key) != ""){
+              Checking(k) = data(k).fields(key)
               acc = acc + 1
             }
           }
+        }
        }
-    }
+
 
     acc
   }
 
   def computeTotalExpectedKWHAnnualProduction(dataset: Array[SolarInstallation]): Float = {
     var acc: Float = 0
+    val data = dataset.drop(1)
+    for (k <- Range(0,data.length-1)) {
+      for(key <- data(k).fields.keys) {
+        if (key == "EXPECTED_KWH_ANNUAL_PRODUCTION" ){
 
-    for (k <- Range(0,dataset.length)) {
-      for (i  <- dataset(k).fields.keys ){
-
-        if (i == "EXPECTED_KWH_ANNUAL_PRODUCTION" ){
-          val value = dataset(k).fields.getOrElse(i,"")
-          if (value == "" || value.toFloat < 0){
+          if (data(k).fields(key) == "" || data(k).fields(key).toFloat < 0){
 
           }
           else{
-            acc = acc + value.toFloat
+            acc = acc + data(k).fields(key).toFloat
           }
 
         }
@@ -163,32 +183,17 @@ object DataProcessor {
     val splitSecondRow2 = SECOND_ROW2.split(',')
     val rowArray = DataProcessor.splitArrayToRowArray(splitSecondRow)
     val rowArray2 = DataProcessor.splitArrayToRowArray(splitSecondRow2)
-    val new1: Array[SolarInstallation] = Array( rowArrayToSolarInstallation(acc),rowArrayToSolarInstallation(rowArray),rowArrayToSolarInstallation(rowArray2))
-    //println( computeUniqueInverterManufacturers(new1) )
-   // println(computeTotalExpectedKWHAnnualProduction(new1))
+     val new1: Array[SolarInstallation] = Array( rowArrayToSolarInstallation(acc),rowArrayToSolarInstallation(rowArray),rowArrayToSolarInstallation(rowArray2))
+   // println( computeUniqueInverterManufacturers(new1) )
+   //   println(computeTotalExpectedKWHAnnualProduction(new1))
 
 
-    val testData = "First Cell,Second Cell,\"The \"\"Best\"\" Around\",\"Comma, Cell\",\"\"\"Object-Orientation, Abstraction, and Data Structures Using Scala\"\"\""
+    val testData = "First Cell,Second Cell,\"\"\"Best\"\" the, kool \"\"Best\"\" Around\",\"Comma, Cell\",\"\"\"Object-Orientation, Abstraction, and Data Structures Using Scala\"\"\""
     val Splittest = testData.split(',')
     val row = splitArrayToRowArray(Splittest)
-    println(row(0))
-    println(row(1))
-    println(row(2))
-    println(row(3))
-    println(row(4))
-    println(row(5))
 
-    println ("****************")
-    println ("****************")
 
-    println(Splittest(0))
-    println(Splittest(1))
-    println(Splittest(2))
-    println(Splittest(3))
-    println(Splittest(4))
-    println(Splittest(5))
-    println(Splittest(6))
-    println(Splittest(7))
+
 
 
   }
