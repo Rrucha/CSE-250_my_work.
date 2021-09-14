@@ -44,11 +44,9 @@ object DataProcessor {
     var Acc: Array[String] = Array()
     var Answer: Array[String] = Array()
     val len : Int = splitHeaderRow.length
-    if (splitHeaderRow.length == 31) {
-      splitHeaderRow.map(_.trim)
-    }
 
-    else{
+
+
       for (i <- splitHeaderRow){
         val ind : Int = splitHeaderRow.indexOf(i)
         if (i.contains('"')){
@@ -81,8 +79,9 @@ object DataProcessor {
             oof3 = oof3.replace(",\"","")
             oof4 =  oof3.replace("\"\"","\"")
             oof = oof4.lastIndexOf("\"")
-
-            Acc = Acc :+ oof4.dropRight(1)
+            val splits = oof4.splitAt(oof)
+            oof5 = splits._1 + splits._2.replaceFirst("\"","")
+            Acc = Acc :+ oof5
             luck = 0
           }
 
@@ -90,7 +89,23 @@ object DataProcessor {
         else if (luck != 2){
           Acc = Acc :+ i
         }
+
+
+    }
+
+    if(Acc.length < 31){
+      while(Acc.length <= 31){
+        Acc = Acc :+ ","
       }
+      Acc
+    }
+    else if (Acc.length >31){
+      while(Acc.length <= 31){
+        Acc = Acc.drop(1)
+      }
+      Acc
+    }
+    else{
       Acc
     }
   }
@@ -111,7 +126,7 @@ object DataProcessor {
         val values: String = rowData(i)
 
         dd = mutable.HashMap(keys -> values)
-        acc.fields = acc.fields ++ dd
+        acc.fields =   dd ++ acc.fields
 
 
       }
@@ -163,9 +178,6 @@ object DataProcessor {
           }
 
         }
-        else{
-
-        }
       }
     }
   acc
@@ -184,6 +196,7 @@ object DataProcessor {
     val rowArray = DataProcessor.splitArrayToRowArray(splitSecondRow)
     val rowArray2 = DataProcessor.splitArrayToRowArray(splitSecondRow2)
      val new1: Array[SolarInstallation] = Array( rowArrayToSolarInstallation(acc),rowArrayToSolarInstallation(rowArray),rowArrayToSolarInstallation(rowArray2))
+    println(new1(0).fields)
    // println( computeUniqueInverterManufacturers(new1) )
    //   println(computeTotalExpectedKWHAnnualProduction(new1))
 
@@ -201,7 +214,7 @@ object DataProcessor {
     val failedline = "08/31/2021,0000196776,,\"Cooperstown,\",Otsego,NY,13326,Residential,Residential/Small Commercial,PON 2112,NYS Electric and Gas,Purchase,07/16/2019,09/03/2019,Complete,Kasselman Solar LLC,Enphase Energy Inc.,IQ7PLUS-72-x-US [240V],6,LG Electronics Inc.,LG365Q1C-A5,6,7506.00,766.00,2.19,1958.00,,No,No,No,POINT (-74.908187 42.717237)".split(",")
     val we =  DataProcessor.splitArrayToRowArray(failedline)
 
-    println(we(3))
+
 
 
 
