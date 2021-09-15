@@ -40,6 +40,8 @@ object Main {
 
       for (line <- lines) {
         val rowData = DataProcessor.splitArrayToRowArray(line.split(","))
+
+
         val installation = DataProcessor.rowArrayToSolarInstallation(rowData)
         dataset.append(installation)
         outputFile.write(installation.toString)
@@ -50,10 +52,14 @@ object Main {
       outputFile.close()
     }
 
+
+
     val inverterManufacturers = DataProcessor.computeUniqueInverterManufacturers(dataset.toArray)
     val totalKWHAnnually = DataProcessor.computeTotalExpectedKWHAnnualProduction(dataset.toArray)
+
     println(s"Number of Inverter Manufacturers: $inverterManufacturers")
     println(s"Expected Annual Production: $totalKWHAnnually KWH")
   }
 
 }
+

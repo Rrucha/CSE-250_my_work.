@@ -38,7 +38,7 @@ object DataProcessor {
     var list1: List[Int] = List()
 
     var luck: Int = 0
-
+  var Index: Int =0
 
 
     var Acc: Array[String] = Array()
@@ -48,13 +48,13 @@ object DataProcessor {
 
 
       for (i <- splitHeaderRow){
-        val ind : Int = splitHeaderRow.indexOf(i)
+
         if (i.contains('"')){
           // val indexofi = splitHeaderRow.indexOf(i)
 
           if (i(0) == '"' && luck ==0){
             firstquote = i
-            indexoffirstquote = splitHeaderRow.indexOf(firstquote)
+            indexoffirstquote = Index
             list1 = list1 :+ indexoffirstquote
             luck = 2
           }
@@ -62,7 +62,7 @@ object DataProcessor {
 
           if (i(i.length-1) == '"' && luck ==2) {
             lastquote = i
-            indexoflastquote = splitHeaderRow.indexOf(lastquote)
+            indexoflastquote = Index
             // val oof = splitHeaderRow(indexofi-1) + "," + splitHeaderRow(indexofi)
             //  val oof2 = oof.substring(2, oof.length() - 1)
             var oof3 = ""
@@ -89,8 +89,7 @@ object DataProcessor {
         else if (luck != 2){
           Acc = Acc :+ i
         }
-
-
+        Index = Index + 1
     }
 
     if(Acc.length < 31){
@@ -182,5 +181,8 @@ object DataProcessor {
     }
   acc
   }
+
+
+
 
 }
