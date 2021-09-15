@@ -120,12 +120,11 @@ object DataProcessor {
     for (i <- head.indices) {
 
 
-      if (head(i) != "LEGACY_PROJECT_NUMBER" && head(i) != "PROGRAM_TYPE" && head(i) != "ELECTRIC_UTILITY" && head(i) !=  "SOLICITATION" && head(i) != "REMOTE_NET_METERING" && head(i) != "GEOREFERENCE") {
+      if  (req_head.contains(head(i))) {
         val keys: String = head(i)
         val values: String = rowData(i)
 
-        dd = mutable.HashMap(keys -> values)
-        acc.fields =   dd ++ acc.fields
+        acc.fields += (keys -> values)
 
 
       }
