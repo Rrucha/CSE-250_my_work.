@@ -1,6 +1,6 @@
 # Project 1: Sequences
 
-**Part 1 Due: Wednesday 10/13/21 Before 5:00 PM (10 points)**
+**Part 1 Due: Friday 10/15/21 Before 5:00 PM (10 points)**
 
 **Part 2 Due: Friday 10/22/21 Before 5:00 PM (20 points + up to 5 bonus points)**
 
