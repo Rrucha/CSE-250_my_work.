@@ -2,7 +2,7 @@
 
 **Part 1 Due: Wednesday 10/13/21 Before 5:00 PM (10 points)**
 
-**Part 2 Due: Wednesday 10/20/21 Before 5:00 PM (20 points + up to 5 bonus points)**
+**Part 2 Due: Friday 10/22/21 Before 5:00 PM (20 points + up to 5 bonus points)**
 
 **Total Points = 30**
 
