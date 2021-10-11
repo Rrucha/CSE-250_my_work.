@@ -1,6 +1,6 @@
 # Project 0: Hello World in Scala!
 
-**Due: Wednesday 09/15/21 Before 5:00 PM**
+**Due: Wednesday 09/08/21 Before 5:00 PM**
 
 **Total Points = 30**
 
@@ -187,7 +187,6 @@ operating systems.  However, only the following platforms are officially
 supported by this course.
 * Ubuntu Linux
 * MacOS with [Homebrew](https://brew.sh)
-* IntelliJ on Windows
 
 Instructions for Ubuntu should work without change for any Debian-based Linux 
 distribution (Ubuntu, PopOS!, Debian, Mint).  
@@ -234,7 +233,7 @@ To find the name of a package, you can use:
 * **Ubuntu**: `apt search [keywords]`
 * **MacOS**: `brew search [keywords]`
 
-### Editor + SBT
+### Editor + Mill
 
 You will need a text editor and a Scala compiler for this course.  Popular editors 
 include
@@ -269,7 +268,7 @@ public/private keypair (if you don't already have one) as follows:
    * Your private key is in `~/.ssh/id_rsa`.  **Keep this file secret and safe!**
 
 Next, you'll need to provide your **public** key to the server.   
-1. Go to [https://microbase.odin.cse.buffalo.edu/](https://microbase.odin.cse.buffalo.edu/)
+1. Go to [https://microbase.cse.buffalo.edu/](https://microbase.cse.buffalo.edu/)
 2. Enter your UB email address
 3. Click the link in your email.  The token will be valid for 5 hours.
 4. In the Key Management section of the page, enter a name for your computer in the appropriate box
@@ -324,11 +323,11 @@ visualization, and transformation, as well as for machine learning.
 **Problem 1** *(15 points)*: In the object `cse250.pa0.DataProcessor` define the
 Scala function:
 ```scala
-splitArrayToRowArray(splitHeaderRow: Array[String]): Array[String]
+splitArrayToRowArray(rowData: Array[String]): Array[String]
 ```
 with the following behavior:
-* Assume that `splitHeaderRow` is the result from taking some line from the Solar Installations dataset and invoking `split(',')`.
-* Given `splitHeaderRow`, place the data into an `Array` corresponding to the columns that would result from opening the original dataset file with a spreadsheet application.
+* Assume that `rowData` is the result from taking some line from the Solar Installations dataset and invoking `split(',')`.
+* Given `rowData`, place the data into an `Array` corresponding to the columns that would result from opening the original dataset file with a spreadsheet application.
 
 Note that every row processed should produce a return result that contains the same 
 number of column entries as the header row for the document.  This means that each
@@ -339,7 +338,7 @@ rows that contain cells with commas (see the CSV representation rules below).
 
 A good way to test this functionality is to ensure that the first row of the dataset,
 which contains the header, should return a copy of the row.  The second row of the
-dataset, which contains successive blank entries, should still return a row with 31 
+dataset, which contains successive blank entries, should still return a row with 51 
 entries, but should have two empty values for the `ELECTRIC_UTILITY` and 
 `PURCHASE_TYPE` fields, respectively.  Feel free to add the tests provided in this 
 handout.
@@ -350,7 +349,7 @@ Scala function:
 rowArrayToSolarInstallation(rowArray: Array[String]): SolarInstallation
 ```
 with the following behavior:
-* Assume that the input `rowArray` is an `Array` containing 31 entries, corresponding to a row that was correctly processed through `splitArrayToRowArray`.
+* Assume that the input `rowArray` is an `Array` containing 51 entries, corresponding to a row that was correctly processed through `splitArrayToRowArray`.
 * Return the `SolarInstallation` object that corresponds to the data stored within the row.
 
 Note that `SolarInstallation` is only meant to hold a limited number of headers from 
@@ -364,30 +363,30 @@ number 0 corresponds to the first/left-most column):
 | Column | Label
 | ------ | -----------------------------------------
 | 0      | REPORTING_PERIOD
-| 1      | PROJECT_NUMBER
-| 3      | CITY
-| 4      | COUNTY
-| 5      | STATE
-| 6      | ZIP_CODE
-| 7      | SECTOR
-| 11     | PURCHASE_TYPE
-| 12     | DATE_APPLICATION_RECEIVED
-| 13     | DATE_COMPLETED
-| 14     | PROJECT_STATUS
-| 15     | CONTRACTOR
-| 16     | PRIMARY_INVERTER_MANUFACTURER
-| 17     | PRIMARY_INVERTER_MODEL_NUMBER
-| 18     | TOTAL_INVERTER_QUANTITY
-| 19     | PRIMARY_PV_MODULE_MANUFACTURER
-| 20     | PV_MODULE_MODEL_NUMBER
-| 21     | TOTAL_PV_MODULE_QUANTITY
-| 22     | PROJECT_COST
-| 23     | INCENTIVE
-| 24     | TOTAL_NAMEPLATE_KW_DC
-| 25     | EXPECTED_KWH_ANNUAL_PRODUCTION
-| 27     | AFFORDABLE_SOLAR
-| 28     | COMMUNITY_DISTRIBUTED_GENERATION
-| 29     | GREEN_JOBS_GREEN_NEW_YORK_PARTICIPANT
+| 2      | PROJECT_NUMBER
+| 4      | CITY
+| 5      | COUNTY
+| 6      | STATE
+| 7      | ZIP_CODE
+| 8      | SECTOR
+| 12     | PURCHASE_TYPE
+| 13     | DATE_APPLICATION_RECEIVED
+| 14     | DATE_COMPLETED
+| 15     | PROJECT_STATUS
+| 16     | CONTRACTOR
+| 17     | PRIMARY_INVERTER_MANUFACTURER
+| 18     | PRIMARY_INVERTER_MODEL_NUMBER
+| 19     | TOTAL_INVERTER_QUANTITY
+| 20     | PRIMARY_PV_MODULE_MANUFACTURER
+| 21     | PV_MODULE_MODEL_NUMBER
+| 22     | TOTAL_PV_MODULE_QUANTITY
+| 23     | PROJECT_COST
+| 24     | INCENTIVE
+| 25     | TOTAL_NAMEPLATE_KW_DC
+| 26     | EXPECTED_KWH_ANNUAL_PRODUCTION
+| 28     | AFFORDABLE_SOLAR
+| 29     | COMMUNITY_DISTRIBUTED_GENERATION
+| 30     | GREEN_JOBS_GREEN_NEW_YORK_PARTICIPANT
 
 When you are finished, a `SolarInstallation` should contain exactly 25 entries (one
 piece of data associated with each header).  This will cause the resulting updated
