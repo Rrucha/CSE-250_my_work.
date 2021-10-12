@@ -557,7 +557,7 @@ stored as `[e2]` ↔ `[e4]` ↔ `[e5]`.
 
 ```
 capacity: 4
-_numStored: 3
+_numStored: 2
 _head: 1
 _tail: 2
 ```
