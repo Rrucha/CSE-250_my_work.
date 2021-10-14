@@ -309,10 +309,8 @@ class LinkedListBufferTests extends AnyFlatSpec {
       val buffer = createLinkedListBuffer(4);
       val r31, r32, r33, r34 ,r35 = new SolarInstallation()
 
-      buffer.append(r31)
-
+      buffer.append(r35)
       buffer.append(r32)
-
       buffer.append(r34)
       buffer.append(r35)
 
@@ -325,7 +323,7 @@ class LinkedListBufferTests extends AnyFlatSpec {
       {
         val Bool: Boolean = buffer.remove(r35)
         assert(Bool)
-        assert(buffer.length == 3)
+        assert(buffer.length == 2)
         assert(buffer.apply(buffer.length-1) == r34)
       }
     }
@@ -365,11 +363,8 @@ class LinkedListBufferTests extends AnyFlatSpec {
       val c1, c2, c3, c4 ,c5 = new SolarInstallation()
 
       buffer.append(c1)
-
       buffer.append(c2)
-
       buffer.append(c4)
-
       buffer.append(c1)
 
       {
@@ -410,7 +405,7 @@ class LinkedListBufferTests extends AnyFlatSpec {
       val count: Int = buffer.countEntry(c2)
       assert(count == 3)
       assert(buffer.length == 6)
-      assert(buffer.apply(0) == c1)
+      assert(buffer.head == c1)
       assert(buffer.apply(buffer.length-1) == c2)
 
     }
@@ -419,7 +414,7 @@ class LinkedListBufferTests extends AnyFlatSpec {
       val count: Int = buffer.countEntry(c1)
       assert(count == 2)
       assert(buffer.length == 6)
-      assert(buffer.apply(0) == c1)
+      assert(buffer.head == c1)
       assert(buffer.apply(buffer.length-1) == c2)
 
     }
@@ -430,7 +425,7 @@ class LinkedListBufferTests extends AnyFlatSpec {
       val count: Int = buffer.countEntry(c5)
       assert(count == 1)
       assert(buffer.length == 6)
-      assert(buffer.apply(0) == c2)
+      assert(buffer.head == c2)
       assert(buffer.apply(buffer.length-1) == c5)
 
     }
@@ -438,7 +433,7 @@ class LinkedListBufferTests extends AnyFlatSpec {
       val count: Int = buffer.countEntry(c1)
       assert(count == 1)
       assert(buffer.length == 6)
-      assert(buffer.apply(0)== c2)
+      assert(buffer.head == c2)
       assert(buffer.apply(buffer.length-1) == c5)
 
     }
@@ -523,25 +518,31 @@ class LinkedListBufferTests extends AnyFlatSpec {
   /*** START of iterator TESTING CASE 1**/
 
   behavior of "LinkedListBuffer"
-  it should "Count UPDATE properly CASE 1  MIS ORDER CAPACITY FULL SITUATION" in {
-    val buffer = createLinkedListBuffer(5);
+  it should "Count iteratior properly CASE 1 " in {
+    val buffer = createLinkedListBuffer(4);
     val p1, p2, p3, p4 ,p5, p6,p7 = new SolarInstallation()
 
-    buffer.append(p1)
-    buffer.append(p2)
-    buffer.append(p4)
-    buffer.append(p3)
-    buffer.append(p5)
-
+       assert( buffer.append(p1) == None)
+      assert(buffer.append(p2) == None)
+      assert( buffer.append(p3) == None)
+      assert(  buffer.append(p4) == None)
+      assert(  buffer.append(p3) == Some(p1))
+      assert(  buffer.append(p5) == Some(p2))
 
     {
-      buffer.update(0,p6)
-      assert( buffer.apply(0) == p6)
+      val iter = buffer.iterator
+      assert(iter.next() == p3)
+      assert( iter.next() == p4)
+      assert( iter.next() == p3)
+      iter.next()
+      iter.next()
+      iter.remove()
     }
-
     {
-      buffer.update(2,p7)
-      assert(buffer.apply(2) == p7)
+      val iter = buffer.iterator
+      assert(iter.next() == p3)
+     assert( iter.next() == p4)
+    assert( iter.next() == p5)
     }
 
   }
