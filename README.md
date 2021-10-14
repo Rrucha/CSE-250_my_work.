@@ -226,7 +226,7 @@ that we can use this with the `SolarInstallation` class.
 * If the index provided is not present (or greater than capacity), the behavior of this function is unspecified.  It is customary to throw an `IndexOutOfBoundsException`.
 
 
-##### `update(idx: Int, elem: A): Int`
+##### `update(idx: Int, elem: A): Unit`
 * Update the entry at index `idx` within the sequence (0-based indexing) to be  `elem`
 * Required by `mutable.Seq`
 * If the index provided is not present (or greater than capacity), the behavior of this function is unspecified.  It is customary to throw an `IndexOutOfBoundsException`.
