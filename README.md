@@ -145,6 +145,15 @@ A few notes:
 * If you add members to the `LinkedListBuffer` class, you should avoid 
   submitting tests that access these fields as they will not compile.  Your 
   tests should limit access to only what is public in the handout code.
+* Your tests should generally focus on testing **specified** behavior.  This 
+  means specifically behaviors documented below.  For the most part, specified
+  behaviors are limited to the API (i.e., the object's callable methods such
+  as apply, iterator, remove, etc...).  If the specification does not 
+  explicitly say something about how the data is to be organized, it should not
+  be part of the test.
+* The assert method has an optional 2nd parameter that allows you to provide a
+  debug message.  If the assertion fails, this message will be included in the
+  testing log.
 
 Your code will be tested against correct and incorrect implementations of 
 `LinkedListBuffer`.  Your goal is to get all tests to pass on the correct 
