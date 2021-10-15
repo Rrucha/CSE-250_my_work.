@@ -366,33 +366,6 @@ class LinkedListBufferTests extends AnyFlatSpec {
 
     /*** start of REMOVE TESTING CASE 4**/
 
-    behavior of "LinkedListBuffer"
-    it should "Remove properly Case 4 REMOVE WHEN ONLY ONE NODE IS THERE" in {
-      val buffer = createLinkedListBuffer(4);
-      val r41, r42, r43, r44 ,r45 = new SolarInstallation()
-      r41.fields("name") = "5"
-      r42.fields("name") = "6"
-      r43.fields("name") = "7"
-      r44.fields("name") = "8"
-      r45.fields("name") = "9"
-
-        buffer.append(r41)
-
-              {
-                val Bool : Boolean = buffer.remove(r43)
-                assert(!Bool)
-              }
-
-              {
-                val Bool: Boolean = buffer.remove(r41)
-                assert(Bool)
-                assert(buffer.length == 0)
-                assert(buffer.head != r41)
-                assert(buffer.apply(buffer.length-1) != r41)
-                val iterator = buffer.iterator
-                assert(!iterator.hasNext)
-              }
-    }
 
   /*** END of REMOVE TESTING CASE 4**/
            /*** END of REMOVE TESTING**/
