@@ -607,6 +607,7 @@ class LinkedListBufferTests extends AnyFlatSpec {
                 assert( iter.next() == p3)
                 iter.remove()
               }
+
               {
                 val iter = buffer.iterator
                 assert(iter.next() == p3)
@@ -645,6 +646,7 @@ class LinkedListBufferTests extends AnyFlatSpec {
       assert( iter.next() == p7)
       iter.remove()
     }
+
     {
       val iter = buffer.iterator
       assert(iter.next() == p3)
@@ -653,8 +655,6 @@ class LinkedListBufferTests extends AnyFlatSpec {
     }
 
   }
-
-
   /*** END of UPDATE TESTING CASE 2**/
   /*** END of UPDATE TESTING**/
 
