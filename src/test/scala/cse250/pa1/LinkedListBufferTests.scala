@@ -667,9 +667,9 @@ class LinkedListBufferTests extends AnyFlatSpec {
                 assert( iter.next() == p4)
                 assert(iter.hasNext)
                 assert( iter.next() == p3)
-                assert(iter.length == 4)
+
                 iter.remove()
-                assert(iter.length == 3)
+
               }
 
               {
@@ -715,9 +715,9 @@ class LinkedListBufferTests extends AnyFlatSpec {
       assert( iter.next() == p4)
       assert(iter.hasNext)
       assert( iter.next() == p7)
-      assert(iter.length == 4)
+
       iter.remove()
-      assert(iter.length == 3)
+
     }
 
     {
