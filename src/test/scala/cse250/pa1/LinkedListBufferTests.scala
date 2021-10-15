@@ -113,8 +113,11 @@ class LinkedListBufferTests extends AnyFlatSpec {
 
             {
               val iterator = buffer.iterator
+              assert(iterator.hasNext)
               assert( iterator.next() == e1)
+              assert(iterator.hasNext)
               assert( iterator.next() == e2)
+              assert(!iterator.hasNext)
               assert(buffer.length == 2)
               assert(buffer.apply(buffer.length-1) == e2)
             }
@@ -123,9 +126,13 @@ class LinkedListBufferTests extends AnyFlatSpec {
 
             {
               val iterator = buffer.iterator
+              assert(iterator.hasNext)
               assert( iterator.next() == e1)
+              assert(iterator.hasNext)
               assert( iterator.next() == e2)
+              assert(iterator.hasNext)
               assert( iterator.next() == e3)
+              assert(!iterator.hasNext)
               assert(buffer.length == 3)
               assert(buffer.apply(buffer.length-1) == e3)
             }
@@ -154,7 +161,9 @@ class LinkedListBufferTests extends AnyFlatSpec {
 
             {
               val iterator = buffer.iterator
+              assert(iterator.hasNext)
               assert( iterator.next() == e2)
+              assert(!iterator.hasNext)
               assert(buffer.length == 1)
               assert(buffer.apply(buffer.length -1)== e2)
             }
@@ -163,8 +172,11 @@ class LinkedListBufferTests extends AnyFlatSpec {
 
             {
               val iterator = buffer.iterator
+              assert(iterator.hasNext)
               assert( iterator.next() == e2)
+              assert(iterator.hasNext)
               assert( iterator.next() == e1)
+              assert(!iterator.hasNext)
               assert(buffer.length == 2)
               assert(buffer.apply(buffer.length-1) == e1)
             }
@@ -173,9 +185,13 @@ class LinkedListBufferTests extends AnyFlatSpec {
 
             {
               val iterator = buffer.iterator
+              assert(iterator.hasNext)
               assert( iterator.next() == e2)
+              assert(iterator.hasNext)
               assert( iterator.next() == e1)
+              assert(iterator.hasNext)
               assert( iterator.next() == e3)
+              assert(!iterator.hasNext)
               assert(buffer.length == 3)
               assert(buffer.apply(buffer.length-1) == e3)
             }
@@ -204,9 +220,10 @@ class LinkedListBufferTests extends AnyFlatSpec {
 
                 {
                   val iterator = buffer.iterator
+                  assert(iterator.hasNext)
                   assert( iterator.next() == e2)
+                  assert(!iterator.hasNext)
                   assert(buffer.length == 1)
-
                   assert(buffer.apply(buffer.length-1) == e2)
                 }
 
@@ -214,8 +231,11 @@ class LinkedListBufferTests extends AnyFlatSpec {
 
               {
                 val iterator = buffer.iterator
+                assert(iterator.hasNext)
                 assert( iterator.next() == e2)
+                assert(iterator.hasNext)
                 assert( iterator.next() == e1)
+                assert(!iterator.hasNext)
                 assert(buffer.length == 2)
                 assert(buffer.apply(buffer.length-1) == e1)
               }
@@ -225,9 +245,13 @@ class LinkedListBufferTests extends AnyFlatSpec {
 
               {
                 val iterator = buffer.iterator
+                assert(iterator.hasNext)
                 assert( iterator.next() == e2)
+                assert(iterator.hasNext)
                 assert( iterator.next() == e1)
+                assert(iterator.hasNext)
                 assert( iterator.next() == e3)
+                assert(!iterator.hasNext)
                 assert(buffer.length == 3)
                 assert(buffer.apply(buffer.length-1) == e3)
               }
@@ -236,10 +260,15 @@ class LinkedListBufferTests extends AnyFlatSpec {
 
               {
                 val iterator = buffer.iterator
+                assert(iterator.hasNext)
                 assert( iterator.next() == e2)
+                assert(iterator.hasNext)
                 assert( iterator.next() == e1)
+                assert(iterator.hasNext)
                 assert( iterator.next() == e3)
+                assert(iterator.hasNext)
                 assert( iterator.next() == e4)
+                assert(!iterator.hasNext)
                 assert(buffer.length == 4)
                 assert(buffer.apply(buffer.length-1) == e4)
               }
@@ -248,10 +277,15 @@ class LinkedListBufferTests extends AnyFlatSpec {
 
               {
                 val iterator = buffer.iterator
+                assert(iterator.hasNext)
                 assert( iterator.next() == e1)
+                assert(iterator.hasNext)
                 assert( iterator.next() == e3)
+                assert(iterator.hasNext)
                 assert( iterator.next() == e4)
+                assert(iterator.hasNext)
                 assert( iterator.next() == e3)
+                assert(!iterator.hasNext)
                 assert(buffer.length == 4)
                 assert(buffer.apply(buffer.length-1) == e3)
               }
@@ -289,9 +323,13 @@ class LinkedListBufferTests extends AnyFlatSpec {
                 assert(buffer.length == 3)
 
                 val iterator = buffer.iterator
+                assert(iterator.hasNext)
                 assert( iterator.next() == r1)
+                assert(iterator.hasNext)
                 assert( iterator.next() == r2)
+                assert(iterator.hasNext)
                 assert( iterator.next() == r5)
+                assert(!iterator.hasNext)
               }
     }
     /*** END of REMOVE TESTING CASE 1**/
@@ -322,9 +360,13 @@ class LinkedListBufferTests extends AnyFlatSpec {
                 assert(buffer.length == 3)
 
                 val iterator = buffer.iterator
+                assert(iterator.hasNext)
                 assert( iterator.next() == r22)
+                assert(iterator.hasNext)
                 assert( iterator.next() == r24)
+                assert(iterator.hasNext)
                 assert( iterator.next() == r25)
+                assert(!iterator.hasNext)
               }
     }
     /*** END of REMOVE TESTING CASE 2**/
@@ -357,8 +399,11 @@ class LinkedListBufferTests extends AnyFlatSpec {
               assert(buffer.length == 2)
               assert(buffer.apply(buffer.length-1) == r34)
               val iterator = buffer.iterator
+              assert(iterator.hasNext)
               assert( iterator.next() == r32)
+              assert(iterator.hasNext)
               assert( iterator.next() == r34)
+              assert(!iterator.hasNext)
             }
 
     }
@@ -366,6 +411,47 @@ class LinkedListBufferTests extends AnyFlatSpec {
 
     /*** start of REMOVE TESTING CASE 4**/
 
+  behavior of "LinkedListBuffer"
+  it should "Remove properly Case 4 REMOVE CPY" in {
+    val buffer = createLinkedListBuffer(4);
+    val r31, r32, r33, r34 ,r35 = new SolarInstallation()
+    r31.fields("name") = "5"
+    r32.fields("name") = "6"
+    r33.fields("name") = "7"
+    r34.fields("name") = "8"
+    r35.fields("name") = "9"
+
+    buffer.append(r31)
+    buffer.append(r32)
+    buffer.append(r31)
+    buffer.append(r35)
+
+
+
+
+    {
+      val Bool: Boolean = buffer.remove(r31)
+      assert(Bool)
+      assert(buffer.length == 2)
+      assert(buffer.apply(buffer.length-1) == r35)
+      val iterator = buffer.iterator
+      assert(iterator.hasNext)
+      assert( iterator.next() == r32)
+      assert(iterator.hasNext)
+      assert( iterator.next() == r35)
+      assert(!iterator.hasNext)
+    }
+
+    {
+      val Bool = buffer.remove(r35)
+      assert(Bool)
+      val iterator = buffer.iterator
+      assert(iterator.hasNext)
+      assert( iterator.next() == r32)
+      assert(!iterator.hasNext)
+    }
+
+  }
 
   /*** END of REMOVE TESTING CASE 4**/
            /*** END of REMOVE TESTING**/
@@ -575,17 +661,26 @@ class LinkedListBufferTests extends AnyFlatSpec {
 
               {
                 val iter = buffer.iterator
+                assert(iter.hasNext)
                 assert(iter.next() == p3)
+                assert(iter.hasNext)
                 assert( iter.next() == p4)
+                assert(iter.hasNext)
                 assert( iter.next() == p3)
+                assert(iter.length == 4)
                 iter.remove()
+                assert(iter.length == 3)
               }
 
               {
                 val iter = buffer.iterator
+                assert(iter.hasNext)
                 assert(iter.next() == p3)
+                assert(iter.hasNext)
                 assert( iter.next() == p4)
-               assert( iter.next() == p5)
+                assert(iter.hasNext)
+                assert( iter.next() == p5)
+                assert(!iter.hasNext)
               }
 
   }
@@ -614,17 +709,26 @@ class LinkedListBufferTests extends AnyFlatSpec {
 
     {
       val iter = buffer.iterator
+      assert(iter.hasNext)
       assert(iter.next() == p3)
+      assert(iter.hasNext)
       assert( iter.next() == p4)
+      assert(iter.hasNext)
       assert( iter.next() == p7)
+      assert(iter.length == 4)
       iter.remove()
+      assert(iter.length == 3)
     }
 
     {
       val iter = buffer.iterator
+      assert(iter.hasNext)
       assert(iter.next() == p3)
+      assert(iter.hasNext)
       assert( iter.next() == p4)
+      assert(iter.hasNext)
       assert( iter.next() == p5)
+      assert(!iter.hasNext)
     }
 
   }
