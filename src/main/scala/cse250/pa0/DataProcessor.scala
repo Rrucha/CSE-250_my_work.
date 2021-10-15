@@ -113,6 +113,7 @@ object DataProcessor {
 
   def rowArrayToSolarInstallation(rowData: Array[String]): SolarInstallation = {
     val acc: SolarInstallation = new SolarInstallation
+
     var dd: mutable.Map[String, String] = new mutable.HashMap[String, String]
     val head = SolarInstallation.HEADERS
     val req_head = SolarInstallation.REQUIRED_HEADERS
