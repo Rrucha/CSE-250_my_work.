@@ -18,6 +18,10 @@
  */
 package cse250.pa1
 
+import scala.+:
+import scala.util.control.Breaks
+import scala.util.control.Breaks.break
+
 class LinkedListBuffer[A](capacity: Int)
   extends scala.collection.mutable.Seq[A]
 {
@@ -44,7 +48,59 @@ class LinkedListBuffer[A](capacity: Int)
    * 
    * (assume that all times are non-amortized unless otherwise specified).
    */
-  def append(entry: A): Option[A] = ???
+  def append(entry: A): Option[A] = {
+
+    if (_numStored < capacity){
+      var status : Option[A] = _buffer(_numStored)._value
+      val arr = new LinkedListNode(Some(entry))
+      if (_numStored == 0){
+        status =  _buffer(_numStored)._value
+        _buffer(0)= arr
+        arr._next = -1
+        arr._prev = -1
+
+        _head = 0
+        _tail =0
+        _numStored = _numStored + 1
+      }
+      else if (_numStored == capacity-1){
+        status = _buffer(_numStored)._value
+        arr._next = -1
+        arr._prev = _tail
+
+        _buffer(_numStored) =  arr
+        _buffer(_tail)._next = _buffer.indexOf(arr)
+
+        _tail = _buffer.indexOf(arr)
+        _numStored = _numStored + 1
+      }
+      else{
+        status =  _buffer(_numStored)._value
+        arr._next = -1
+        arr._prev = _tail
+        _buffer(_numStored)= arr
+        _buffer(_tail)._next = _buffer.indexOf(arr)
+        _tail = _buffer.indexOf(arr)
+        _numStored = _numStored + 1
+      }
+status
+    }
+    else {
+      val arr = new LinkedListNode(Some(entry))
+      val before = _buffer(_head)
+      val index : Int=  _head
+      _head = _buffer(_head)._next
+      _buffer(_head)._prev = -1
+      arr._prev = _tail
+      arr._next = -1
+      _buffer(index) = arr
+      _buffer(_tail)._next = _buffer.indexOf(arr)
+      _tail = _buffer.indexOf(arr)
+
+      before._value
+    }
+  }
+
 
   /**
    * Remove all instances of an element from the sequence.
@@ -57,7 +113,61 @@ class LinkedListBuffer[A](capacity: Int)
    * 
    * This function must run in O(n) time, where n = [[length]] 
    */
-  def remove(entry: A): Boolean = ???
+  def remove(entry: A): Boolean = {
+    var check = 9
+     for (i <- _buffer) {
+       if (i.get == entry){
+         var PREVIOUS: LinkedListNode = null
+         var NEC: LinkedListNode = null
+         if (i._prev != -1) {
+            PREVIOUS = _buffer(i._prev)
+         }
+         if (i == _buffer(_head)){
+           if (i._next != -1) {
+             _head = i._next
+
+           }
+           else{
+             _head = -1
+           }
+         }
+         if (i == _buffer(_tail)){
+           if (i._prev != -1) {
+             _tail = i._prev
+             _buffer(i._prev)._next = -1
+           }
+           else{
+             _tail= -1
+           }
+         }
+         if (i._next != -1) {
+           NEC = _buffer(i._next)
+         }
+         val ing  = _buffer.indexOf(i)
+
+         _buffer.drop(ing)
+
+         if (i._next != -1 && PREVIOUS != null) {
+           _buffer(i._next)._prev = _buffer.indexOf(_buffer(i._prev))
+         }
+
+         if (i._prev != -1 && NEC != null) {
+           _buffer(i._prev)._next = _buffer.indexOf(_buffer(i._next))
+         }
+         else if (i._prev != -1 && NEC == null){
+           _buffer(i._prev)._next = -1
+         }
+         check = -1
+         _numStored = _numStored - 1
+       }
+     }
+   if (check == -1){
+     true
+   }
+   else{
+      false
+    }
+  }
 
   /**
    * Return the current length of the sequence
@@ -69,7 +179,23 @@ class LinkedListBuffer[A](capacity: Int)
    * 
    * This function must run in Θ(1) time.
    */
-  override def length: Int = ???
+  override def length: Int = {
+    var num = 0
+    var i = _head
+    if (i != -1) {
+      while (i != -1) {
+        num = num + 1
+        if (_buffer(i)._next != -1) {
+          i = _buffer(i)._next
+        }
+        else{
+          i = -1
+        }
+      }
+
+    }
+    num
+  }
 
   /**
    * Retrieve the `idx`th element to be inserted into the sequence (i.e., the
@@ -81,7 +207,30 @@ class LinkedListBuffer[A](capacity: Int)
    * 
    * This function must run in O(n) time, where n = `idx`
    */
-  override def apply(idx: Int): A = ???
+  override def apply(idx: Int): A ={
+    var oof: LinkedListNode = _buffer.head
+    var oo = _head
+
+    var num = 0
+    var _curr = _head
+    var bruh: LinkedListNode = _buffer(oo)
+    while (oo != -1){
+      if (num <= idx) {
+        num = num + 1
+        bruh = _buffer(oo)
+      }
+
+      if (_buffer(oo)._next != -1){
+        oo = _buffer(oo)._next
+      }
+      else{
+       oo =  -1
+      }
+
+    }
+
+    bruh.get
+  }
 
   /**
    * Count the number of times `entry` occurs in the sequence.
@@ -93,7 +242,15 @@ class LinkedListBuffer[A](capacity: Int)
    * 
    * This function must run in O(n) time, where n = [[length]] 
    */
-  def countEntry(entry: A): Int = ???
+  def countEntry(entry: A): Int = {
+    var num = 0
+    for (i <- _buffer) {
+      if (i.get == entry){
+        num = num +1
+      }
+    }
+    num
+  }
 
   /**
    * Update the value at position `idx` to `elem`
@@ -105,7 +262,33 @@ class LinkedListBuffer[A](capacity: Int)
    * 
    * This function must run in O(n) time, where n = `idx`
    */
-  def update(idx: Int, elem: A): Unit = ???
+  def update(idx: Int, elem: A): Unit = {
+    if (idx <= _buffer.length) {
+      var oof: LinkedListNode = _buffer.head
+      var oo = _head
+      var num = 0
+      var _curr = _head
+      var bruh: LinkedListNode = _buffer(oo)
+      while (oo != -1){
+        if (num <= idx) {
+          num = num + 1
+          bruh = _buffer(oo)
+        }
+
+        if (_buffer(oo)._next != -1){
+          oo = _buffer(oo)._next
+        }
+        else{
+          oo =  -1
+        }
+
+      }
+      bruh._value = Option(elem)
+    }
+    else{
+      throw new  IndexOutOfBoundsException
+    }
+  }
 
   /**
    * Return an iterator over the elements of this sequence
@@ -119,7 +302,9 @@ class LinkedListBuffer[A](capacity: Int)
    * This function must run in Θ(1) time.
    */
   override def iterator: LinkedListIterator =
-    new LinkedListIterator()
+    new LinkedListIterator(){
+
+    }
 
   /**
    * Render a graphical representation of the list
@@ -205,7 +390,68 @@ class LinkedListBuffer[A](capacity: Int)
      * This method must throw a [[NoSuchElementException]] if it is called
      * before [[next]] is called for the first time on this iterator.
      */
-    def remove(): Unit = ???
+    def remove(): Unit ={
+      var currentElemen: LinkedListNode = null
+      var currentElement: LinkedListNode = null
+      if(_curr != -1) {
+        currentElement = _buffer(_curr)
+      }
+      else{
+          currentElement = _buffer(_tail)
+      }
+
+      var PREVIOUS: LinkedListNode = null
+      var NEC: LinkedListNode = null
+             val  _cur = currentElement._prev
+            if (_curr != -1) {
+               currentElemen = _buffer(_cur)
+            }
+      else{
+             currentElemen = currentElement
+            }
+      if (currentElemen._prev != -1) {
+        PREVIOUS = _buffer(currentElemen._prev)
+      }
+      if (currentElemen == _buffer(_head)){
+        if (currentElemen._next != -1) {
+          _head = currentElemen._next
+
+        }
+        else{
+          _head = -1
+        }
+      }
+      if (currentElemen == _buffer(_tail)){
+        if (currentElemen._prev != -1) {
+          _tail = currentElemen._prev
+          _buffer(currentElemen._prev)._next = -1
+        }
+        else{
+          _tail= -1
+        }
+      }
+      if (currentElemen._next != -1) {
+        NEC = _buffer(currentElemen._next)
+      }
+
+
+      _buffer.drop(_cur)
+
+      if (currentElemen._next != -1 && PREVIOUS != null) {
+        _buffer(currentElemen._next)._prev = _buffer.indexOf(_buffer(currentElemen._prev))
+      }
+
+      if (currentElemen._prev != -1 && NEC != null) {
+        _buffer(currentElemen._prev)._next = _buffer.indexOf(_buffer(currentElemen._next))
+      }
+      else if (currentElemen._prev != -1 && NEC == null){
+        _buffer(currentElemen._prev)._next = -1
+      }
+
+      _numStored = _numStored - 1
+
+
+    }
   }
 
 }
