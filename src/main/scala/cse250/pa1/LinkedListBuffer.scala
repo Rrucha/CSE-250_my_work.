@@ -264,26 +264,12 @@ status
    */
   def update(idx: Int, elem: A): Unit = {
     if (idx <= _buffer.length) {
-      var oof: LinkedListNode = _buffer.head
-      var oo = _head
-      var num = 0
-      var _curr = _head
-      var bruh: LinkedListNode = _buffer(oo)
-      while (oo != -1){
-        if (num <= idx) {
-          num = num + 1
-          bruh = _buffer(oo)
+      var oof: A = apply(idx)
+      for (i <- _buffer){
+        if (i.get == oof) {
+          _buffer(_buffer.indexOf(i))._value = Option(elem)
         }
-
-        if (_buffer(oo)._next != -1){
-          oo = _buffer(oo)._next
-        }
-        else{
-          oo =  -1
-        }
-
       }
-      bruh._value = Option(elem)
     }
     else{
       throw new  IndexOutOfBoundsException
