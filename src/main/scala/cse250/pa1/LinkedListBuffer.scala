@@ -50,7 +50,7 @@ class LinkedListBuffer[A](capacity: Int)
    */
   def append(entry: A): Option[A] = {
 
-    if (_numStored < capacity){
+    if (_numStored < capacity && _numStored >= 0){
       var status : Option[A] = _buffer(_numStored)._value
       val arr = new LinkedListNode(Some(entry))
       if (_numStored == 0){
@@ -127,9 +127,7 @@ status
              _head = i._next
 
            }
-           else{
-             _head = -1
-           }
+
          }
          if (i == _buffer(_tail)){
            if (i._prev != -1) {
@@ -158,7 +156,9 @@ status
            _buffer(i._prev)._next = -1
          }
          check = -1
-         _numStored = _numStored - 1
+         if (_numStored > 0) {
+           _numStored = _numStored - 1
+         }
        }
      }
    if (check == -1){
@@ -180,21 +180,7 @@ status
    * This function must run in Θ(1) time.
    */
   override def length: Int = {
-    var num = 0
-    var i = _head
-    if (i != -1) {
-      while (i != -1) {
-        num = num + 1
-        if (_buffer(i)._next != -1) {
-          i = _buffer(i)._next
-        }
-        else{
-          i = -1
-        }
-      }
-
-    }
-    num
+_numStored
   }
 
   /**
@@ -208,28 +194,34 @@ status
    * This function must run in O(n) time, where n = `idx`
    */
   override def apply(idx: Int): A ={
-    var oof: LinkedListNode = _buffer.head
     var oo = _head
 
     var num = 0
-    var _curr = _head
+
     var bruh: LinkedListNode = _buffer(oo)
-    while (oo != -1){
-      if (num <= idx) {
-        num = num + 1
-        bruh = _buffer(oo)
-      }
+    if (idx < _numStored){
+     while (oo != -1) {
+       if (num <= idx) {
+         num = num + 1
+         bruh = _buffer(oo)
+         if(num-1 == idx) {
+           return bruh.get
+         }
+       }
 
-      if (_buffer(oo)._next != -1){
-        oo = _buffer(oo)._next
-      }
-      else{
-       oo =  -1
-      }
+       if (_buffer(oo)._next != -1 ) {
+         oo = _buffer(oo)._next
+       }
+       else {
+         oo = -1
+       }
 
+     }
+     bruh.get
+   }
+    else{
+      throw new  IndexOutOfBoundsException
     }
-
-    bruh.get
   }
 
   /**
@@ -264,7 +256,7 @@ status
    */
   def update(idx: Int, elem: A): Unit = {
     if (idx <= _buffer.length) {
-      var oof: A = apply(idx)
+      val oof: A = apply(idx)
       for (i <- _buffer){
         if (i.get == oof) {
           _buffer(_buffer.indexOf(i))._value = Option(elem)
@@ -395,6 +387,7 @@ status
       else{
              currentElemen = currentElement
             }
+
       if (currentElemen._prev != -1) {
         PREVIOUS = _buffer(currentElemen._prev)
       }
@@ -419,8 +412,6 @@ status
       if (currentElemen._next != -1) {
         NEC = _buffer(currentElemen._next)
       }
-
-
       _buffer.drop(_cur)
 
       if (currentElemen._next != -1 && PREVIOUS != null) {
@@ -433,9 +424,9 @@ status
       else if (currentElemen._prev != -1 && NEC == null){
         _buffer(currentElemen._prev)._next = -1
       }
-
-      _numStored = _numStored - 1
-
+      if (_numStored > 0) {
+        _numStored = _numStored - 1
+      }
 
     }
   }
