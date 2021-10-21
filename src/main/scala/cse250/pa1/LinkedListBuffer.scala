@@ -19,6 +19,7 @@
 package cse250.pa1
 
 import scala.+:
+import scala.collection.mutable.ArrayBuffer
 import scala.util.control.Breaks
 import scala.util.control.Breaks.break
 
@@ -29,6 +30,7 @@ class LinkedListBuffer[A](capacity: Int)
   var _numStored = 0
   var _head = -1
   var _tail = -1
+  var _removedindx: ArrayBuffer[Int] = ArrayBuffer()
 
   /**
    * Append an entry into the sequence, displacing the oldest entry if needed.
@@ -49,55 +51,110 @@ class LinkedListBuffer[A](capacity: Int)
    * (assume that all times are non-amortized unless otherwise specified).
    */
   def append(entry: A): Option[A] = {
-
-    if (_numStored < capacity && _numStored >= 0){
-      var status : Option[A] = _buffer(_numStored)._value
+    /** checking that  _numstored is less than the capacity and _numStored is positive * */
+    if (_numStored < capacity && _numStored >= 0) {
+      var status: Option[A] = _buffer(_numStored)._value
       val arr = new LinkedListNode(Some(entry))
-      if (_numStored == 0){
-        status =  _buffer(_numStored)._value
-        _buffer(0)= arr
+
+      /** checking that if this is the first entry in list* */
+      if (_numStored == 0) {
+        /** FINDING SOME() */
+        status = _buffer(_numStored)._value
+
+        /** ADDING* */
+        _buffer(0) = arr
+
+        /** ADJUSTING THE _next AND _prev */
         arr._next = -1
         arr._prev = -1
 
+        /** ADJUSTING THE HEAD AND TAIL */
         _head = 0
-        _tail =0
+        _tail = 0
         _numStored = _numStored + 1
       }
-      else if (_numStored == capacity-1){
+
+      /** checking that if this is the last entry in list* */
+      else if (_numStored == capacity - 1) {
+        /** FINDING SOME() */
         status = _buffer(_numStored)._value
         arr._next = -1
         arr._prev = _tail
 
-        _buffer(_numStored) =  arr
+        /** ADDING* */
+        _buffer(_numStored) = arr
+
+        /** updating previous tails next * */
         _buffer(_tail)._next = _buffer.indexOf(arr)
 
+        /** updating THE TAIL TO THE ADDED THING * */
         _tail = _buffer.indexOf(arr)
         _numStored = _numStored + 1
       }
-      else{
-        status =  _buffer(_numStored)._value
+
+      /** EVERYTHING OTHER THAN FIRST AND LAST NODE OF THE LINKED LIST * */
+      else {
+        /** FINDING SOME() */
+        status = _buffer(_numStored)._value
         arr._next = -1
         arr._prev = _tail
-        _buffer(_numStored)= arr
-        _buffer(_tail)._next = _buffer.indexOf(arr)
-        _tail = _buffer.indexOf(arr)
+        if (_removedindx.nonEmpty) {
+          val oof = _removedindx(0)
+          _buffer(oof) = arr
+          /** updating previous tails next * */
+          _buffer(_tail)._next = _buffer.indexOf(arr)
+
+          /** updating THE TAIL TO THE ADDED THING * */
+          _tail = _buffer.indexOf(arr)
+          _removedindx.remove(0)
+        }
+      else  {
+          /** ADDING* */
+          _buffer(_numStored) = arr
+
+          /** updating previous tails next * */
+
+          _buffer(_tail)._next = _buffer.indexOf(arr)
+
+          /** updating THE TAIL TO THE ADDED THING * */
+          _tail = _buffer.indexOf(arr)
+        }
+
         _numStored = _numStored + 1
       }
-status
+      status
     }
+
+    /** _NUMSTORED IS GREATER THAN THE CAPACITY HERE I'LL REPLACE THE NEW ENTRY WITH HEAD* */
     else {
+      /** makeing the linkedlistnode of the entry for append */
       val arr = new LinkedListNode(Some(entry))
+      /** FINDING SOME() */
       val before = _buffer(_head)
-      val index : Int=  _head
+      val index: Int = _head
+
+      /** Adjusting the head next */
       _head = _buffer(_head)._next
+
+      /** Adjusting the head prev */
       _buffer(_head)._prev = -1
+
+      /** ARR IN BETWEEN */
       arr._prev = _tail
       arr._next = -1
-      _buffer(index) = arr
-      _buffer(_tail)._next = _buffer.indexOf(arr)
-      _tail = _buffer.indexOf(arr)
 
-      before._value
+      /** ADDING* */
+
+
+        _buffer(index) = arr
+
+        /** updating previous tails next * */
+        _buffer(_tail)._next = _buffer.indexOf(arr)
+
+        /** updating THE TAIL TO THE ADDED THING * */
+        _tail = _buffer.indexOf(arr)
+        before._value
+
     }
   }
 
@@ -115,52 +172,86 @@ status
    */
   def remove(entry: A): Boolean = {
     var check = 9
-     for (i <- _buffer) {
-       if (i.get == entry){
-         var PREVIOUS: LinkedListNode = null
-         var NEC: LinkedListNode = null
-         if (i._prev != -1) {
+    /** lOOPING THROUGH THE _buffer**/
+    if (_numStored > 1){
+      for (i <- _buffer) {
+        /** checking if the current node of _buffer is equal to entry* */
+        if (i._value != None && i.get == entry) {
+          var PREVIOUS: LinkedListNode = null
+          var NEC: LinkedListNode = null
+
+          /** checking if the pervious of current node is Not null* */
+          if (i._prev != -1) {
             PREVIOUS = _buffer(i._prev)
-         }
-         if (i == _buffer(_head)){
-           if (i._next != -1) {
-             _head = i._next
+          }
 
-           }
+          /** checking if the current node is the head node* */
+          if (i == _buffer(_head)) {
+            if (i._next != -1) {
+              _head = i._next
 
-         }
-         if (i == _buffer(_tail)){
-           if (i._prev != -1) {
-             _tail = i._prev
-             _buffer(i._prev)._next = -1
-           }
-           else{
-             _tail= -1
-           }
-         }
-         if (i._next != -1) {
-           NEC = _buffer(i._next)
-         }
-         val ing  = _buffer.indexOf(i)
+            }
 
-         _buffer.drop(ing)
+          }
 
-         if (i._next != -1 && PREVIOUS != null) {
-           _buffer(i._next)._prev = _buffer.indexOf(_buffer(i._prev))
-         }
+          /** checking if the current node is the tail node* */
+          if (i == _buffer(_tail)) {
+            if (i._prev != -1) {
+              _tail = i._prev
+              _buffer(i._prev)._next = -1
+            }
+            else {
+              _tail = -1
+            }
+          }
 
-         if (i._prev != -1 && NEC != null) {
-           _buffer(i._prev)._next = _buffer.indexOf(_buffer(i._next))
-         }
-         else if (i._prev != -1 && NEC == null){
-           _buffer(i._prev)._next = -1
-         }
-         check = -1
-         if (_numStored > 0) {
-           _numStored = _numStored - 1
-         }
-       }
+          /** checking if the current node's next isn't -1* */
+          if (i._next != -1) {
+            NEC = _buffer(i._next)
+          }
+
+          val ing = _buffer.indexOf(i)
+          _removedindx += ing
+            i.clear
+          /** REMOVING "THE NODE"* */
+          _buffer.drop(ing)
+
+          /** FOR PRECAUTION CHECKING AGAIN IF THE next OF CURRENT NODE ISN'T NULL and the previous of node that i dropped* */
+          if (i._next != -1 && PREVIOUS != null) {
+            _buffer(i._next)._prev = _buffer.indexOf(_buffer(i._prev))
+          }
+
+          /** FOR PRECAUTION CHECKING AGAIN IF previous OF CURRENT NODE ISN'T NULL and  the next of the node that i dropped * */
+          if (i._prev != -1 && NEC != null) {
+            _buffer(i._prev)._next = _buffer.indexOf(_buffer(i._next))
+          }
+
+          /** IF previous OF CURRENT NODE ISN'T NULL and  the next of the node that i dropped is NULL* */
+          else if (i._prev != -1 && NEC == null) {
+            _buffer(i._prev)._next = -1
+          }
+
+          /** Bool check if the get at some point was equal to entry (the one we wish to remove) */
+          check = -1
+
+          /** MAKING SURE THAT _numStored DOESNT GO NEGATIVE* */
+          if (_numStored > 0) {
+            _numStored = _numStored - 1
+          }
+        }
+      }
      }
+    else if (_numStored == 1){
+      for (i <- _buffer) {
+        if (i._value != None && i.get == entry) {
+          val ing = _buffer.indexOf(i)
+          _buffer(ing)._value = None
+          _numStored = _numStored - 1
+          _head = -1
+          check = -1
+        }
+      }
+    }
    if (check == -1){
      true
    }
@@ -197,31 +288,35 @@ _numStored
     var oo = _head
 
     var num = 0
-
-    var bruh: LinkedListNode = _buffer(oo)
-    if (idx < _numStored){
-     while (oo != -1) {
-       if (num <= idx) {
-         num = num + 1
-         bruh = _buffer(oo)
-         if(num-1 == idx) {
-           return bruh.get
-         }
-       }
-
-       if (_buffer(oo)._next != -1 ) {
-         oo = _buffer(oo)._next
-       }
-       else {
-         oo = -1
-       }
-
-     }
-     bruh.get
+    var bruh: LinkedListNode = null
+   if(oo != -1) {
+      bruh= _buffer(oo)
    }
-    else{
-      throw new  IndexOutOfBoundsException
-    }
+
+     if (idx < _numStored) {
+       while (oo != -1) {
+         if (num <= idx) {
+           num = num + 1
+           bruh = _buffer(oo)
+           if (num - 1 == idx) {
+             return bruh.get
+           }
+         }
+
+         if (_buffer(oo)._next != -1) {
+           oo = _buffer(oo)._next
+         }
+         else {
+           oo = -1
+         }
+
+       }
+       bruh.get
+     }
+     else {
+       throw new IndexOutOfBoundsException
+     }
+
   }
 
   /**
@@ -257,11 +352,11 @@ _numStored
   def update(idx: Int, elem: A): Unit = {
     if (idx <= _buffer.length) {
       val oof: A = apply(idx)
-      for (i <- _buffer){
-        if (i.get == oof) {
-          _buffer(_buffer.indexOf(i))._value = Option(elem)
-        }
+      var curr = _head
+      for (_ <- 0 until idx){
+        curr =  _buffer(curr)._next
       }
+      _buffer(curr)._value = Option(elem)
     }
     else{
       throw new  IndexOutOfBoundsException

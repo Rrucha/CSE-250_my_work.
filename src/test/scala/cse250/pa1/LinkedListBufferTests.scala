@@ -296,6 +296,171 @@ class LinkedListBufferTests extends AnyFlatSpec {
       /*** END of APPEND TESTING CASE 3**/
     }
 
+  /*** start of APPEND + REMOVE TESTING CASE 4**/
+
+  behavior of "LinkedListBuffer"
+  it should "Remove properly Case 4 Append n REPEAT REMOVE TAIL" in {
+    val buffer = createLinkedListBuffer(7);
+    val A, B, C, D ,E,F ,Z = new SolarInstallation()
+    A.fields("name") = "1"
+    B.fields("name") = "2"
+    C.fields("name") = "3"
+    D.fields("name") = "4"
+    E.fields("name") = "5"
+    F.fields("name") = "6"
+    Z.fields("name") = "7"
+
+    buffer.append(A) //0
+    buffer.append(B) //1
+    buffer.append(C)  //2
+    buffer.append(D) //3
+    buffer.append(D) //4
+    buffer.append(E)  //5
+    buffer.append(C)
+    val Bool1 = buffer.remove(C)
+    val Bool2: Boolean = buffer.remove(F)
+
+    {
+      assert(!Bool2)
+    }
+
+    {
+      assert(Bool1)
+      assert(buffer.length == 5)
+      assert(buffer.apply(0) == A)
+      assert(buffer.apply(buffer.length-1) == E)
+      val iterator = buffer.iterator
+      assert(iterator.hasNext)
+      assert( iterator.next() == A) //0
+      assert(iterator.hasNext)
+      assert( iterator.next() == B) //1
+      assert(iterator.hasNext)
+      assert( iterator.next() == D)  //2
+      assert(iterator.hasNext)
+      assert( iterator.next() == D)  //3
+      assert(iterator.hasNext)
+      assert( iterator.next() == E)  //4
+      assert(!iterator.hasNext)
+    }
+
+
+
+
+
+    buffer.append(Z)
+
+    {
+      assert(buffer.length == 6)
+      assert(buffer.apply(buffer.length-1) == Z)
+      val iterator = buffer.iterator
+      assert(iterator.hasNext)
+      assert( iterator.next() == A) //0
+      assert(iterator.hasNext)
+      assert( iterator.next() == B)  //1
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //2
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //3
+      assert(iterator.hasNext)
+
+
+      assert( iterator.next() == E) //4
+      assert(iterator.hasNext)
+      assert( iterator.next() == Z) //5
+      assert(!iterator.hasNext)
+    }
+    buffer.append(D)
+
+    {
+      assert(buffer.length == 7)
+      assert(buffer.apply(buffer.length-1) == D)
+      val iterator = buffer.iterator
+      assert(iterator.hasNext)
+      assert( iterator.next() == A) //0
+      assert(iterator.hasNext)
+      assert( iterator.next() == B)  //1
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //2
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //3
+      assert(iterator.hasNext)
+
+
+      assert( iterator.next() == E) //4
+      assert(iterator.hasNext)
+      assert( iterator.next() == Z) //5
+      assert(iterator.hasNext)
+      assert( iterator.next() == D)
+      assert(!iterator.hasNext)
+    }
+  }
+  /*** END of APPEND +  REMOVE TESTING CASE 4**/
+  /*** start of APPEND + REMOVE TESTING CASE 5**/
+
+  behavior of "LinkedListBuffer"
+  it should "Remove properly Case 5 Append n REPEAT REMOVE TAIL" in {
+    val buffer = createLinkedListBuffer(6);
+    val A, B, C, D ,E,F ,Z = new SolarInstallation()
+    A.fields("name") = "1"
+    B.fields("name") = "2"
+    C.fields("name") = "3"
+    D.fields("name") = "4"
+    E.fields("name") = "5"
+    F.fields("name") = "6"
+    Z.fields("name") = "7"
+
+    buffer.append(B)
+    buffer.append(C)
+    buffer.append(A)
+    buffer.append(B)
+    buffer.append(A)
+    buffer.append(D)
+    buffer.append(F)
+    buffer.append(E)
+    val Bool2: Boolean = buffer.remove(A)
+
+
+    {
+      assert(Bool2)
+      assert(buffer.length == 4)
+      assert(buffer.apply(0) == B)
+      assert(buffer.apply(buffer.length-1) == E)
+      val iterator = buffer.iterator
+      assert(iterator.hasNext)
+      assert( iterator.next() == B) //0
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //1
+      assert(iterator.hasNext)
+      assert( iterator.next() == F)  //2
+      assert(iterator.hasNext)
+      assert( iterator.next() == E)  //3
+
+      assert(!iterator.hasNext)
+    }
+
+
+    buffer.append(Z)
+
+    {
+      assert(buffer.length == 5)
+      assert(buffer.apply(buffer.length-1) == Z)
+      val iterator = buffer.iterator
+
+      assert(iterator.hasNext)
+      assert( iterator.next() == B) //0
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //1
+      assert(iterator.hasNext)
+      assert( iterator.next() == F)  //2
+      assert(iterator.hasNext)
+      assert( iterator.next() == E)  //3
+      assert(iterator.hasNext)
+      assert( iterator.next() == Z) //5
+      assert(!iterator.hasNext)
+    }
+
+  }
+  /*** END of APPEND +  REMOVE TESTING CASE 5**/
           /*** END of APPEND TESTING**/
 
     /*** START of REMOVE TESTING**/
@@ -493,7 +658,168 @@ class LinkedListBufferTests extends AnyFlatSpec {
 
   }
   /*** END of REMOVE TESTING CASE 5**/
-           /*** END of REMOVE TESTING**/
+
+  /*** START of REMOVE TESTING CASE 6**/
+
+  behavior of "LinkedListBuffer"
+  it should "Remove properly Case 6  CAPACITY FULL REMOVE AND APPEND AFTER THAT" in {
+    val buffer = createLinkedListBuffer(4);
+    val r31, r32, r33, r34 ,r35, r3 = new SolarInstallation()
+    r31.fields("name") = "5"
+    r32.fields("name") = "6"
+    r33.fields("name") = "7"
+    r34.fields("name") = "8"
+    r35.fields("name") = "9"
+    r3.fields("name") = "3"
+    buffer.append(r31) // 0
+    buffer.append(r32) //1
+    buffer.append(r34)  //2
+    buffer.append(r35) //3
+    buffer.append(r32) //0
+    buffer.append(r31) //1
+    val bool=  buffer.remove(r35)
+    buffer.append(r3) //3
+
+
+    {
+      assert(bool)
+      assert(buffer.length == 4)
+      assert(buffer.apply(buffer.length-1) == r3)
+      val iterator = buffer.iterator
+      assert(iterator.hasNext)
+      assert( iterator.next() == r34)
+      assert(iterator.hasNext)
+      assert( iterator.next() == r32)
+      assert(iterator.hasNext)
+      assert( iterator.next() == r31)
+      assert(iterator.hasNext)
+      assert( iterator.next() == r3)
+      assert(!iterator.hasNext)
+    }
+
+  }
+  /*** END of REMOVE TESTING CASE 6**/
+  /*** START of REMOVE TESTING CASE 7**/
+
+  behavior of "LinkedListBuffer"
+  it should "Remove properly Case 7  CAPACITY FULL REMOVE AND APPEND AFTER THAT" in {
+    val buffer = createLinkedListBuffer(4);
+    val r31, r32, r33, r34 ,r35, r36 = new SolarInstallation()
+    r31.fields("name") = "5"
+    r32.fields("name") = "6"
+    r33.fields("name") = "7"
+    r34.fields("name") = "8"
+    r35.fields("name") = "9"
+    r36.fields("name") = "1"
+
+    buffer.append(r31) //0
+    buffer.append(r32) //1
+    buffer.append(r34) //2
+    buffer.append(r35) //3
+
+    buffer.append(r36) //4  //0
+    val bool=  buffer.remove(r35)
+    buffer.append(r31) // 0
+    buffer.append(r34) // 1
+    buffer.append(r35) // 2
+
+
+    {
+      assert(bool)
+      assert(buffer.length == 4)
+      assert(buffer.apply(buffer.length-1) == r35)
+      val iterator = buffer.iterator
+      assert(iterator.hasNext)
+      assert( iterator.next() == r36)
+      assert(iterator.hasNext)
+      assert( iterator.next() == r31)
+      assert(iterator.hasNext)
+      assert( iterator.next() == r34)
+      assert(iterator.hasNext)
+      assert( iterator.next() == r35)
+      assert(!iterator.hasNext)
+    }
+
+  }
+  /*** END of REMOVE TESTING CASE 7**/
+  /*** start of REMOVE TESTING CASE 8**/
+
+  behavior of "LinkedListBuffer"
+  it should "Remove properly Case 8 EVERYTHING PERFECT" in {
+    val buffer = createLinkedListBuffer(4);
+    val r1, r2, r3, r4 ,r5 = new SolarInstallation()
+    r1.fields("name") = "5"
+    r2.fields("name") = "6"
+    r3.fields("name") = "7"
+    r4.fields("name") = "8"
+    r5.fields("name") = "9"
+
+    buffer.append(r1)
+
+    {
+      val Bool = buffer.remove(r3)
+      assert(!Bool)
+    }
+    {
+      assert(buffer.apply(0) == r1 )
+    }
+    {
+      val Bool: Boolean = buffer.remove(r1)
+      assert(Bool)
+      assert(buffer.length == 0)
+
+      val iterator = buffer.iterator
+      assert(!iterator.hasNext)
+
+    }
+
+  }
+  /*** END of REMOVE TESTING CASE 8**/
+
+  /*** START of REMOVE TESTING CASE 9**/
+
+  behavior of "LinkedListBuffer"
+  it should "Remove properly Case 9  exceed CAPACITY " in {
+    val buffer = createLinkedListBuffer(4);
+    val r31, r32, r33, r34 ,r35, r3 = new SolarInstallation()
+    r31.fields("name") = "5"
+    r32.fields("name") = "6"
+    r33.fields("name") = "7"
+    r34.fields("name") = "8"
+    r35.fields("name") = "9"
+    r3.fields("name") = "3"
+    buffer.append(r31) // 0
+    buffer.append(r32) //1
+    buffer.append(r34)  //2
+    buffer.append(r35) //3
+    buffer.append(r32) //0
+    buffer.append(r31) //1
+    val bool=  buffer.remove(r35)
+
+
+    {
+      assert(bool)
+      assert(buffer.length == 3)
+      assert(buffer.head == r34)
+      assert(buffer.apply(buffer.length-1) == r31)
+      assert(buffer.apply(0) == r34)
+      assert(buffer.apply(1) == r32)
+      assert(buffer.apply(2) == r31)
+      val iterator = buffer.iterator
+      assert(iterator.hasNext)
+      assert( iterator.next() == r34)
+      assert(iterator.hasNext)
+      assert( iterator.next() == r32)
+      assert(iterator.hasNext)
+      assert( iterator.next() == r31)
+      assert(!iterator.hasNext)
+
+    }
+
+  }
+  /*** END of REMOVE TESTING CASE 9**/
+
+  /*** END of REMOVE TESTING**/
   /*** START of COUNT ENTRY TESTING**/
         /*** START of COUNT ENTRY TESTING CASE 1  **/
 
@@ -591,6 +917,69 @@ class LinkedListBufferTests extends AnyFlatSpec {
               }
   }
   /*** END of COUNT ENTRY TESTING CASE 2**/
+  /*** START of COUNT ENTRY TESTING CASE 3  **/
+
+  behavior of "LinkedListBuffer"
+  it should "Count Entry properly CASE 3 UPDATE + MIS ORDER CAPACITY FULL SITUATION" in {
+    val buffer = createLinkedListBuffer(6);
+    val c1, c2, c3, c4 ,c5 = new SolarInstallation()
+    c1.fields("name") = "5"
+    c2.fields("name") = "6"
+    c3.fields("name") = "7"
+    c4.fields("name") = "8"
+    c5.fields("name") = "9"
+
+    buffer.append(c1)
+    buffer.append(c2)
+    buffer.append(c4)
+    buffer.append(c1)
+    buffer.append(c2)
+    buffer.append(c2)
+    buffer.update(0,c3)
+
+    {
+      val count: Int = buffer.countEntry(c3)
+      assert(count == 1)
+    }
+
+    {
+      val count: Int = buffer.countEntry(c2)
+      assert(count == 3)
+      assert(buffer.length == 6)
+      assert(buffer.head == c3)
+      assert(buffer.apply(buffer.length-1) == c2)
+
+    }
+
+    {
+      val count: Int = buffer.countEntry(c1)
+      assert(count == 1)
+      assert(buffer.length == 6)
+      assert(buffer.head == c3)
+      assert(buffer.apply(buffer.length-1) == c2)
+
+    }
+
+    buffer.append(c5)
+
+    {
+      val count: Int = buffer.countEntry(c5)
+      assert(count == 1)
+      assert(buffer.length == 6)
+      assert(buffer.head == c2)
+      assert(buffer.apply(buffer.length-1) == c5)
+
+    }
+    {
+      val count: Int = buffer.countEntry(c1)
+      assert(count == 1)
+      assert(buffer.length == 6)
+      assert(buffer.head == c2)
+      assert(buffer.apply(buffer.length-1) == c5)
+
+    }
+  }
+  /*** END of COUNT ENTRY TESTING CASE 3**/
     /*** END of COUNT ENTRY TESTING**/
 
 
