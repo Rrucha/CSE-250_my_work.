@@ -461,6 +461,181 @@ class LinkedListBufferTests extends AnyFlatSpec {
 
   }
   /*** END of APPEND +  REMOVE TESTING CASE 5**/
+  /*** start of APPEND + REMOVE TESTING CASE 6**/
+
+  behavior of "LinkedListBuffer"
+  it should "Remove properly Case 6 Append n REPEAT REMOVE TAIL" in {
+    val buffer = createLinkedListBuffer(7);
+    val A, B, C, D ,E,F ,Z = new SolarInstallation()
+    A.fields("name") = "1"
+    B.fields("name") = "2"
+    C.fields("name") = "3"
+    D.fields("name") = "4"
+    E.fields("name") = "5"
+    F.fields("name") = "6"
+    Z.fields("name") = "7"
+
+    buffer.append(A) //0
+    buffer.append(B) //1
+    buffer.append(C)  //2
+    buffer.append(D) //3
+    buffer.append(D) //4
+    buffer.append(C)  //5
+    buffer.append(E)
+    val Bool1 = buffer.remove(C)
+
+
+    {
+      assert(Bool1)
+      assert(buffer.length == 5)
+      assert(buffer.apply(0) == A)
+      assert(buffer.apply(buffer.length-1) == E)
+      val iterator = buffer.iterator
+      assert(iterator.hasNext)
+      assert( iterator.next() == A) //0
+      assert(iterator.hasNext)
+      assert( iterator.next() == B) //1
+      assert(iterator.hasNext)
+      assert( iterator.next() == D)  //2
+      assert(iterator.hasNext)
+      assert( iterator.next() == D)  //3
+      assert(iterator.hasNext)
+      assert( iterator.next() == E)  //4
+      assert(!iterator.hasNext)
+    }
+
+    buffer.append(Z)
+
+    {
+      assert(buffer.length == 6)
+      assert(buffer.apply(buffer.length-1) == Z)
+      val iterator = buffer.iterator
+      assert(iterator.hasNext)
+      assert( iterator.next() == A) //0
+      assert(iterator.hasNext)
+      assert( iterator.next() == B)  //1
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //2
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //3
+      assert(iterator.hasNext)
+      assert( iterator.next() == E) //4
+      assert(iterator.hasNext)
+      assert( iterator.next() == Z) //5
+      assert(!iterator.hasNext)
+    }
+    buffer.append(D)
+
+    {
+      assert(buffer.length == 7)
+      assert(buffer.apply(buffer.length-1) == D)
+      val iterator = buffer.iterator
+      assert(iterator.hasNext)
+      assert( iterator.next() == A) //0
+      assert(iterator.hasNext)
+      assert( iterator.next() == B)  //1
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //2
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //3
+      assert(iterator.hasNext)
+      assert( iterator.next() == E) //4
+      assert(iterator.hasNext)
+      assert( iterator.next() == Z) //5
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //6
+      assert(!iterator.hasNext)
+    }
+  }
+  /*** END of APPEND +  REMOVE TESTING CASE 6**/
+
+  /*** start of APPEND + REMOVE TESTING CASE 7**/
+
+  behavior of "LinkedListBuffer"
+  it should "Remove properly Case 7 Append n REPEAT REMOVE TAIL" in {
+    val buffer = createLinkedListBuffer(7);
+    val A, B, C, D ,E,F ,Z = new SolarInstallation()
+    A.fields("name") = "1"
+    B.fields("name") = "2"
+    C.fields("name") = "3"
+    D.fields("name") = "4"
+    E.fields("name") = "5"
+    F.fields("name") = "6"
+    Z.fields("name") = "7"
+
+    buffer.append(F) //0
+    buffer.append(B) //1
+    buffer.append(A)  //2
+    buffer.append(D) //3
+    buffer.append(D) //4
+    buffer.append(F)  //5
+    buffer.append(E)
+    val Bool1 = buffer.remove(F)
+
+
+    {
+      assert(Bool1)
+      assert(buffer.length == 5)
+      assert(buffer.apply(0) == B)
+      assert(buffer.apply(buffer.length-1) == E)
+      val iterator = buffer.iterator
+      assert(iterator.hasNext)
+      assert( iterator.next() == B) //0
+      assert(iterator.hasNext)
+      assert( iterator.next() == A) //1
+      assert(iterator.hasNext)
+      assert( iterator.next() == D)  //2
+      assert(iterator.hasNext)
+      assert( iterator.next() == D)  //3
+      assert(iterator.hasNext)
+      assert( iterator.next() == E)  //4
+      assert(!iterator.hasNext)
+    }
+
+    buffer.append(Z)
+
+    {
+      assert(buffer.length == 6)
+      assert(buffer.apply(buffer.length-1) == Z)
+      val iterator = buffer.iterator
+      assert(iterator.hasNext)
+      assert( iterator.next() == B) //0
+      assert(iterator.hasNext)
+      assert( iterator.next() == A)  //1
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //2
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //3
+      assert(iterator.hasNext)
+      assert( iterator.next() == E) //4
+      assert(iterator.hasNext)
+      assert( iterator.next() == Z) //5
+      assert(!iterator.hasNext)
+    }
+    buffer.append(D)
+
+    {
+      assert(buffer.length == 7)
+      assert(buffer.apply(buffer.length-1) == D)
+      val iterator = buffer.iterator
+      assert(iterator.hasNext)
+      assert( iterator.next() == B) //0
+      assert(iterator.hasNext)
+      assert( iterator.next() == A)  //1
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //2
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //3
+      assert(iterator.hasNext)
+      assert( iterator.next() == E) //4
+      assert(iterator.hasNext)
+      assert( iterator.next() == Z) //5
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //6
+      assert(!iterator.hasNext)
+    }
+  }
+  /*** END of APPEND +  REMOVE TESTING CASE 7**/
           /*** END of APPEND TESTING**/
 
     /*** START of REMOVE TESTING**/

@@ -57,7 +57,7 @@ class LinkedListBuffer[A](capacity: Int)
       val arr = new LinkedListNode(Some(entry))
 
       /** checking that if this is the first entry in list* */
-      if (_numStored == 0) {
+      if (_numStored == 0 ) {
         /** FINDING SOME() */
         status = _buffer(_numStored)._value
 
@@ -75,7 +75,7 @@ class LinkedListBuffer[A](capacity: Int)
       }
 
       /** checking that if this is the last entry in list* */
-      else if (_numStored == capacity - 1) {
+      else if (_numStored == capacity - 1 && _buffer(_numStored)._value.isEmpty) {
         /** FINDING SOME() */
         status = _buffer(_numStored)._value
         arr._next = -1
