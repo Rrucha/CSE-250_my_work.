@@ -636,6 +636,475 @@ class LinkedListBufferTests extends AnyFlatSpec {
     }
   }
   /*** END of APPEND +  REMOVE TESTING CASE 7**/
+  /*** start of APPEND + REMOVE TESTING CASE 8**/
+
+  behavior of "LinkedListBuffer"
+  it should "Remove properly Case 8 Append n REPEAT REMOVE TAIL" in {
+    val buffer = createLinkedListBuffer(7);
+    val A, B, C, D ,E,F ,Z = new SolarInstallation()
+    A.fields("name") = "1"
+    B.fields("name") = "2"
+    C.fields("name") = "3"
+    D.fields("name") = "4"
+    E.fields("name") = "5"
+    F.fields("name") = "6"
+    Z.fields("name") = "7"
+
+    buffer.append(F) //0
+    buffer.append(B) //1
+    buffer.append(A)  //2
+    buffer.append(D) //3
+    buffer.append(D) //4
+    buffer.append(F)  //5
+    buffer.append(E)
+    buffer.append(F) //0
+    buffer.append(B) //1
+    buffer.append(A)  //2
+    buffer.append(D) //3
+    buffer.append(D) //4
+    buffer.append(F)  //5
+    buffer.append(E)
+    buffer.append(F) //0
+    buffer.append(B) //1
+    buffer.append(A)  //2
+    buffer.append(D) //3
+    buffer.append(D) //4
+    buffer.append(F)  //5
+    buffer.append(E)
+    buffer.append(F) //0
+    buffer.append(B) //1
+    buffer.append(A)  //2
+    buffer.append(D) //3
+    buffer.append(D) //4
+    buffer.append(F)  //5
+    buffer.append(E)
+    buffer.append(F) //0
+    buffer.append(B) //1
+    buffer.append(A)  //2
+    buffer.append(D) //3
+    buffer.append(D) //4
+    buffer.append(F)  //5
+    buffer.append(E)
+    buffer.append(F) //0
+    buffer.append(B) //1
+    buffer.append(A)  //2
+    buffer.append(D) //3
+    buffer.append(D) //4
+    buffer.append(F)  //5
+    buffer.append(E)
+    buffer.append(F) //0
+    buffer.append(B) //1
+    buffer.append(A)  //2
+    buffer.append(D) //3
+    buffer.append(D) //4
+    buffer.append(F)  //5
+    buffer.append(E)
+    buffer.append(F) //0
+    buffer.append(B) //1
+    buffer.append(A)  //2
+    buffer.append(D) //3
+    buffer.append(D) //4
+    buffer.append(F)  //5
+    buffer.append(E)
+    buffer.append(F) //0
+    buffer.append(B) //1
+    buffer.append(A)  //2
+    buffer.append(D) //3
+    buffer.append(D) //4
+    buffer.append(F)  //5
+    buffer.append(E)
+
+    buffer.append(E) //0
+    buffer.append(E) //1
+    buffer.append(E)  //2
+    buffer.append(E) //3
+    buffer.append(E) //4
+    buffer.append(E)  //5
+    buffer.append(E)
+    buffer.append(F) //0
+    buffer.append(B) //1
+    buffer.append(A)  //2
+    buffer.append(D) //3
+    buffer.append(D) //4
+    buffer.append(F)  //5
+    buffer.append(E)
+    val Bool1 = buffer.remove(F)
+
+
+    {
+      assert(Bool1)
+      assert(buffer.length == 5)
+      assert(buffer.apply(0) == B)
+      assert(buffer.apply(buffer.length-1) == E)
+      val iterator = buffer.iterator
+      assert(iterator.hasNext)
+      assert( iterator.next() == B) //0
+      assert(iterator.hasNext)
+      assert( iterator.next() == A) //1
+      assert(iterator.hasNext)
+      assert( iterator.next() == D)  //2
+      assert(iterator.hasNext)
+      assert( iterator.next() == D)  //3
+      assert(iterator.hasNext)
+      assert( iterator.next() == E)  //4
+      assert(!iterator.hasNext)
+    }
+
+    buffer.append(Z)
+
+    {
+      assert(buffer.length == 6)
+      assert(buffer.apply(buffer.length-1) == Z)
+      val iterator = buffer.iterator
+      assert(iterator.hasNext)
+      assert( iterator.next() == B) //0
+      assert(iterator.hasNext)
+      assert( iterator.next() == A)  //1
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //2
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //3
+      assert(iterator.hasNext)
+      assert( iterator.next() == E) //4
+      assert(iterator.hasNext)
+      assert( iterator.next() == Z) //5
+      assert(!iterator.hasNext)
+    }
+    buffer.append(D)
+
+    {
+      assert(buffer.length == 7)
+      assert(buffer.apply(buffer.length-1) == D)
+      val iterator = buffer.iterator
+      assert(iterator.hasNext)
+      assert( iterator.next() == B) //0
+      assert(iterator.hasNext)
+      assert( iterator.next() == A)  //1
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //2
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //3
+      assert(iterator.hasNext)
+      assert( iterator.next() == E) //4
+      assert(iterator.hasNext)
+      assert( iterator.next() == Z) //5
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //6
+      assert(!iterator.hasNext)
+    }
+  }
+  /*** END of APPEND +  REMOVE TESTING CASE 8**/
+  /*** start of APPEND + REMOVE TESTING CASE 9**/
+
+  behavior of "LinkedListBuffer"
+  it should "Remove properly Case 9 Append n REPEAT REMOVE TAIL" in {
+    val buffer = createLinkedListBuffer(42);
+    val A, B, C, D ,E,F ,Z = new SolarInstallation()
+    A.fields("name") = "1"
+    B.fields("name") = "2"
+    C.fields("name") = "3"
+    D.fields("name") = "4"
+    E.fields("name") = "5"
+    F.fields("name") = "6"
+    Z.fields("name") = "7"
+
+    buffer.append(F) //0
+    buffer.append(B) //1
+    buffer.append(A)  //2
+    buffer.append(D) //3
+    buffer.append(D) //4
+    buffer.append(F)  //5
+    buffer.append(E) //6
+
+    buffer.append(F) //7
+    buffer.append(B) //8
+    buffer.append(A)  //9
+    buffer.append(D) //10
+    buffer.append(D) //11
+    buffer.append(F)  //12
+    buffer.append(E)  //13
+
+    buffer.append(F) //14
+    buffer.append(B) //15
+    buffer.append(A)  //16
+    buffer.append(D) //17
+    buffer.append(D) //18
+    buffer.append(F)  //19
+    buffer.append(E) //20
+
+    buffer.append(F) //14
+    buffer.append(B) //15
+    buffer.append(A)  //16
+    buffer.append(D) //17
+    buffer.append(D) //18
+    buffer.append(F)  //19
+    buffer.append(E) //20
+
+
+    buffer.append(F) //14
+    buffer.append(B) //15
+    buffer.append(A)  //16
+    buffer.append(D) //17
+    buffer.append(D) //18
+    buffer.append(F)  //19
+    buffer.append(E) //20
+
+    buffer.append(F) //14
+    buffer.append(B) //15
+    buffer.append(A)  //16
+    buffer.append(D) //17
+    buffer.append(D) //18
+    buffer.append(F)  //19
+    buffer.append(E) //20
+    val Bool1 = buffer.remove(F)
+
+
+    {
+      assert(Bool1)
+      assert(buffer.length == 30)
+      assert(buffer.apply(0) == B)
+      assert(buffer.apply(buffer.length-1) == E)
+      val iterator = buffer.iterator
+      assert(iterator.hasNext)
+      assert( iterator.next() == B) //0
+      assert(iterator.hasNext)
+      assert( iterator.next() == A) //1
+      assert(iterator.hasNext)
+      assert( iterator.next() == D)  //2
+      assert(iterator.hasNext)
+      assert( iterator.next() == D)  //3
+      assert(iterator.hasNext)
+      assert( iterator.next() == E)  //4
+
+      assert(iterator.hasNext)
+      assert( iterator.next() == B) //0
+      assert(iterator.hasNext)
+      assert( iterator.next() == A) //1
+      assert(iterator.hasNext)
+      assert( iterator.next() == D)  //2
+      assert(iterator.hasNext)
+      assert( iterator.next() == D)  //3
+      assert(iterator.hasNext)
+      assert( iterator.next() == E)  //4
+
+      assert(iterator.hasNext)
+      assert( iterator.next() == B) //0
+      assert(iterator.hasNext)
+      assert( iterator.next() == A) //1
+      assert(iterator.hasNext)
+      assert( iterator.next() == D)  //2
+      assert(iterator.hasNext)
+      assert( iterator.next() == D)  //3
+      assert(iterator.hasNext)
+      assert( iterator.next() == E)  //4
+
+
+      assert(iterator.hasNext)
+      assert( iterator.next() == B) //0
+      assert(iterator.hasNext)
+      assert( iterator.next() == A) //1
+      assert(iterator.hasNext)
+      assert( iterator.next() == D)  //2
+      assert(iterator.hasNext)
+      assert( iterator.next() == D)  //3
+      assert(iterator.hasNext)
+      assert( iterator.next() == E)  //4
+
+      assert(iterator.hasNext)
+      assert( iterator.next() == B) //0
+      assert(iterator.hasNext)
+      assert( iterator.next() == A) //1
+      assert(iterator.hasNext)
+      assert( iterator.next() == D)  //2
+      assert(iterator.hasNext)
+      assert( iterator.next() == D)  //3
+      assert(iterator.hasNext)
+      assert( iterator.next() == E)  //4
+
+      assert(iterator.hasNext)
+      assert( iterator.next() == B) //0
+      assert(iterator.hasNext)
+      assert( iterator.next() == A) //1
+      assert(iterator.hasNext)
+      assert( iterator.next() == D)  //2
+      assert(iterator.hasNext)
+      assert( iterator.next() == D)  //3
+      assert(iterator.hasNext)
+      assert( iterator.next() == E)  //4
+
+      assert(!iterator.hasNext)
+    }
+
+    buffer.append(Z)
+
+    {
+      assert(buffer.length == 31)
+      assert(buffer.apply(buffer.length-1) == Z)
+      val iterator = buffer.iterator
+      assert(iterator.hasNext)
+      assert( iterator.next() == B) //0
+      assert(iterator.hasNext)
+      assert( iterator.next() == A)  //1
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //2
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //3
+      assert(iterator.hasNext)
+      assert( iterator.next() == E) //4
+      assert(iterator.hasNext)
+
+
+      assert(iterator.hasNext)
+      assert( iterator.next() == B) //0
+      assert(iterator.hasNext)
+      assert( iterator.next() == A)  //1
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //2
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //3
+      assert(iterator.hasNext)
+      assert( iterator.next() == E) //4
+      assert(iterator.hasNext)
+
+
+      assert(iterator.hasNext)
+      assert( iterator.next() == B) //0
+      assert(iterator.hasNext)
+      assert( iterator.next() == A)  //1
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //2
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //3
+      assert(iterator.hasNext)
+      assert( iterator.next() == E) //4
+      assert(iterator.hasNext)
+
+
+      assert(iterator.hasNext)
+      assert( iterator.next() == B) //0
+      assert(iterator.hasNext)
+      assert( iterator.next() == A)  //1
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //2
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //3
+      assert(iterator.hasNext)
+      assert( iterator.next() == E) //4
+      assert(iterator.hasNext)
+
+      assert(iterator.hasNext)
+      assert( iterator.next() == B) //0
+      assert(iterator.hasNext)
+      assert( iterator.next() == A)  //1
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //2
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //3
+      assert(iterator.hasNext)
+      assert( iterator.next() == E) //4
+      assert(iterator.hasNext)
+
+
+      assert(iterator.hasNext)
+      assert( iterator.next() == B) //0
+      assert(iterator.hasNext)
+      assert( iterator.next() == A)  //1
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //2
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //3
+      assert(iterator.hasNext)
+      assert( iterator.next() == E) //4
+      assert(iterator.hasNext)
+      assert( iterator.next() == Z) //5
+      assert(!iterator.hasNext)
+    }
+    buffer.append(D)
+
+    {
+      assert(buffer.length == 32)
+      assert(buffer.apply(buffer.length-1) == D)
+      val iterator = buffer.iterator
+      assert(iterator.hasNext)
+      assert( iterator.next() == B) //0
+      assert(iterator.hasNext)
+      assert( iterator.next() == A)  //1
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //2
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //3
+      assert(iterator.hasNext)
+      assert( iterator.next() == E) //4
+      assert(iterator.hasNext)
+
+      assert(iterator.hasNext)
+      assert( iterator.next() == B) //0
+      assert(iterator.hasNext)
+      assert( iterator.next() == A)  //1
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //2
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //3
+      assert(iterator.hasNext)
+      assert( iterator.next() == E) //4
+      assert(iterator.hasNext)
+
+      assert(iterator.hasNext)
+      assert( iterator.next() == B) //0
+      assert(iterator.hasNext)
+      assert( iterator.next() == A)  //1
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //2
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //3
+      assert(iterator.hasNext)
+      assert( iterator.next() == E) //4
+      assert(iterator.hasNext)
+
+      assert(iterator.hasNext)
+      assert( iterator.next() == B) //0
+      assert(iterator.hasNext)
+      assert( iterator.next() == A)  //1
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //2
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //3
+      assert(iterator.hasNext)
+      assert( iterator.next() == E) //4
+      assert(iterator.hasNext)
+
+      assert(iterator.hasNext)
+      assert( iterator.next() == B) //0
+      assert(iterator.hasNext)
+      assert( iterator.next() == A)  //1
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //2
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //3
+      assert(iterator.hasNext)
+      assert( iterator.next() == E) //4
+      assert(iterator.hasNext)
+
+
+      assert(iterator.hasNext)
+      assert( iterator.next() == B) //0
+      assert(iterator.hasNext)
+      assert( iterator.next() == A)  //1
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //2
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //3
+      assert(iterator.hasNext)
+      assert( iterator.next() == E) //4
+      assert(iterator.hasNext)
+      assert( iterator.next() == Z) //5
+      assert(iterator.hasNext)
+      assert( iterator.next() == D) //6
+
+      assert(!iterator.hasNext)
+    }
+  }
+  /*** END of APPEND +  REMOVE TESTING CASE 9**/
           /*** END of APPEND TESTING**/
 
     /*** START of REMOVE TESTING**/
@@ -1110,18 +1579,18 @@ class LinkedListBufferTests extends AnyFlatSpec {
     buffer.append(c1)
     buffer.append(c2)
     buffer.append(c2)
-    buffer.update(0,c3)
+    buffer.update(0,c2)
 
     {
       val count: Int = buffer.countEntry(c3)
-      assert(count == 1)
+      assert(count == 0)
     }
 
     {
       val count: Int = buffer.countEntry(c2)
-      assert(count == 3)
+      assert(count == 4)
       assert(buffer.length == 6)
-      assert(buffer.head == c3)
+      assert(buffer.head == c2)
       assert(buffer.apply(buffer.length-1) == c2)
 
     }
@@ -1130,7 +1599,7 @@ class LinkedListBufferTests extends AnyFlatSpec {
       val count: Int = buffer.countEntry(c1)
       assert(count == 1)
       assert(buffer.length == 6)
-      assert(buffer.head == c3)
+      assert(buffer.head == c2)
       assert(buffer.apply(buffer.length-1) == c2)
 
     }
@@ -1155,7 +1624,64 @@ class LinkedListBufferTests extends AnyFlatSpec {
     }
   }
   /*** END of COUNT ENTRY TESTING CASE 3**/
-    /*** END of COUNT ENTRY TESTING**/
+  /*** START of COUNT ENTRY TESTING CASE 4  **/
+
+  behavior of "LinkedListBuffer"
+  it should "Count Entry properly CASE4" in {
+    val buffer = createLinkedListBuffer(4);
+    val c1, c2, c3, c4 ,c5 = new SolarInstallation()
+    c1.fields("name") = "5"
+    c2.fields("name") = "6"
+    c3.fields("name") = "7"
+    c4.fields("name") = "8"
+    c5.fields("name") = "9"
+
+
+    {
+      val count: Int = buffer.countEntry(c1)
+      assert(count == 0)
+      assert(buffer.length == 0)
+
+    }
+
+  }
+  /*** END of COUNT ENTRY TESTING CASE 4 **/
+  /*** START of COUNT ENTRY TESTING CASE 5 **/
+
+  behavior of "LinkedListBuffer"
+  it should "Count Entry properly CASE5" in {
+    val buffer = createLinkedListBuffer(4);
+    val c1, c2, c3, c4 ,c5 = new SolarInstallation()
+    c1.fields("name") = "5"
+    c2.fields("name") = "6"
+    c3.fields("name") = "7"
+    c4.fields("name") = "8"
+    c5.fields("name") = "9"
+
+    buffer.append(c1)
+    buffer.append(c2)
+    buffer.append(c4)
+    buffer.remove(c2)
+
+    {
+      val count: Int = buffer.countEntry(c4)
+      assert(count == 1)
+      assert(buffer.length == 2)
+
+    }
+    buffer.remove(c4)
+
+    {
+      val count: Int = buffer.countEntry(c4)
+      assert(count == 0)
+      assert(buffer.length == 1)
+
+    }
+
+  }
+  /*** END of COUNT ENTRY TESTING CASE 5**/
+
+  /*** END of COUNT ENTRY TESTING**/
 
 
   /*** START of APPLY TESTING**/

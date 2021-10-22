@@ -63,10 +63,14 @@ class LinkedListBuffer[A](capacity: Int)
 
         /** ADDING* */
         _buffer(0) = arr
-
+        if (_removedindx.contains(0)) {
+          _removedindx -= 0
+        }
         /** ADJUSTING THE _next AND _prev */
         arr._next = -1
         arr._prev = -1
+
+
 
         /** ADJUSTING THE HEAD AND TAIL */
         _head = 0
@@ -87,6 +91,7 @@ class LinkedListBuffer[A](capacity: Int)
         /** updating previous tails next * */
         _buffer(_tail)._next = _buffer.indexOf(arr)
 
+
         /** updating THE TAIL TO THE ADDED THING * */
         _tail = _buffer.indexOf(arr)
         _numStored = _numStored + 1
@@ -98,6 +103,7 @@ class LinkedListBuffer[A](capacity: Int)
         status = _buffer(_numStored)._value
         arr._next = -1
         arr._prev = _tail
+        /** USING ARRAY THAT I CREATED WHICH STORED THE REMOVED INDEXES */
         if (_removedindx.nonEmpty) {
           val oof = _removedindx(0)
           _buffer(oof) = arr
@@ -119,7 +125,6 @@ class LinkedListBuffer[A](capacity: Int)
           /** updating THE TAIL TO THE ADDED THING * */
           _tail = _buffer.indexOf(arr)
         }
-
         _numStored = _numStored + 1
       }
       status
@@ -144,8 +149,6 @@ class LinkedListBuffer[A](capacity: Int)
       arr._next = -1
 
       /** ADDING* */
-
-
         _buffer(index) = arr
 
         /** updating previous tails next * */
@@ -173,79 +176,98 @@ class LinkedListBuffer[A](capacity: Int)
   def remove(entry: A): Boolean = {
     var check = 9
     /** lOOPING THROUGH THE _buffer**/
-    if (_numStored > 1){
+    if (_numStored > 1) {
       for (i <- _buffer) {
         /** checking if the current node of _buffer is equal to entry* */
         if (i._value != None && i.get == entry) {
-          var PREVIOUS: LinkedListNode = null
-          var NEC: LinkedListNode = null
 
-          /** checking if the pervious of current node is Not null* */
-          if (i._prev != -1) {
-            PREVIOUS = _buffer(i._prev)
+          if (_numStored == 1) {
+            for (i <- _buffer) {
+              if (i._value != None && i.get == entry) {
+                val ing = _buffer.indexOf(i)
+                _removedindx += ing
+                i.clear
+                _numStored = _numStored - 1
+                _head = -1
+                check = -1
+              }
+            }
           }
 
-          /** checking if the current node is the head node* */
-          if (i == _buffer(_head)) {
-            if (i._next != -1) {
-              _head = i._next
+          else {
+            var PREVIOUS: LinkedListNode = null
+            var NEC: LinkedListNode = null
+
+            /** checking if the pervious of current node is Not null* */
+            if (i._prev != -1) {
+              PREVIOUS = _buffer(i._prev)
+            }
+
+
+            /** checking if the current node is the head node* */
+            if (i == _buffer(_head)) {
+              if (i._next != -1) {
+                _head = i._next
+
+              }
 
             }
 
-          }
+            /** checking if the current node is the tail node* */
+            if (i == _buffer(_tail)) {
+              if (i._prev != -1) {
+                _tail = i._prev
+                _buffer(i._prev)._next = -1
+              }
+              else {
+                _tail = -1
+              }
+            }
 
-          /** checking if the current node is the tail node* */
-          if (i == _buffer(_tail)) {
-            if (i._prev != -1) {
-              _tail = i._prev
+            /** checking if the current node's next isn't -1* */
+            if (i._next != -1) {
+              NEC = _buffer(i._next)
+            }
+
+            val ing = _buffer.indexOf(i)
+            _removedindx += ing
+
+            /** REMOVING "THE NODE"* */
+            i.clear
+
+
+            /** FOR PRECAUTION CHECKING AGAIN IF THE next OF CURRENT NODE ISN'T NULL and the previous of node that i dropped* */
+            if (i._next != -1 && PREVIOUS != null) {
+              _buffer(i._next)._prev = _buffer.indexOf(_buffer(i._prev))
+            }
+
+            /** FOR PRECAUTION CHECKING AGAIN IF previous OF CURRENT NODE ISN'T NULL and  the next of the node that i dropped * */
+            if (i._prev != -1 && NEC != null) {
+              _buffer(i._prev)._next = _buffer.indexOf(_buffer(i._next))
+            }
+
+            /** IF previous OF CURRENT NODE ISN'T NULL and  the next of the node that i dropped is NULL* */
+            else if (i._prev != -1 && NEC == null) {
               _buffer(i._prev)._next = -1
             }
-            else {
-              _tail = -1
+
+            /** Bool check if the get at some point was equal to entry (the one we wish to remove) */
+            check = -1
+
+            /** MAKING SURE THAT _numStored DOESNT GO NEGATIVE* */
+            if (_numStored > 0) {
+              _numStored = _numStored - 1
             }
-          }
-
-          /** checking if the current node's next isn't -1* */
-          if (i._next != -1) {
-            NEC = _buffer(i._next)
-          }
-
-          val ing = _buffer.indexOf(i)
-          _removedindx += ing
-            i.clear
-          /** REMOVING "THE NODE"* */
-          _buffer.drop(ing)
-
-          /** FOR PRECAUTION CHECKING AGAIN IF THE next OF CURRENT NODE ISN'T NULL and the previous of node that i dropped* */
-          if (i._next != -1 && PREVIOUS != null) {
-            _buffer(i._next)._prev = _buffer.indexOf(_buffer(i._prev))
-          }
-
-          /** FOR PRECAUTION CHECKING AGAIN IF previous OF CURRENT NODE ISN'T NULL and  the next of the node that i dropped * */
-          if (i._prev != -1 && NEC != null) {
-            _buffer(i._prev)._next = _buffer.indexOf(_buffer(i._next))
-          }
-
-          /** IF previous OF CURRENT NODE ISN'T NULL and  the next of the node that i dropped is NULL* */
-          else if (i._prev != -1 && NEC == null) {
-            _buffer(i._prev)._next = -1
-          }
-
-          /** Bool check if the get at some point was equal to entry (the one we wish to remove) */
-          check = -1
-
-          /** MAKING SURE THAT _numStored DOESNT GO NEGATIVE* */
-          if (_numStored > 0) {
-            _numStored = _numStored - 1
           }
         }
       }
-     }
-    else if (_numStored == 1){
+    }
+    else if (_numStored == 1 ){
       for (i <- _buffer) {
         if (i._value != None && i.get == entry) {
           val ing = _buffer.indexOf(i)
-          _buffer(ing)._value = None
+          _removedindx += ing
+          i.clear
           _numStored = _numStored - 1
           _head = -1
           check = -1
@@ -331,9 +353,11 @@ _numStored
    */
   def countEntry(entry: A): Int = {
     var num = 0
-    for (i <- _buffer) {
-      if (i.get == entry){
-        num = num +1
+    if (_buffer.nonEmpty) {
+      for (i <- _buffer) {
+        if ( (i._value != None) && i.get == entry) {
+          num = num + 1
+        }
       }
     }
     num
@@ -454,6 +478,7 @@ _numStored
       
       val currentElement = _buffer(_curr)
       _curr = currentElement._next
+
       return currentElement._value.get
     }
 
@@ -525,5 +550,7 @@ _numStored
 
     }
   }
+
+
 
 }
