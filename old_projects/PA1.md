@@ -1,18 +1,18 @@
-# Project 2: Sorted Sequences
+# Project 1: Sequences
 
-**Part 1 Due: Friday ??? Before 5:00 PM (10 points)**
+**Part 1 Due: Friday 10/15/21 Before 5:00 PM (10 points)**
 
-**Part 2 Due: Friday ??? Before 5:00 PM (20 points + up to 5 bonus points)**
+**Part 2 Due: Friday 10/22/21 Before 5:00 PM (20 points + up to 7 bonus points)**
 
 **Total Points = 30**
 
 ## Objectives
 
 In this assignment, you will: 
-* Implement a key-value store (Map / Dictionary)
-* Use sorted sequences to reduce access costs
-* Implement a merge operation
-* Create a custom implementation of a mutable.Map
+* Define a custom type
+* Create a custom implementation of a mutable.Seq
+* Explore the basics of linked records
+* Implement a linked list using an Array to represent memory
 * Think about your design and how to test it.
 
 ## Useful Resources
@@ -25,8 +25,9 @@ syntax.  You will also want to read the Scala references provided below:
 * [ScalaTest Docs](https://www.scalatest.org/)
 
 Relevant textbook sections:
-* Sets and Maps - § 6.2, 6.3 p189-197
-* Buffers - § 6.4 p198-199
+* Nature of Arrays / Nature of Lists - § 12.2, 12.3 p406-408
+* Mutable Singly Linked List - § 12.4 p408-417
+* Mutable Doubly Linked List - § 12.5 p417-422
 
 ## Late Policy
 
@@ -67,24 +68,18 @@ that time.
 
 ## Project Setup
 
-1. Use your existing project 1 repository **or** clone a fresh copy:
-```bash
-git clone microbase@odin.cse.buffalo.edu:YOUR_UBIT.git
-```
-(don't forget to replace `YOUR_UBIT`)
-
-2. Update your repository to include materials for PA2 as follows.  From your 
+1. Update your repository to include materials for PA1 as follows.  From your 
 source directory, run the following commands at the command line.
 ```bash
-git remote add project-2 https://gitlab.odin.cse.buffalo.edu/cse-250/project-2.git
-git fetch project-2
-git merge project-2/main
+git remote add project-1 https://gitlab.odin.cse.buffalo.edu/cse-250/project-1.git
+git fetch project-1
+git merge project-1/main
 ```
 
-3. Update the copyright statement with your UBIT and person number in the
+2. Update the copyright statement with your UBIT and person number in the
    submission files.
 
-4. Review the file contents and read over the comments on what is already 
+3. Review the file contents and read over the comments on what is already 
    present.  
 
 ## Instructions
@@ -92,57 +87,32 @@ git merge project-2/main
 The following assignment consists of two parts.  Before submitting either part
 make sure that all of your code is committed and pushed into microbase.  
 
-**Only code in the `src/test/scala/cse250/pa2` directory will be considered for 
-part 1, and only code in the `src/main/scala/cse250/pa2` directory will be 
+**Only code in the `src/test/scala/cse250/pa1` directory will be considered for 
+part 1, and only code in the `src/main/scala/cse250/pa1` directory will be 
 considered for part 2.**
 
 Once your code is committed and pushed into microbase, log into 
 [microbase](https://microbase.odin.cse.buffalo.edu) and submit your assignment
-to the "Programming Project 2 - Tests" or "Programming Project 2 - 
+to the "Programming Project 1 - Tests" or "Programming Project 1 - 
 Implementation" projects for part 1 and part 2 respectively.
 
 **Expect this project to take 8-10 hours of setting up your environment, reading 
 through documentation, and planning, coding, and testing your solution.**
 
-For **Project 2 - Problems 1 and 2** you will be allowed an unlimited number of submissions without penalty.  For **Project 2 - Problem 2**, you will receive the first 60% of your grade (up to 12 points) immediately from microbase.  After the late submission deadline, your final score will be computed based on **the most recent submission**.
+For **Project 1** you will be allowed 5 submissions, without penalty.  Starting 
+from the 6th submission, you will receive a 2 points per-submission deduction 
+from your score on the assignment.
 
+Your score is the best score of any of your submissions.  If you receive a score
+and resubmit, the higher score will be used.  There is a maximum of 10 
+submissions.
 
 ### Overview
 
-In this project, you will implement classes called `AppendOnlyLSMIndex` and `LSMIndex`, 
-which implement a data structure called a "Log-Structured Merge Tree" (LSM Tree, or LSM
-Index for short; see the [original paper](papers/lsmtree.pdf) and an [early follow-up](papers/blsmtree.pdf)).  Note that, **in spite of the term "tree" in its name, the LSM Index
-is not a tree in the sense of a heap or binary search tree**.  LSM trees are used 
-extensively in big-data processing systems, including: 
-* [Google's BigTable](https://cloud.google.com/bigtable/)
-* [Apache Cassandra](http://cassandra.apache.org/)
-* [LevelDB](https://github.com/google/leveldb)
-* [MongoDB](https://github.com/wiredtiger/wiredtiger)
-
-As we'll see in upcoming written assignments, the LSM Index has some very nice properties, 
-particularly for "write heavy" workloads like monitoring IOT data, log files in distributed 
-clusters.
-
-An LSM Index stores data in a sequence of exponentially growing levels (sometimes called layers or tiers), where every layer except the 0th is (i) a **sorted** array, and (ii) immutable.  For some "buffer size" $`B`$, an LSM Index will store
-* Level 0: A mutable array of size up to $`B`$
-* Level 1: Nothing, or one immutable, sorted array of size $`B`$
-* Level 2: Nothing, or one immutable, sorted array of size $`2B`$
-* Level 3: Nothing, or one immutable, sorted array of size $`4B`$
-* Level j: Nothing, or one immutable, sorted array of size $`2^j\cdotB`$
-
-Insertions always happen at Level 0 (see below for a discussion of deletions):
-
-When the buffer fills up (i.e., reaches size $`B`$),
-1. The $`B`$ elements in the Level 0 array are sorted and inserted at Level 1.  
-2. If there is already a (sorted) array at Level 1, the $`B`$ elements in the new array are merged with the $`B`$ elements in the array at Level 1 to create a new array of size $`2B`$.  This new (sorted array) is inserted at Level 2, and Level 1 is now empty.
-   * If Level 1 was already empty, the process ends here
-3. If there is already a (sorted) array at Level 2, the $`2B`$ elements in the new array are merged with the $`2B`$ elements in the array at Level 2 to create a new array of size $`4B`$.  This new (sorted array) is inserted at Level 3, and Level 2 is now empty.
-   * If Level 2 was already empty, the process ends here
-4. If there is already a (sorted) array at Level j, the $`2^jB`$ elements in the new array are merged with the $`2^jB`$ elements in the array at Level j to create a new array of size $`2^{j+1}B`$.  This new (sorted array) is inserted at Level j+1, and Level j is now empty.
-   * If Level j was already empty, the process ends here
-
-
-# TODO: Continue from here
+In this project, you will implement a class called `LinkedListBuffer` to 
+implement a bounded-capacity linked list.  Buffer elements will reside in a
+fixed-size `Array` that represents a pre-allocated region of memory.  Array 
+indices will be used in place of pointers.
 
 ### Problem 1: Tests
 (10 points)
