@@ -230,7 +230,7 @@ Level 4: [Sorted Immutable Sequence of 1600 elements]
 
 ##### Step 6
 
-The very next insertion after this would bring the capacity to 3200, requiring promotions at level 0, 1, 2, 3, and 4.  A new level (5) would need to be created
+The very next insertion after this would bring the number of records in the LSM tree to 3200, requiring promotions at level 0, 1, 2, 3, and 4.  A new level (5) would need to be created
 ```
 Buffer: 0 elements
 Level 0: unoccupied
