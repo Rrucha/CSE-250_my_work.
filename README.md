@@ -149,7 +149,7 @@ When an array of $`2^j B`$ elements is promoted to level $`j`$, one of two thing
 * If the level is not already occupied (i.e., there is nothing stored at the level), the newly promoted array is inserted at the level processing stops.
 * If the level **is** already occupied (i.e., there is an array stored at the level), the newly promoted array is merged with it to create a new sorted array (of size $`2^{j+1} B`$).  The merged array is promoted to level $`j+1`$.  Once the records are promoted, level $`j`$ is no longer occupied.
 
-##### Example
+#### Example
 Let's take an LSM Index (with $`B = 100`$) that initially contains 2032 elements:
 ```
 Buffer: 32 elements
@@ -159,6 +159,8 @@ Level 2: [Sorted Immutable Sequence of 400 elements]
 Level 3: unoccupied
 Level 4: [Sorted Immutable Sequence of 1600 elements]
 ```
+
+##### Step 1 
 
 After we insert 68 records (32+68 = 100), 
 * The buffer is sorted, and promoted to level 0.
@@ -170,6 +172,8 @@ Level 2: [Sorted Immutable Sequence of 400 elements]
 Level 3: unoccupied
 Level 4: [Sorted Immutable Sequence of 1600 elements]
 ```
+
+##### Step 2
 
 Elements continue to be inserted into the buffer.  After another 100 insertions, the buffer fills up:
 * The buffer is sorted, and promoted to level 0
@@ -183,6 +187,8 @@ Level 3: unoccupied
 Level 4: [Sorted Immutable Sequence of 1600 elements]
 ```
 
+##### Step 3
+
 Elements continue to be inserted to the buffer.  After another 100 insertions, the buffer fills up:
 * The buffer is sorted, and promoted to level 0.
 ```
@@ -193,6 +199,8 @@ Level 2: [Sorted Immutable Sequence of 400 elements]
 Level 3: unoccupied
 Level 4: [Sorted Immutable Sequence of 1600 elements]
 ```
+
+##### Step 4 
 
 Elements continue to be inserted to the buffer.  After another 100 insertions, the buffer fills up:
 * The buffer is sorted, and promoted to level 0
@@ -208,6 +216,8 @@ Level 3: [Sorted Immutable Sequence of 800 elements]
 Level 4: [Sorted Immutable Sequence of 1600 elements]
 ```
 
+##### Step 5
+
 After another 799 insertions, the first three levels of the LSM index and buffer would fill up again:
 ```
 Buffer: 99 elements
@@ -217,6 +227,8 @@ Level 2: [Sorted Immutable Sequence of 400 elements]
 Level 3: [Sorted Immutable Sequence of 800 elements]
 Level 4: [Sorted Immutable Sequence of 1600 elements]
 ```
+
+##### Step 6
 
 The very next insertion after this would bring the capacity to 3200, requiring promotions at level 0, 1, 2, 3, and 4.  A new level (5) would need to be created
 ```
