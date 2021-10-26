@@ -150,7 +150,7 @@ When an array of $`2^j B`$ elements is promoted to level $`j`$, one of two thing
 * If the level **is** already occupied (i.e., there is an array stored at the level), the newly promoted array is merged with it to create a new sorted array (of size $`2^{j+1} B`$).  The merged array is promoted to level $`j+1`$.  Once the records are promoted, level $`j`$ is no longer occupied.
 
 ##### Example
-Let's take an LSM Index with ($`B = 100`$) that initially contains 2032 elements:
+Let's take an LSM Index (with $`B = 100`$) that initially contains 2032 elements:
 ```
 Buffer: 32 elements
 Level 0: unoccupied
