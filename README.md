@@ -120,7 +120,7 @@ For **Project 2 - Problems 1 and 2** you will be allowed an unlimited number of 
 In this project, you will implement classes called `LSMIndex` and `UniqueLSMIndex`, 
 which implement a data structure called a "Log-Structured Merge Tree" (LSM Tree, or LSM
 Index for short; see the [original paper](papers/lsmtree.pdf) and an [early follow-up](papers/blsmtree.pdf)).  Note that, **in spite of the term "tree" in its name, the LSM Index
-is not a tree in the sense of a heap or binary search tree**.  LSM trees are used 
+is not a tree in the same sense as a heap or binary search tree**.  LSM trees are used 
 extensively in big-data processing systems, including: 
 * [Google's BigTable](https://cloud.google.com/bigtable/)
 * [Apache Cassandra](http://cassandra.apache.org/)
@@ -131,26 +131,103 @@ As we'll see in upcoming written assignments, the LSM Index has some very nice p
 particularly for "write heavy" workloads like monitoring IOT data, log files in distributed 
 clusters.
 
-An LSM Index stores data in a sequence of exponentially growing levels (sometimes called layers or tiers), where every layer except the 0th is (i) a **sorted** array, and (ii) immutable.  For some "buffer size" $`B`$, an LSM Index will store
-* Level 0: A mutable array of size up to $`B`$
-* Level 1: Nothing, or one immutable, sorted array of size $`B`$
-* Level 2: Nothing, or one immutable, sorted array of size $`2B`$
-* Level 3: Nothing, or one immutable, sorted array of size $`4B`$
-* Level j: Nothing, or one immutable, sorted array of size $`2^j\cdotB`$
+An LSM Index stores data in a sequence of exponentially growing levels (sometimes called layers or tiers), where every layer except the 0th is (i) a **sorted** array, and (ii) immutable.  Any given layer may be occupied or not.
+
+Concretely: For some "buffer size" $`B`$, an LSM Index will store
+* The Buffer: A mutable array of size up to $`B`$
+* Level 0: Nothing, or one immutable, sorted array of size $`B`$
+* Level 1: Nothing, or one immutable, sorted array of size $`2B`$
+* Level 2: Nothing, or one immutable, sorted array of size $`4B`$
+* ...
+* Level j: Nothing, or one immutable, sorted array of size $`2^j\cdot B`$
 
 Insertions always happen at Level 0 (see below for a discussion of deletions):
 
-When the buffer fills up (i.e., reaches size $`B`$),
-1. The $`B`$ elements in the Level 0 array are sorted and inserted at Level 1.  
-2. If there is already a (sorted) array at Level 1, the $`B`$ elements in the new array are merged with the $`B`$ elements in the array at Level 1 to create a new array of size $`2B`$.  This new (sorted array) is inserted at Level 2, and Level 1 is now empty.
-   * If Level 1 was already empty, the process ends here
-3. If there is already a (sorted) array at Level 2, the $`2B`$ elements in the new array are merged with the $`2B`$ elements in the array at Level 2 to create a new array of size $`4B`$.  This new (sorted array) is inserted at Level 3, and Level 2 is now empty.
-   * If Level 2 was already empty, the process ends here
-4. If there is already a (sorted) array at Level j, the $`2^jB`$ elements in the new array are merged with the $`2^jB`$ elements in the array at Level j to create a new array of size $`2^{j+1}B`$.  This new (sorted array) is inserted at Level j+1, and Level j is now empty.
-   * If Level j was already empty, the process ends here
+When the buffer fills up (i.e., reaches size $`B`$), the $`B`$ ($`=2^0 B`$) elements in the buffer are sorted and "promoted" to Level 0.  Once the buffered records are promoted, the buffer is cleared.
 
-We refer to this operation as "promoting" the array.
+When an array of $`2^j B`$ elements is promoted to level $`j`$, one of two things happens, depending on whether level $`j`$ is currently occupied:
+* If the level is not already occupied (i.e., there is nothing stored at the level), the newly promoted array is inserted at the level processing stops.
+* If the level **is** already occupied (i.e., there is an array stored at the level), the newly promoted array is merged with it to create a new sorted array (of size $`2^{j+1} B`$).  The merged array is promoted to level $`j+1`$.  Once the records are promoted, level $`j`$ is no longer occupied.
 
+For example, consider an LSM Index with ($`B = 100`$) that initially contains 2032 elements:
+```
+Buffer: 32 elements
+Level 0: unoccupied
+Level 1: unoccupied
+Level 2: [Sorted Immutable Sequence of 400 elements]
+Level 3: unoccupied
+Level 4: [Sorted Immutable Sequence of 1600 elements]
+```
+
+After we insert 68 records (32+68 = 100), 
+* The buffer is sorted, and promoted to level 0.
+```
+Buffer: 0 elements
+Level 0: [Sorted Immutable Sequence of 100 elements]
+Level 1: unoccupied
+Level 2: [Sorted Immutable Sequence of 400 elements]
+Level 3: unoccupied
+Level 4: [Sorted Immutable Sequence of 1600 elements]
+```
+
+Elements continue to be inserted into the buffer.  After another 100 insertions, the buffer fills up:
+* The buffer is sorted, and promoted to level 0
+* Level 0 is already occupied, so the 100 elements of the sorted buffer are merged with the 100 elements at level 0.  The resulting 200-element sequence is promoted to level 1.
+```
+Buffer: 0 elements
+Level 0: unoccupied
+Level 1: [Sorted Immutable Sequence of 200 elements]
+Level 2: [Sorted Immutable Sequence of 400 elements]
+Level 3: unoccupied
+Level 4: [Sorted Immutable Sequence of 1600 elements]
+```
+
+Elements continue to be inserted to the buffer.  After another 100 insertions, the buffer fills up:
+* The buffer is sorted, and promoted to level 0.
+```
+Buffer: 0 elements
+Level 0: [Sorted Immutable Sequence of 100 elements]
+Level 1: [Sorted Immutable Sequence of 200 elements]
+Level 2: [Sorted Immutable Sequence of 400 elements]
+Level 3: unoccupied
+Level 4: [Sorted Immutable Sequence of 1600 elements]
+```
+
+Elements continue to be inserted to the buffer.  After another 100 insertions, the buffer fills up:
+* The buffer is sorted, and promoted to level 0
+* Level 0 is already occupied, so the 100 elements of the sorted buffer are merged with the 100 elements at level 0.  The resulting 200-element sequence is promoted to level 1.
+* Level 1 is already occupied, so the 200 elements promoted from level 0 are merged with the 200 elements at level 1.  The resulting 400-element sequence is promoted to level 2.
+* Level 2 is already occupied, so the 400 elements promoted from level 1 are merged with the 400 elements at level 2.  The resulting 800-element sequence is promoted to level 3.
+```
+Buffer: 0 elements
+Level 0: unoccupied
+Level 1: unoccupied
+Level 2: unoccupied
+Level 3: [Sorted Immutable Sequence of 800 elements]
+Level 4: [Sorted Immutable Sequence of 1600 elements]
+```
+
+After another 799 insertions, the first three levels of the LSM index and buffer would fill up again:
+```
+Buffer: 99 elements
+Level 0: [Sorted Immutable Sequence of 100 elements]
+Level 1: [Sorted Immutable Sequence of 200 elements]
+Level 2: [Sorted Immutable Sequence of 400 elements]
+Level 3: [Sorted Immutable Sequence of 800 elements]
+Level 4: [Sorted Immutable Sequence of 1600 elements]
+```
+
+The very next insertion after this would bring the capacity to 3200, requiring promotions at level 0, 1, 2, 3, and 4.  A new level (5) would need to be created
+```
+Buffer: 0 elements
+Level 0: unoccupied
+Level 1: unoccupied
+Level 2: unoccupied
+Level 3: unoccupied
+Level 4: unoccupied
+Level 5: [Sorted Immutable Sequence of 3200 elements]
+```
+ 
 
 ### Problem 1: Tests
 (10 points)
@@ -212,7 +289,7 @@ collection of key-value pairs, where keys have type `K` and values have type
 * `_bufferElementsUsed`: The number of elements of `_buffer` that are used.
 
 * `_levels`: The collection of levels of the LSM index. A level may be occupied (`Some(elements)`) or empty (`None`).  
-    * If `_levels(i)` is defined, it **must** contain an *immutable*, *sorted* list of exactly $`2^i \cdot \texttt{_bufferSize}`$ elements.  
+    * If `_levels(i)` is defined, it **must** contain an *immutable*, *sorted* list of exactly $`2^i \cdot \texttt{\_bufferSize}`$ elements.  
 
 You will need to implement the following methods:
 
