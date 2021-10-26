@@ -1,8 +1,8 @@
 # Project 2: Sorted Sequences
 
-**Part 1 Due: Friday ??? Before 5:00 PM (10 points)**
+**Problem 1 Due: Friday Nov 5 Before 5:00 PM (10 points)**
 
-**Part 2 Due: Friday ??? Before 5:00 PM (20 points + up to 5 bonus points)**
+**Problem 2 & Bonus Due: Friday Nov 12 Before 5:00 PM (20 points + up to 8 bonus points)**
 
 **Total Points = 30**
 
@@ -22,7 +22,15 @@ syntax.  You will also want to read the Scala references provided below:
 
 * [The Scala API](https://www.scala-lang.org/api/current/index.html)
   * [Scala Collections](https://docs.scala-lang.org/overviews/collections-2.13/introduction.html)
+    * [Ordered](https://www.scala-lang.org/api/current/scala/math/Ordered.html)
+    * [IndexedSeq](https://www.scala-lang.org/api/current/scala/collection/IndexedSeq.html)
+       - This is a Seq with an efficient apply()
+    * [BufferedIterator](https://www.scala-lang.org/api/current/scala/collection/BufferedIterator.html)
+       - This is an Iterator with support for `head`, a peek operation.
 * [ScalaTest Docs](https://www.scalatest.org/)
+
+
+
 
 Relevant textbook sections:
 * Sets and Maps - § 6.2, 6.3 p189-197
@@ -109,7 +117,7 @@ For **Project 2 - Problems 1 and 2** you will be allowed an unlimited number of 
 
 ### Overview
 
-In this project, you will implement classes called `AppendOnlyLSMIndex` and `LSMIndex`, 
+In this project, you will implement classes called `LSMIndex` and `UniqueLSMIndex`, 
 which implement a data structure called a "Log-Structured Merge Tree" (LSM Tree, or LSM
 Index for short; see the [original paper](papers/lsmtree.pdf) and an [early follow-up](papers/blsmtree.pdf)).  Note that, **in spite of the term "tree" in its name, the LSM Index
 is not a tree in the sense of a heap or binary search tree**.  LSM trees are used 
@@ -141,472 +149,112 @@ When the buffer fills up (i.e., reaches size $`B`$),
 4. If there is already a (sorted) array at Level j, the $`2^jB`$ elements in the new array are merged with the $`2^jB`$ elements in the array at Level j to create a new array of size $`2^{j+1}B`$.  This new (sorted array) is inserted at Level j+1, and Level j is now empty.
    * If Level j was already empty, the process ends here
 
+We refer to this operation as "promoting" the array.
 
-# TODO: Continue from here
 
 ### Problem 1: Tests
 (10 points)
 
 Your first task is to write tests that determine if an implementation of 
-`LinkedListBuffer` adheres to the requirements specified below for each of the
-operations.  In particular, you should ensure that the expected behaviors follow
-from each of the method calls that are to be implemented.  For example, if you 
-append a value and an iterator over the sequence does not include the value, 
-this would not be a correct implementation.
+`LSMIndex` adheres to the requirements specified below 
+for each of the operations.  In particular, you should ensure that each of
+the expected behaviors follow from each of the method calls that are to be
+implemented.  For example, if you insert a value then subsequent calls to 
+apply should receive the value.
 
-You must implement your tests in the `LinkedListBufferTests` class, located
-in `src/test/scala/cse250/pa1/LinkedListBufferTests.scala`.  From within this
-class, you may call the `createLinkedListBuffer` method to obtain an empty 
-instance of the `LinkedListBuffer` implementation under test.  An example test 
-is already present.
+You must implement your tests in the `LSMIndexTests` class, located in `src/test/scala/cse250/pa2/`.  From within these
+classes, you must call the `lsmIndex` method to obtain
+empty instances of the classes under test.  Simple example tests are 
+already present.
 
-In order to write good tests, you should look through the specification for each
-method and ensure that anywhere a behavior is specified, you should write a test
-that performs a sequence of method calls necessary to expose a problem and to
-ensure that the expected result has occurred.  This will require creating 
-multiple scenarios with various operation sequences.  Similarly if you have 
-requirements that must always hold, you may want to add assertions between 
-method calls that these still hold.
+In order to write good tests, you should look through the specification for 
+each method and ensure that anywhere a behavior is specified, you should 
+write a test that performs a sequence of method calls necessary to expose a 
+problem and to ensure that the expected result has occurred.  This will 
+require creating multiple scenarios with various operation sequences.  
+Similarly if you have requirements that must always hold, you may want to add 
+assertions between method calls that these still hold.
 
 A few notes:
 
-* The tests will not have access to the dataset file.  You should write your 
+* The tests will not have access to any data files.  You should write your 
   tests without loading any files.
-* If you add members to the `LinkedListBuffer` class, you should avoid 
+* If you add members to any classes being tested,  you should avoid 
   submitting tests that access these fields as they will not compile.  Your 
   tests should limit access to only what is public in the handout code.
 * Your tests should generally focus on testing **specified** behavior.  This 
   means specifically behaviors documented below.  For the most part, specified
   behaviors are limited to the API (i.e., the object's callable methods such
   as apply, iterator, remove, etc...).  If the specification does not 
-  explicitly say something about how the data is to be organized, it should not
-  be part of the test.
+  explicitly say something about how the data is to be organized, it should 
+  not be part of the test.
 * The assert method has an optional 2nd parameter that allows you to provide a
   debug message.  If the assertion fails, this message will be included in the
   testing log.
 
 Your code will be tested against correct and incorrect implementations of 
-`LinkedListBuffer`.  Your goal is to get all tests to pass on the correct 
-implementation, and for at least one test to fail for an incorrect 
-implementation.
+`LSMIndex`.  Your goal is to get all tests to pass on 
+the correct implementation, and for at least one test to fail for an incorrect implementation.  
 
-### Problem 2: Implementation
+A testing suite that fails a valid implementation will receive 0 points.  A 
+testing suite that passes a valid implementation will be graded based on 
+the incorrect implementations it fails.
+
+### Problem 2: Append-Only LSM Index
 (20 points)
 
-Your task is to build a mutable sequence that stores a bounded number of 
-elements in the order in which they are provided through a series of insertions
-and removals.  For this assignment, you will have to implement the specified API
-using a specific internal storage scheme.  The internal storage we will be using
-is a fixed-size `Array` holding an embedded list of type `A` objects.  Unlike
-a typical `Array` however, the position of each object is **not** its position
-in the `Array`.  Instead the "nodes" of the list keep note of the indices within
-the array to find the nodes that come before and after in the sequence, like a
-Linked List.
+Your task is to implement an LSM Index (`LSMIndex[K, V]`).  This is a 
+collection of key-value pairs, where keys have type `K` and values have type 
+`V`.  There are three variables pre-defined:
 
-To realize this sequence, your task is to complete the definition of 
-`LinkedListBuffer` by implementing the `mutable.Seq` trait combined with 
-additional methods as follows.  Note that these are implemented using a generic
-type `A`.  If you look at the provided tests and the main method, you will see
-that we can use this with the `SolarInstallation` class.
+* `_buffer`: A fixed-size `_bufferSize`-element buffer that newly inserted key-value are to be inserted into.  This buffer does not need to be sorted.
 
-##### `append(entry: A): Option[A]`
-* Record `entry` into your data store.
-    * The newest entry mut always be stored at the end (tail) of the sequence
-    * Any available slot (empty node) in your backing storage array may be used
-      when one is available.  
-* Update `_numStored` if necessary.  If `capacity` is reached, `_numStored` 
-  should not increase.
-* If the capacity of the backing storage array is reached, you should overwrite
-  the oldest entry (the head) with `entry`.  
-    * This would make the second oldest entry the new oldest (the new head)
-    * This would still make `entry` the newest entry (the new tail)
-    * If an entry is replaced, you should return the replaced entry, otherwise return `None`.
-* Duplicate entries are OK.  We only care about storing them in sequence of 
-  oldest to newest (based on insertion order).
-* The runtime of this function must be O(capacity) (i.e., linear in the maximum
-  size of the sequence) in general.  
-    * In the specific case where the capacity of the list has been reached and
-      the size of the list is not changed by this method, the function must have
-      a runtime of Θ(1) (i.e., constant time when `length` = `capacity`).
-    * 2 bonus points will be awarded if the wall-clock performance of this 
-      function suggests that it always has a runtime of Θ(1) (i.e., constant 
-      time for all calls)
+* `_bufferElementsUsed`: The number of elements of `_buffer` that are used.
 
-##### `remove(entry: A): Boolean`
-* If `entry` is not currently present in the list, return `false`.  Otherwise,
-  remove all records containing `entry` and return `true`.  
-    * Test for equivalence using `==`.
-* Update `_numStored` if necessary.
-* Any values that are not equal to `entry` should not be moved within `_buffer`.
-* The runtime of this function must be O(length) (i.e., linear in the number of 
-  elements currently in the sequence)
+* `_levels`: The collection of levels of the LSM index. A level may be occupied (`Some(elements)`) or empty (`None`).  
+    * If `_levels(i)` is defined, it **must** contain an *immutable*, *sorted* list of exactly $`2^i \cdot \texttt{_bufferSize}`$ elements.  
+
+You will need to implement the following methods:
 
 
-##### `countEntry(entry: A): Int`
-* Return a count of the nodes containing the given `entry`.
-    * Test for equivalence using `==`.
-* The runtime of this function must be O(length) (i.e., linear in the number of 
-  elements currently in the sequence)
+#### `promote(level: Int, elements: IndexedSeq[(K, V)]): Unit`
 
-##### `apply(idx: Int): A`
-* Return the value of the entry at index `idx` within the sequence (0-based indexing)
-* Required by `mutable.Seq`
-* The runtime of this function must be O(idx) (i.e., linear in the index being
-  retrieved).
-* If the index provided is not present (or greater than capacity), the behavior of this function is unspecified.  It is customary to throw an `IndexOutOfBoundsException`.
+If level `level` has not been allocated (`_levels.size <= level`), allocate it as an unoccupied level.
+
+If level `level` is not occupied, place the already sorted sequence `elements` at that level (i.e., after `promote`, the level should be occupied).
+
+If level `level` is occupied, merge `elements` with the current contents of the level and promote the result to the next level.  You may find the `MergedIterator` class helpful, although note that you will need to complete it.  The merge operation should be linear in the size of the sequences being merged.
+
+#### `contains(key: K): Boolean`
+
+Determine if the provided key is present in the LSM index.  Return true if so.
+
+#### `apply(key: K): Seq[V]`
+
+Retrieve every key-value pair with the provided key present in the LSM Index.
+
+* You may find the `search` method of [IndexedSeq](https://www.scala-lang.org/api/current/scala/collection/IndexedSeq.html) helpful.
 
 
-##### `update(idx: Int, elem: A): Unit`
-* Update the entry at index `idx` within the sequence (0-based indexing) to be  `elem`
-* Required by `mutable.Seq`
-* If the index provided is not present (or greater than capacity), the behavior of this function is unspecified.  It is customary to throw an `IndexOutOfBoundsException`.
-* The runtime of this function must be O(idx) (i.e., linear in the index being
-  retrieved).
+### Bonus Problem: LSM Index with Unique Keys and Deletion
+(3 points)
 
-##### `length`
-* Return the number of elements currently present in the sequence
-* Required by `mutable.Seq`
-* The runtime of this function must be Θ(1) (i.e., constant)
+As a bonus objective, implement an LSM Index (`UniqueLSMIndex[K, V]`) that guarantees that only the most recently inserted value for each key will be returned by `apply`, and that allows deletions.
 
-##### `iterator`
-* Return an iterator over the elements of the list.  Elements must be visited
-  in order from oldest to newest.
-    * For your convenience, a template iterator class is defined in the same
-      file.  `LinkedListIterator` is a member class of `LinkedListBuffer`, and
-      as such, its methods have ha access to all instance variables in the 
-      enclosing `LinkedListBuffer` that created it.
-    * Functional `hasNext()` and `next()` methods have already been implemented.
-* Required by `mutable.Seq`
-* The iterator's `remove` method must delete the last element that the `next` 
-  method returned.  The method must have a runtime of Θ(1) (i.e., constant, 
-  per-call)
-    * Note that, unlike the `remove` method on `LinkedListBuffer`, this method
-      **only ever removes a single element.**
-    * Note that you may need to modify other methods in `LinkedListIterator` to
-      implement this method.
+Single-valued keys can be accomplished without requiring mutable sequences through two observations:
 
-### Linked List Organization
+1. More recently inserted elements are always at lower levels (or in the buffer) -- the value in the buffer is always more recent than the value for the same key at level 2, which is more recent than the value for the same key at level 4.
 
-You must maintain a "linked list" of entries stored in `_buffer` of your 
-`LinkedListBuffer`.  The nodes of the list are stored within the array as 
-`LinkedListNode` objects.  A `LinkedListNode` contains a `_value` of type 
-`Option[A]`, which may be either `None` if the node is not assigned, or `Some`
-if the node is in-use.  `_value.get` will return the value of the node if it is
-assigned.  You may use `_value.isDefined` to test whether the node has a value.
-The `LinkedListNode` also has indices for `prev` and `next` of type `Int`.  
+2. A redundant, older value can be eliminated when the level is merged through a promotion.
 
-You should keep in mind the following pointers while maintaining your embedded 
-linked list:
-* When an entry is added, be sure to update the indices of the `_tail`, the 
-  modified node, and possibly `_head` as well.
-* When an entry is removed, be sure to update the indices of the surrounding
-  entries, and possibly `_head` and `_tail` as well.
-* Take care to check if you are removing the head and/or tail and handle these
-  cases separately.
-* **Hint**: If the storage is full, think of insertion as if you were to remove the 
-  head of the list and then use that slot to store the new tail.
+Deletions can be accomplished by "inserting" a special marker, usually called a tombstone, that indicates that the value for the key was deleted.  The tombstone overwrites older records during merges.  Once it reaches the final level, it can be expired.  In `UniqueLSMIndex`, you'll find that `_level` uses a value type of `Option[V]` --- Use `None` as a tombstone marker.
 
-Consider the following code:
+You will need to change your implementation in at least the following ways:
 
-```scala
-/* 1.  */ val buffer = new LinkedListBuffer[SolarInstallation](4)
-/* 2.  */ val e1, e2, e3, e4, e5 = new SolarInstallation() // allocate 5 objects
-/* 3.  */ // Normally you would initialize e1-e5 here.
-/* 4.  */ buffer.append(e1)
-/* 5.  */ buffer.append(e2)
-/* 6.  */ buffer.append(e3)
-/* 7.  */ buffer.append(e4)
-/* 8.  */ buffer.append(e3)
-/* 9.  */ buffer.remove(e3)   // returns true
-/* 10. */ buffer.append(e5)
-/* 11. */ val iter = buffer.iterator
-/* 12. */ iter.next()         // returns e2
-/* 13. */ iter.next()         // returns e4
-/* 14. */ iter.remove()
-```
+1. Apply will need to prioritize returning values at lower levels
+2. Insert will need to de-duplicate the buffer.
+3. When merging layers together, you will need to de-duplicate keys and apply tombstones.
 
-The following is a visualization of the internal state of `buffer` for the above
-code.  
-
-##### Following Line 1 execution
-
-<table>
-  <tr>
-    <th colspan=2>None</th>
-    <th colspan=2>None</th>
-    <th colspan=2>None</th>
-    <th colspan=2>None</th>
-  </tr>
-  <tr>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-</table>
-
-```
-capacity: 4
-_numStored: 0
-_head: -1
-_tail: -1
-```
-This represents an empty list, internally.
-
-##### Following Line 4 execution
-
-<table>
-  <tr>
-    <th colspan=2>Some(e1)</th>
-    <th colspan=2>None</th>
-    <th colspan=2>None</th>
-    <th colspan=2>None</th>
-  </tr>
-  <tr>
-    <td>-1</td>
-    <td>-1</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-</table>
-
-```
-capacity: 4
-_numStored: 1
-_head: 0
-_tail: 0
-```
-This corresponds to the list `Seq( e1 )`
-
-##### Following Line 5 execution
-
-<table>
-  <tr>
-    <th colspan=2>Some(e1)</th>
-    <th colspan=2>Some(e2)</th>
-    <th colspan=2>None</th>
-    <th colspan=2>None</th>
-  </tr>
-  <tr>
-    <td>-1</td>
-    <td>1</td>
-    <td>0</td>
-    <td>-1</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-</table>
-
-```
-capacity: 4
-_numStored: 2
-_head: 0
-_tail: 1
-```
-This corresponds to the list `Seq( e1, e2 )`, stored as `[e1]` ↔ `[e2]`
-
-##### Following Line 6 execution
-
-<table>
-  <tr>
-    <th colspan=2>Some(e1)</th>
-    <th colspan=2>Some(e2)</th>
-    <th colspan=2>Some(e3)</th>
-    <th colspan=2>None</th>
-  </tr>
-  <tr>
-    <td>-1</td>
-    <td>1</td>
-    <td>0</td>
-    <td>2</td>
-    <td>1</td>
-    <td>-1</td>
-    <td></td>
-    <td></td>
-  </tr>
-</table>
-
-```
-capacity: 4
-_numStored: 3
-_head: 0
-_tail: 2
-```
-This corresponds to the list `Seq( e1, e2, e3 )`, 
-stored as `[e1]` ↔ `[e2]` ↔ `[e3]`
-
-##### Following Line 7 execution
-
-<table>
-  <tr>
-    <th colspan=2>Some(e1)</th>
-    <th colspan=2>Some(e2)</th>
-    <th colspan=2>Some(e3)</th>
-    <th colspan=2>Some(e4)</th>
-  </tr>
-  <tr>
-    <td>-1</td>
-    <td>1</td>
-    <td>0</td>
-    <td>2</td>
-    <td>1</td>
-    <td>3</td>
-    <td>2</td>
-    <td>-1</td>
-  </tr>
-</table>
-
-```
-capacity: 4
-_numStored: 4
-_head: 0
-_tail: 3
-```
-This corresponds to the list `Seq( e1, e2, e3, e4 )`, 
-stored as `[e1]` ↔ `[e2]` ↔ `[e3]` ↔ `[e4]`
-
-##### Following Line 8 execution
-
-<table>
-  <tr>
-    <th colspan=2>Some(e3)</th>
-    <th colspan=2>Some(e2)</th>
-    <th colspan=2>Some(e3)</th>
-    <th colspan=2>Some(e4)</th>
-  </tr>
-  <tr>
-    <td>3</td>
-    <td>-1</td>
-    <td>-1</td>
-    <td>2</td>
-    <td>1</td>
-    <td>3</td>
-    <td>2</td>
-    <td>0</td>
-  </tr>
-</table>
-
-```
-capacity: 4
-_numStored: 4
-_head: 1
-_tail: 0
-```
-
-As the capacity has been reached, the head of the list is replaced by the newly
-appended `e3`.  This corresponds to the list `Seq( e2, e3, e4, e3 )`, 
-stored as `[e2]` ↔ `[e3]` ↔ `[e4]` ↔ `[e3]`.
-Note the changes to `_head` and `_tail`.
-
-##### Following Line 9 execution
-
-<table>
-  <tr>
-    <th colspan=2>None</th>
-    <th colspan=2>Some(e2)</th>
-    <th colspan=2>None</th>
-    <th colspan=2>Some(e4)</th>
-  </tr>
-  <tr>
-    <td></td>
-    <td></td>
-    <td>-1</td>
-    <td>3</td>
-    <td></td>
-    <td></td>
-    <td>1</td>
-    <td>-1</td>
-  </tr>
-</table>
-
-```
-capacity: 4
-_numStored: 2
-_head: 1
-_tail: 3
-```
-
-Both copies of `e3` are removed.  This corresponds to the list `Seq( e2, e4 )`, 
-stored as `[e2]` ↔ `[e4]`
-Note the changes to `_head` and `_tail`.
-
-##### Following Line 10 execution
-
-<table>
-  <tr>
-    <th colspan=2>None</th>
-    <th colspan=2>Some(e2)</th>
-    <th colspan=2>Some(e5)</th>
-    <th colspan=2>Some(e4)</th>
-  </tr>
-  <tr>
-    <td></td>
-    <td></td>
-    <td>-1</td>
-    <td>3</td>
-    <td>3</td>
-    <td>-1</td>
-    <td>1</td>
-    <td>2</td>
-  </tr>
-</table>
-
-```
-capacity: 4
-_numStored: 3
-_head: 1
-_tail: 2
-```
-
-The newly added `e5` may be added into either of the free slots at indices 0 and
-2.  The above example inserts it into the slot at index 2.
-This corresponds to the list `Seq( e2, e4, e5 )`, 
-stored as `[e2]` ↔ `[e4]` ↔ `[e5]`.
-
-##### Following Line 14 execution
-
-<table>
-  <tr>
-    <th colspan=2>None</th>
-    <th colspan=2>Some(e2)</th>
-    <th colspan=2>Some(e5)</th>
-    <th colspan=2>None</th>
-  </tr>
-  <tr>
-    <td></td>
-    <td></td>
-    <td>-1</td>
-    <td>2</td>
-    <td>1</td>
-    <td>-1</td>
-    <td></td>
-    <td></td>
-  </tr>
-</table>
-
-```
-capacity: 4
-_numStored: 2
-_head: 1
-_tail: 2
-```
-
-The iterator remove operation removes the list node at the last index to be
-returned by the `next` method (`e4` at array index 3), here.
-This corresponds to the list `Seq( e2, e5 )`, 
-stored as `[e2]` ↔ `[e5]`.
-Note the changes to the `_next` and `_prev` pointers of the nodes holding `e2` 
-and `e5` respectively.
 
 ## Suggested approach
 
@@ -617,23 +265,13 @@ and `e5` respectively.
 2. Write your tests to the extent that you feel it would be sufficient that if
    you pass all of them your work is complete.
 
-3. Begin work on `append` and try adding values and checking that they are 
-   present in the array.  You can do so with the iterator, or the initialy 
-   provided unit tests.  Note that if your list isn't linked correctly, your 
-   iterator may cause an infinite loop.
-      * Check that your lists are updating appropriately.
-      * Add more items than your backing storage array can hold to see that you
-        wrap properly.
-      * Use the debugger to step through method executions or use print 
-        statements to log a trace through your methods to ensure that they work
-        as expected.
+3. Implement the `MergeIterator`.  Note the [BufferedIterator.head](https://www.scala-lang.org/api/current/scala/collection/BufferedIterator.html#head:A) method.  
 
-4. Next work on the `countEntry` and `LinkedListIterator.remove` methods.
+4. Implement `promote`.  Note the [Iterator.toIndexedSeq](https://www.scala-lang.org/api/current/scala/collection/BufferedIterator.html#toIndexedSeq:IndexedSeq[A]) method.
 
-5. After this, the outer `remove` entry should be easier to approach.
+5. Implement `apply`.  Note the [IndexedSeq.search](https://www.scala-lang.org/api/current/scala/collection/immutable/IndexedSeq.html#search[B%3E:A](elem:B)(implicitord:scala.math.Ordering[B]):collection.Searching.SearchResult) method.
 
-6. `apply` and `update` both depend on other functionality to work correctly, 
-  but may be completed at any time.
+6. Implement `contains`
 
 It is particularly important to follow some semblance of this approach when
 working on the assignment, as it will be confusing to work out of this order.
@@ -646,10 +284,7 @@ Be sure to test as you go.  **Don't wait until the end to test!**
 
 ## Allowed library/container usage
 
-* The provided template already references `scala.collection.mutable.Seq` and 
-  `scala.collection.Iterator`, traits, and `scala.Array`.  
-* You may not any other uses of containers or traits from the scala collection 
-  library.
+* You may not use any containers or traits from the scala collection library that are not already referenced by the template code.
 
 
 ## AI Policy Overview
@@ -774,4 +409,3 @@ as where the example code resides.
 
 ## Revision History
 * Fall 2021 - Oliver Kennedy (okennedy@buffalo.edu)
-* Spring 2021 - Andrew Hughes (ahughes6@buffalo.edu)
