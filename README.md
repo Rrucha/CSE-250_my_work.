@@ -293,8 +293,18 @@ the incorrect implementations it fails.
 ### Problem 2: Append-Only LSM Index
 (20 points)
 
-Your task is to implement an LSM Index (`LSMIndex[K, V]`).  This is a 
-collection of key-value pairs, where keys have type `K` and values have type 
+Your task is to implement an LSM Index (`LSMIndex[K, V]`) and a helper class `MergedIterator`.  
+
+The MergedIterator is constructed from two existing iterators that are expected to produce values
+in ascending sorted order.  One method remains unimplemented:
+
+#### next: A
+Return the smaller of the two values at the head of the left or right iterator and advance the 
+corresponding iterator to the next step.
+
+---
+
+The LSM Index is a collection of key-value pairs, where keys have type `K` and values have type 
 `V`.  There are three variables pre-defined:
 
 * `_buffer`: A fixed-size `_bufferSize`-element buffer that newly inserted key-value are to be inserted into.  This buffer does not need to be sorted.
@@ -313,7 +323,7 @@ If level `level` has not been allocated (`_levels.size <= level`), allocate it a
 
 If level `level` is not occupied, place the already sorted sequence `elements` at that level (i.e., after `promote`, the level should be occupied).
 
-If level `level` is occupied, merge `elements` with the current contents of the level and promote the result to the next level.  You may find the `MergedIterator` class helpful, although note that you will need to complete it.  The merge operation should be linear in the size of the sequences being merged.
+If level `level` is occupied, merge `elements` with the current contents of the level and promote the result to the next level.  You may find the `MergedIterator` class defined above helpful.
 
 #### `contains(key: K): Boolean`
 
