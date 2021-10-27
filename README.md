@@ -128,10 +128,10 @@ extensively in big-data processing systems, including:
 * [MongoDB](https://github.com/wiredtiger/wiredtiger)
 
 As we'll see in upcoming written assignments, the LSM Index has some very nice properties, 
-particularly for "write heavy" workloads like monitoring IOT data, log files in distributed 
-clusters.
+particularly for "write heavy" workloads like monitoring IOT data, or querying log files in distributed 
+clusters.  In these applications, users want to be able to efficiently retrieve records by some identifier (something that a sorted array is great at), while also being able to ingest lots of data very quickly (something that sorted lists, and other organizational data structures like binary search trees or their cache-friendly cousin, B+Trees are very bad at).
 
-An LSM Index stores data in a sequence of exponentially growing levels (sometimes called layers or tiers), where every layer except the 0th is (i) a **sorted** array, and (ii) immutable.  Any given layer may be occupied or not.
+An LSM Index stores data in a sequence of exponentially growing levels (sometimes called layers or tiers), where every layer except the 0th is (i) a **sorted** array, and (ii) immutable.  Any given layer may be occupied or not.  There are typically a few additional structural components at each layer (a fence pointer table, a bloom filter), but we will ignore them here.
 
 Concretely: For some "buffer size" $`B`$, an LSM Index will store
 * The Buffer: A mutable array of size up to $`B`$
@@ -141,7 +141,7 @@ Concretely: For some "buffer size" $`B`$, an LSM Index will store
 * ...
 * Level j: Nothing, or one immutable, sorted array of size $`2^j B`$
 
-Insertions always happen at Level 0 (see below for a discussion of deletions):
+Insertions always happen into the buffer (see below for a discussion of deletions):
 
 When the buffer fills up (i.e., reaches size $`B`$), the $`B`$ ($`=2^0 B`$) elements in the buffer are sorted and "promoted" to Level 0.  Once the buffered records are promoted, the buffer is cleared.
 
