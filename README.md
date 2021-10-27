@@ -384,7 +384,13 @@ Be sure to test as you go.  **Don't wait until the end to test!**
 
 ## Allowed library/container usage
 
-* You may not use any containers or traits from the scala collection library that are not already referenced by the template code.
+Your code may include any containers from the scala collection library, but note that conformance to
+the structure defined above will be tested for.  You may find the following methods useful for 
+creating new containers.
+* `.iterator`
+* `.toIndexedSeq`
+* `Some()`
+* `None`
 
 
 ## AI Policy Overview
