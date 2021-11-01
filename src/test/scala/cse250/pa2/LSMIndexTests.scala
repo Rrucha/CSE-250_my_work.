@@ -31,7 +31,7 @@ class LSMIndexTest extends AnyFlatSpec {
 
     lsm.insert(1, "foo")
     assert(lsm.contains(1))
-    assert(lsm(1) == "foo")
+    assert(lsm(1).head == "foo")
   }
 
 }
