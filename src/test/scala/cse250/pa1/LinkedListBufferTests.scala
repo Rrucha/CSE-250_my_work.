@@ -1146,6 +1146,41 @@ class LinkedListBufferTests extends AnyFlatSpec {
               }
     }
     /*** END of REMOVE TESTING CASE 1**/
+  /*** start of REMOVE TESTING CASE 1.5**/
+
+  behavior of "LinkedListBuffer"
+  it should "Remove properly Case 15 EVERYTHING PERFECT" in {
+    val buffer = createLinkedListBuffer(4);
+    val r1, r2, r3, r4 ,r5 = new SolarInstallation()
+    r1.fields("name") = "5"
+    r2.fields("name") = "6"
+    r3.fields("name") = "7"
+    r4.fields("name") = "8"
+    r5.fields("name") = "9"
+
+    buffer.append(r1)
+    buffer.append(r2)
+    buffer.append(r4)
+    buffer.append(r5)
+    //removing
+    buffer.remove(r1)
+    buffer.remove(r2)
+    buffer.remove(r4)
+    buffer.remove(r5)
+    buffer.append(r4)
+    buffer.append(r5)
+
+    {
+
+      val iterator = buffer.iterator
+      assert(iterator.hasNext)
+      assert( iterator.next() == r4)
+      assert(iterator.hasNext)
+      assert( iterator.next() == r5)
+      assert(!iterator.hasNext)
+    }
+  }
+  /*** END of REMOVE TESTING CASE 1.5**/
     /*** start of REMOVE TESTING CASE 2**/
     behavior of "LinkedListBuffer"
     it should "Remove properly Case 2 REMOVE HEAD" in {

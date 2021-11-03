@@ -23,10 +23,20 @@ import org.scalatest.flatspec.AnyFlatSpec
 class LSMIndexTest extends AnyFlatSpec {
 
   def lsmIndex: LSMIndex[Int, String] =
-    new LSMIndex(10)
+    new LSMIndex(100)
 
   behavior of "LSMIndex"
   it should "Support appends" in {
+    val lsm = lsmIndex
+
+    lsm.insert(1, "foo")
+    assert(lsm.contains(1))
+    assert(lsm(1) == "foo")
+  }
+
+
+  behavior of "LSMIndex"
+  it should "Support contains" in {
     val lsm = lsmIndex
 
     lsm.insert(1, "foo")
