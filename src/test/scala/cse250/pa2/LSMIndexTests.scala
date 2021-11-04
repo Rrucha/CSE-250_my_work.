@@ -45,6 +45,7 @@ class LSMIndexTest extends AnyFlatSpec {
 
     }
     assert(lsm._levels(0).get.size == 100)
+    assert(lsm._buffer.isEmpty)
 
  }
 }
