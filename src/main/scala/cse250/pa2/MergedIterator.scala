@@ -52,8 +52,7 @@ class MergedIterator[A: Ordering](
 
 
 object MergedIterator
-{
-  /**
+{/**
    * Use the merged iterator to merge two already sorted iterables
    * into a new sorted, indexed sequence.
    */
