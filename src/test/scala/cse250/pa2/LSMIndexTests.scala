@@ -42,7 +42,7 @@ class LSMIndexTest extends AnyFlatSpec {
       lsm.insert(i, "i")
       assert(lsm.contains(i))
       assert(lsm(i).head == "i")
-     println(lsmIndex._levels(1).get == lsm._buffer.toIndexedSeq)
+     println(lsmIndex._levels(0).get.length == 100)
     }
  }
 }
