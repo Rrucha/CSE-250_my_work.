@@ -54,7 +54,7 @@ class LSMIndexTest extends AnyFlatSpec {
      assert(lsm(i).head ==  stein)
 
     }
-    assert(lsm._levels(0).get.size != 100)
+
     assert(lsm._levels(1).get.size == 200)
     assert(lsm._bufferElementsUsed == 0)
 
