@@ -31,7 +31,7 @@ class LSMIndexTest extends AnyFlatSpec {
 
     lsm.insert(1, "foo")
     assert(lsm.contains(1))
-    assert(lsm(1).toString() == "foo")
+    assert(lsm(1).head == "foo")
   }
 
 
@@ -41,7 +41,7 @@ class LSMIndexTest extends AnyFlatSpec {
     for (i <- 1 to 100) {
       lsm.insert(i, i.toString)
       assert(lsm.contains(i))
-       assert(lsm(i).toString() == i.toString)
+       assert(lsm(i).head == i.toString)
 
     }
    assert(lsm._levels(0).get.size == 100)
@@ -51,18 +51,18 @@ class LSMIndexTest extends AnyFlatSpec {
     var  stein = i.toString + " second"
       lsm.insert(i, stein)
       assert(lsm.contains(i))
-     assert(lsm(i).toString() ==  stein)
+     assert(lsm(i).head ==  stein)
 
     }
-
+    assert(lsm._levels(0).isEmpty)
     assert(lsm._levels(1).get.size == 200)
     assert(lsm._bufferElementsUsed == 0)
 
     for (i <- 201 to 300) {
       var  stein = i.toString + " third"
       lsm.insert(i, stein)
-     assert(lsm.contains(i))
-      assert(lsm(i).toString() ==  stein)
+     // assert(lsm.contains(i))
+      assert(lsm(i).head ==  stein)
 
     }
     assert(lsm._levels(0).get.size == 100)
@@ -74,8 +74,9 @@ class LSMIndexTest extends AnyFlatSpec {
       var stein = i.toString + " fourth"
       lsm.insert(i, stein)
      // assert(lsm.contains(i))
-      assert(lsm(i).toString() == stein)
+      assert(lsm(i).head == stein)
     }
+    assert(lsm._levels(0).isEmpty)
     assert(lsm._levels(2).get.size == 400)
     assert(lsm._bufferElementsUsed == 0)
 
@@ -83,8 +84,9 @@ class LSMIndexTest extends AnyFlatSpec {
       var stein = i.toString + " thi"
       lsm.insert(i, stein)
      // assert(lsm.contains(i))
-      assert(lsm(i).toString() == stein)
+      assert(lsm(i).head == stein)
     }
+    assert(lsm._levels(1).isEmpty)
     assert(lsm._levels(0).get.size == 100)
     assert(lsm._levels(2).get.size == 400)
     assert(lsm._bufferElementsUsed == 0)
@@ -93,8 +95,9 @@ class LSMIndexTest extends AnyFlatSpec {
       var stein = i.toString + " five"
       lsm.insert(i, stein)
       assert(lsm.contains(i))
-      assert(lsm(i).toString() == stein)
+      assert(lsm(i).head == stein)
     }
+    assert(lsm._levels(0).isEmpty)
     assert(lsm._levels(1).get.size == 200)
     assert(lsm._levels(2).get.size == 400)
     assert(lsm._bufferElementsUsed == 0)
@@ -103,7 +106,18 @@ class LSMIndexTest extends AnyFlatSpec {
       var stein = i.toString + " fie"
       lsm.insert(i, stein)
       assert(lsm.contains(i))
-      assert(lsm(i).toString() == stein)
+      assert(lsm(i).head == stein)
+    }
+    assert(lsm._levels(0).get.size == 100)
+    assert(lsm._levels(1).get.size == 200)
+    assert(lsm._levels(2).get.size == 400)
+    assert(lsm._bufferElementsUsed == 0)
+
+    for (i <- 601 to 700) {
+      var stein = i.toString + " fie"
+      lsm.insert(i, stein)
+      assert(lsm.contains(i))
+      assert(lsm(i).head == stein)
     }
     assert(lsm._levels(0).get.size == 100)
     assert(lsm._levels(1).get.size == 200)
@@ -111,15 +125,13 @@ class LSMIndexTest extends AnyFlatSpec {
     assert(lsm._bufferElementsUsed == 0)
 
     for (i <- 701 to 800) {
-      var stein = i.toString + " fie"
+      var stein = i.toString + " fi"
       lsm.insert(i, stein)
       assert(lsm.contains(i))
-      assert(lsm(i).toString() == stein)
+      assert(lsm(i).head == stein)
     }
 
     assert(lsm._levels(3).get.size == 800)
     assert(lsm._bufferElementsUsed == 0)
-
-
  }
 }
