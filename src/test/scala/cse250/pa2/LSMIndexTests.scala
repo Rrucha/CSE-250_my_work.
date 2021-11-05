@@ -113,7 +113,7 @@ class LSMIndexTest extends AnyFlatSpec {
     assert(lsm._levels(2).get.size == 400)
     assert(lsm._bufferElementsUsed == 0)
 
-    for (i <- 601 to 700) {
+    for (i <- 801 to 900) {
       var stein = i.toString + " fie"
       lsm.insert(i, stein)
       assert(lsm.contains(i))
