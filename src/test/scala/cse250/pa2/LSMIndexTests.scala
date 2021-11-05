@@ -50,11 +50,11 @@ class LSMIndexTest extends AnyFlatSpec {
     for (i <- 1 to 100) {
     var  stein = i.toString + " second"
       lsm.insert(i, stein)
-      assert(lsm.contains(i))
-     assert(lsm(i).head ==  stein)
-
     }
-
+    for (i <- 101 to 200) {
+      assert(lsm.contains(i))
+      assert(lsm(i).head == i.toString + " second")
+    }
     assert(lsm._levels(1).get.size == 200)
     assert(lsm._bufferElementsUsed == 0)
 
