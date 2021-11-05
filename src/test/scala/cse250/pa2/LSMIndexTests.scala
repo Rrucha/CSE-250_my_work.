@@ -25,14 +25,7 @@ class LSMIndexTest extends AnyFlatSpec {
   def lsmIndex: LSMIndex[Int, String] =
     new LSMIndex(100)
 
-  behavior of "LSMIndex"
-  it should "Support appends" in {
-    val lsm = lsmIndex
 
-    lsm.insert(1, "foo")
-    assert(lsm.contains(1))
-    assert(lsm(1).head == "foo")
-  }
 
 
   behavior of "LSMIndex"
@@ -51,10 +44,7 @@ class LSMIndexTest extends AnyFlatSpec {
     var  stein = i.toString + " second"
       lsm.insert(i, stein)
     }
-    for (i <- 101 to 200) {
-      assert(lsm.contains(i))
-      assert(lsm(i).head == i.toString + " second")
-    }
+
     assert(lsm._levels(1).get.size == 200)
     assert(lsm._bufferElementsUsed == 0)
 
