@@ -47,7 +47,7 @@ class LSMIndexTest extends AnyFlatSpec {
    assert(lsm._levels(0).get.size == 100)
    assert(lsm._bufferElementsUsed == 0)
 
-    for (i <- 101 to 200) {
+    for (i <- 1 to 100) {
     var  stein = i.toString + " second"
       lsm.insert(i, stein)
       assert(lsm.contains(i))
@@ -58,82 +58,7 @@ class LSMIndexTest extends AnyFlatSpec {
     assert(lsm._levels(1).get.size == 200)
     assert(lsm._bufferElementsUsed == 0)
 
-    for (i <- 201 to 300) {
-      var  stein = i.toString + " third"
-      lsm.insert(i, stein)
-     // assert(lsm.contains(i))
-      assert(lsm(i).head ==  stein)
 
-    }
-    assert(lsm._levels(0).get.size == 100)
-    assert(lsm._levels(1).get.size == 200)
-    assert(lsm._bufferElementsUsed == 0)
-
-
-    for (i <- 301 to 400) {
-      var stein = i.toString + " fourth"
-      lsm.insert(i, stein)
-     assert(lsm.contains(i))
-      assert(lsm(i).head == stein)
-    }
-
-    assert(lsm._levels(2).get.size == 400)
-    assert(lsm._bufferElementsUsed == 0)
-
-    for (i <- 401 to 500) {
-      var stein = i.toString + " thi"
-      lsm.insert(i, stein)
-      assert(lsm.contains(i))
-      assert(lsm(i).head == stein)
-    }
-    assert(lsm._levels(0).get.size == 100)
-    assert(lsm._levels(2).get.size == 400)
-    assert(lsm._bufferElementsUsed == 0)
-
-    for (i <- 501 to 600) {
-      var stein = i.toString + " five"
-      lsm.insert(i, stein)
-      assert(lsm.contains(i))
-      assert(lsm(i).head == stein)
-    }
-
-    assert(lsm._levels(1).get.size == 200)
-    assert(lsm._levels(2).get.size == 400)
-    assert(lsm._bufferElementsUsed == 0)
-
-    for (i <- 601 to 700) {
-      var stein = i.toString + " fie"
-      lsm.insert(i, stein)
-      assert(lsm.contains(i))
-      assert(lsm(i).head == stein)
-    }
-    assert(lsm._levels(0).get.size == 100)
-    assert(lsm._levels(1).get.size == 200)
-    assert(lsm._levels(2).get.size == 400)
-    assert(lsm._bufferElementsUsed == 0)
-
-
-
-    for (i <- 701 to 800) {
-      var stein = i.toString + " fie"
-      lsm.insert(i, stein)
-      assert(lsm.contains(i))
-      assert(lsm(i).head == stein)
-    }
-
-    assert(lsm._levels(3).get.size == 800)
-    assert(lsm._bufferElementsUsed == 0)
-
-
-    for (i <- 701 to 800) {
-      var stein = i.toString + " fie"
-      lsm.insert(i, stein)
-      assert(lsm.contains(i))
-      assert(lsm(i).head == stein)
-    }
-    assert(lsm._levels(0).get.size == 100)
-    assert(lsm._levels(3).get.size == 800)
-    assert(lsm._bufferElementsUsed == 0)
 
   }
 
