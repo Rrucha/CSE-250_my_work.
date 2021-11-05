@@ -54,7 +54,7 @@ class LSMIndexTest extends AnyFlatSpec {
      assert(lsm(i).head ==  stein)
 
     }
-    assert(lsm._levels(0).get.isEmpty)
+
     assert(lsm._levels(1).get.size == 200)
     assert(lsm._bufferElementsUsed == 0)
 
@@ -73,20 +73,19 @@ class LSMIndexTest extends AnyFlatSpec {
     for (i <- 301 to 400) {
       var stein = i.toString + " fourth"
       lsm.insert(i, stein)
-     // assert(lsm.contains(i))
+     assert(lsm.contains(i))
       assert(lsm(i).head == stein)
     }
-    assert(lsm._levels(0).get.isEmpty)
+
     assert(lsm._levels(2).get.size == 400)
     assert(lsm._bufferElementsUsed == 0)
 
     for (i <- 401 to 500) {
       var stein = i.toString + " thi"
       lsm.insert(i, stein)
-     // assert(lsm.contains(i))
+      assert(lsm.contains(i))
       assert(lsm(i).head == stein)
     }
-    assert(lsm._levels(1).get.isEmpty)
     assert(lsm._levels(0).get.size == 100)
     assert(lsm._levels(2).get.size == 400)
     assert(lsm._bufferElementsUsed == 0)
@@ -97,7 +96,7 @@ class LSMIndexTest extends AnyFlatSpec {
       assert(lsm.contains(i))
       assert(lsm(i).head == stein)
     }
-    assert(lsm._levels(0).get.isEmpty)
+
     assert(lsm._levels(1).get.size == 200)
     assert(lsm._levels(2).get.size == 400)
     assert(lsm._bufferElementsUsed == 0)
@@ -116,7 +115,7 @@ class LSMIndexTest extends AnyFlatSpec {
 
 
     for (i <- 701 to 800) {
-      var stein = i.toString + " fi"
+      var stein = i.toString + " fie"
       lsm.insert(i, stein)
       assert(lsm.contains(i))
       assert(lsm(i).head == stein)
