@@ -46,7 +46,7 @@ class LSMIndexTest extends AnyFlatSpec {
     }
 
     for (k <- 1 to 100){
-      assert(lsm(k).head == "1")
+      assert(lsm(k)(1) == "1")
     }
     assert(lsm._levels(0).isEmpty)
     assert(lsm._levels(1).get.size == 200)
