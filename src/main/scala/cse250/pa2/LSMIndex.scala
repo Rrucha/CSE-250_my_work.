@@ -127,7 +127,12 @@ class LSMIndex[K:Ordering, V <: AnyRef](_bufferSize: Int)(implicit ktag: ClassTa
       }
       i = i + 1
     }
- false
+    if (check == -2){
+       false
+    }
+ else{
+       true
+    }
   }
 
   /**
