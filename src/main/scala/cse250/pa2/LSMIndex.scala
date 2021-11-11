@@ -85,10 +85,10 @@ class LSMIndex[K:Ordering, V <: AnyRef](_bufferSize: Int)(implicit ktag: ClassTa
    */
   def promote(level: Int, layerContents: IndexedSeq[(K, V)]): Unit = {
    if (_levels.isEmpty){
-     _levels += Option(layerContents)
+     return _levels += Option(layerContents)
    }
    else if (_levels.size <= level){
-     _levels += Option(layerContents)
+     return _levels += Option(layerContents)
    }
     else if (_levels(level).nonEmpty){
      val what = MergedIterator.merge[(K,V)](_levels(level).get,layerContents)
@@ -97,7 +97,7 @@ class LSMIndex[K:Ordering, V <: AnyRef](_bufferSize: Int)(implicit ktag: ClassTa
     }
 
     else{
-      _levels += Option(layerContents)
+     return   _levels += Option(layerContents)
 
     }
   }
@@ -163,32 +163,17 @@ class LSMIndex[K:Ordering, V <: AnyRef](_bufferSize: Int)(implicit ktag: ClassTa
       x match {
         case Found(idx) => {
 
-          if (idx == 0) {
-            var acc = idx
-            while (acc != 200 && copy.get(acc)._1 == key) {
-              ans = ans :+ copy.get(acc)._2
-              acc = acc + 1
-            }
-          }
-          else if (copy.get.size - 1 == idx) {
-            var acc = idx
-            while (acc != 200 && copy.get(acc)._1 == key) {
-              ans = ans :+ copy.get(acc)._2
-              acc = acc - 1
-            }
-          }
-          else {
             var acc1 = idx
-            while ( acc1 != 200 && copy.get(acc1)._1 == key ) {
+            while (( acc1 != 200 && copy.get(acc1)._1 == key) && copy.get.size - 1 != idx  ) {
               ans = ans :+ copy.get(acc1)._2
               acc1 = acc1 + 1
             }
             var acc = idx
-            while ( acc != 200 && copy.get(acc)._1 == key) {
+            while ( (acc != 200 && copy.get(acc)._1 == key ) && idx != 0 ) {
               ans = ans :+ copy.get(acc)._2
               acc = acc - 1
             }
-          }
+
         }
         case InsertionPoint(idx) => check = -2;
       }
