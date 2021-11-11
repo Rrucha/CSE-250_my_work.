@@ -17,6 +17,8 @@
  * UBIT:
  */
 package cse250.pa2
+import scala.util.Sorting
+
 
 /**
  * MergedIterator's next operation continuously returns the lower 
@@ -47,7 +49,25 @@ class MergedIterator[A: Ordering](
    * head elements.  If either iterator is empty, return the next
    * of the other iterator.
    */
-  def next(): A = ???
+  def next(): A = {
+    if (lhs.hasNext && rhs.hasNext){
+      if ( Ordering[A].lt(lhs.head,rhs.head)){
+        return lhs.head
+      }
+      else{
+        return rhs.head
+      }
+    }
+    else{
+        if (!lhs.hasNext && rhs.hasNext){
+          return rhs.head
+        }
+         else {
+            return rhs.head
+        }
+    }
+
+  }
 }
 
 

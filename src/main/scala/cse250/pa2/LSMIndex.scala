@@ -18,6 +18,7 @@
  */
 package cse250.pa2
 
+import scala.collection.Searching.{Found, InsertionPoint, SearchResult, search}
 import scala.reflect.ClassTag
 import scala.util.Sorting
 import scala.collection.mutable
@@ -29,9 +30,10 @@ import scala.collection.mutable
 class LSMIndex[K:Ordering, V <: AnyRef](_bufferSize: Int)(implicit ktag: ClassTag[K], vtag: ClassTag[V])
 {
   implicit val _ordering = new Ordering[(K, V)]{
-    def compare(a: (K, V), b: (K, V)) =
+    def compare(a: (K, V), b: (K, V)): Int =
       Ordering[K].compare(a._1, b._1)
   }
+
 
   /**
    * The input buffer.  Elements reside here until _buffer is
@@ -81,7 +83,15 @@ class LSMIndex[K:Ordering, V <: AnyRef](_bufferSize: Int)(implicit ktag: ClassTa
    * @param  level          The level to install the sequence at
    * @param  layerContents  The sequence of elements to install at the layer
    */
-  def promote(level: Int, layerContents: IndexedSeq[(K, V)]): Unit = ???
+  def promote(level: Int, layerContents: IndexedSeq[(K, V)]): Unit = {
+
+    if ( !_levels.contains(level) ){
+      _levels += Option(layerContents)
+    }
+    else{
+      MergedIterator.merge(_levels(level).get,layerContents)
+    }
+  }
 
   /**
    * Determine if the provided key is present in the LSM index
@@ -90,7 +100,26 @@ class LSMIndex[K:Ordering, V <: AnyRef](_bufferSize: Int)(implicit ktag: ClassTa
    * 
    * This function should run in O(log^2(n)) time
    */
-  def contains(key: K): Boolean = ???
+  def contains(key: K): Boolean = {
+    var k = 0
+    var check = 0;
+    while (k <= _bufferElementsUsed) {
+         if (_buffer(k)._1 == key) {
+          return true
+         }
+      k = k + 1
+    }
+    var i = 0
+    while(i != _levels.size) {
+     val x : SearchResult =  _levels(i).get.search(key, null.asInstanceOf[V])
+      x match {
+        case Found(idx) => return true;
+        case InsertionPoint(idx) => check = -2;
+      }
+      i = i + 1
+    }
+ false
+  }
 
   /**
    * Retrieve the value associated with the provided key from the
@@ -101,7 +130,47 @@ class LSMIndex[K:Ordering, V <: AnyRef](_bufferSize: Int)(implicit ktag: ClassTa
    * 
    * This function should run in O(log^2(n)) time
    */
-  def apply(key: K): Seq[V] = ???
+  def apply(key: K): Seq[V] = {
+    var k = 0
+    var check = 0;
+    var ans: Seq[V] = Seq()
+    while (k != _bufferElementsUsed) {
+      if (_buffer(k)._1 == key) {
+        val foundValue = _buffer(k)._2
+        ans = ans :+ foundValue
+      }
+      k = k + 1
+    }
+    var i = 0
+    while(i != _levels.size) {
+      val copy = _levels(i)
+
+      val x : SearchResult =  copy.get.search(key, null.asInstanceOf[V])
+      x match {
+        case Found(idx) => {
+          var acc = idx
+        if (idx == 0){
+
+
+        }
+        else if (copy.get.size == idx){
+
+        }
+        else{
+
+        }
+        }
+        case InsertionPoint(idx) => check = -2;
+      }
+      i = i + 1
+    }
+    if (check == -2) {
+       Seq.empty
+    }
+    else{
+       ans
+    }
+  }
 
   /**
    * Generate a string representation of this LSM index
