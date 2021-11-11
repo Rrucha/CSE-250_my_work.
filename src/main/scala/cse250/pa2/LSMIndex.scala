@@ -84,12 +84,21 @@ class LSMIndex[K:Ordering, V <: AnyRef](_bufferSize: Int)(implicit ktag: ClassTa
    * @param  layerContents  The sequence of elements to install at the layer
    */
   def promote(level: Int, layerContents: IndexedSeq[(K, V)]): Unit = {
-
-    if ( !_levels.contains(level) ){
-      _levels += Option(layerContents)
+   if (_levels.isEmpty){
+     _levels += Option(layerContents)
+   }
+   else if (_levels.size <= level){
+     _levels += Option(layerContents)
+   }
+    else if (_levels(level).nonEmpty){
+     val what = MergedIterator.merge[(K,V)](_levels(level).get,layerContents)
+      _levels(level) = None
+      promote(level +1, what)
     }
+
     else{
-      MergedIterator.merge(_levels(level).get,layerContents)
+      _levels += Option(layerContents)
+
     }
   }
 
@@ -144,25 +153,45 @@ class LSMIndex[K:Ordering, V <: AnyRef](_bufferSize: Int)(implicit ktag: ClassTa
     var i = 0
     while(i != _levels.size) {
       val copy = _levels(i)
-
-      val x : SearchResult =  copy.get.search(key, null.asInstanceOf[V])
+     if (copy != None){
+      val x: SearchResult = copy.get.search(key, null.asInstanceOf[V])
       x match {
         case Found(idx) => {
-          var acc = idx
-        if (idx == 0){
 
-
-        }
-        else if (copy.get.size == idx){
-
-        }
-        else{
-
-        }
+          if (idx == 0) {
+            var acc = idx
+            while (acc != 200 && copy.get(acc)._1 == key) {
+              ans = ans :+ copy.get(acc)._2
+              acc = acc + 1
+            }
+          }
+          else if (copy.get.size - 1 == idx) {
+            var acc = idx
+            while (acc != 200 && copy.get(acc)._1 == key) {
+              ans = ans :+ copy.get(acc)._2
+              acc = acc - 1
+            }
+          }
+          else {
+            var acc1 = idx
+            while ( acc1 != 200 && copy.get(acc1)._1 == key ) {
+              ans = ans :+ copy.get(acc1)._2
+              acc1 = acc1 + 1
+            }
+            var acc = idx
+            while ( acc != 200 && copy.get(acc)._1 == key) {
+              ans = ans :+ copy.get(acc)._2
+              acc = acc - 1
+            }
+          }
         }
         case InsertionPoint(idx) => check = -2;
       }
       i = i + 1
+    }
+      else{
+        i = i + 1
+      }
     }
     if (check == -2) {
        Seq.empty

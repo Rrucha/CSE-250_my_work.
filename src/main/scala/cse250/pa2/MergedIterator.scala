@@ -52,18 +52,24 @@ class MergedIterator[A: Ordering](
   def next(): A = {
     if (lhs.hasNext && rhs.hasNext){
       if ( Ordering[A].lt(lhs.head,rhs.head)){
-        return lhs.head
+         lhs.next
       }
       else{
-        return rhs.head
+        rhs.next
       }
     }
+   else if (!lhs.hasNext && rhs.hasNext){
+      rhs.next()
+    }
+    else if (lhs.hasNext && !rhs.hasNext){
+      lhs.next()
+    }
     else{
-        if (!lhs.hasNext && rhs.hasNext){
-          return rhs.head
+        if (lhs.isEmpty){
+          rhs.head
         }
          else {
-            return rhs.head
+          lhs.head
         }
     }
 

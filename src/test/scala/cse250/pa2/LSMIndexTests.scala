@@ -29,13 +29,13 @@ class LSMIndexTest extends AnyFlatSpec {
   behavior of "LSMIndex"
   it should "Support contains" in {
         val lsm = lsmIndex
-    for (i <- 1 to 100) {
+    for (i <- 1 to 99) {
       lsm.insert(i, "1")
       assert(lsm.contains(i))
        assert(lsm.apply(i).head == "1")
 
     }
-
+    lsm.insert(100, "1")
 
    assert(lsm._levels(0).get.size == 100)
    assert(lsm._bufferElementsUsed == 0)
@@ -47,10 +47,11 @@ class LSMIndexTest extends AnyFlatSpec {
 
     }
     lsm.insert(100, "1")
-    for (k <- 1 to 100){
-      assert(lsm(k)(1) == "1")
+    for (k <- 1 to 99){
+      assert(lsm.apply(k)(1) == "1")
     }
-    //assert(lsm._levels(0).isEmpty)
+    assert(lsm.apply(100)(1) == "1")
+    assert(lsm._levels(0).isEmpty)
     assert(lsm._levels(1).get.size == 200)
     assert(lsm._bufferElementsUsed == 0)
 
