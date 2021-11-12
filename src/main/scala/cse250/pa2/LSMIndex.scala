@@ -152,12 +152,14 @@ class LSMIndex[K:Ordering, V <: AnyRef](_bufferSize: Int)(implicit ktag: ClassTa
    */
   def apply(key: K): Seq[V] = {
     var k = 0
+    var bufferpountcheck = -2;
     var check = 0;
     var ans: Seq[V] = Seq()
-    while (k != _bufferElementsUsed) {
+    while (k < _bufferElementsUsed) {
       if (_buffer(k)._1 == key) {
         val foundValue = _buffer(k)._2
         ans = ans :+ foundValue
+        bufferpountcheck = 1;
       }
       k = k + 1
     }
@@ -168,37 +170,45 @@ class LSMIndex[K:Ordering, V <: AnyRef](_bufferSize: Int)(implicit ktag: ClassTa
       val x: SearchResult = copy.get.search(key, null.asInstanceOf[V])
       x match {
         case Found(idx) => {
+          check = 0
           var bruh = 0
-            var acc1 = idx
-            while (acc1 >= 0 &&  acc1 != copy.get.size && copy.get(acc1)._1 == key && copy.get.size - 1 != idx  ) {
-              ans = ans :+ copy.get(acc1)._2
-              acc1 = acc1 + 1
-              bruh = -2
-            }
-            var acc = idx
-            if (bruh == -2) {
+          var acc1 = idx
+          while (acc1 >= 0 && acc1 != copy.get.size && copy.get(acc1)._1 == key && copy.get.size - 1 != idx) {
+            ans = ans :+ copy.get(acc1)._2
+            acc1 = acc1 + 1
+            bruh = -2
+          }
+          var acc = idx
+          if (bruh == -2) {
             acc = acc - 1
-              bruh = 0
-           }
-            while ( acc >= 0 && acc != copy.get.size  && copy.get(acc)._1 == key && idx != 0 ) {
-              ans = ans :+ copy.get(acc)._2
-              acc = acc - 1
-            }
+            bruh = 0
+          }
+          while (acc >= 0 && acc != copy.get.size && copy.get(acc)._1 == key && idx != 0) {
+            ans = ans :+ copy.get(acc)._2
+            acc = acc - 1
+          }
         }
-        case InsertionPoint(idx) => check = -2;
+        case InsertionPoint(idx) => {
+          if (bufferpountcheck == 1) {
+            check = 0;
+          }
+          else{
+            check = -2
+          }
+        }
       }
       i = i + 1
     }
       else{
         i = i + 1
       }
-      check = 0
+
     }
     if (check == -2) {
-       Seq.empty
+       return Seq.empty
     }
     else{
-       ans
+       return ans
     }
   }
 
