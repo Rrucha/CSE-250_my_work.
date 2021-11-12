@@ -189,11 +189,11 @@ class LSMIndex[K:Ordering, V <: AnyRef](_bufferSize: Int)(implicit ktag: ClassTa
           }
         }
         case InsertionPoint(idx) => {
-          if (bufferpountcheck == 1) {
-            check = 0;
+          if (bufferpountcheck == -1) {
+            check = -2;
           }
           else{
-            check = -2
+            check = 0;
           }
         }
       }
