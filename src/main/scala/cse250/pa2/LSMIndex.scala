@@ -170,7 +170,6 @@ class LSMIndex[K:Ordering, V <: AnyRef](_bufferSize: Int)(implicit ktag: ClassTa
       val x: SearchResult = copy.get.search(key, null.asInstanceOf[V])
       x match {
         case Found(idx) => {
-          check = 0
           var bruh = 0
           var acc1 = idx
           while (acc1 >= 0 && acc1 != copy.get.size && copy.get(acc1)._1 == key && copy.get.size - 1 != idx) {
@@ -189,11 +188,11 @@ class LSMIndex[K:Ordering, V <: AnyRef](_bufferSize: Int)(implicit ktag: ClassTa
           }
         }
         case InsertionPoint(idx) => {
-          if (bufferpountcheck == -1) {
-            check = -2;
+          if (bufferpountcheck == 1) {
+            check = 0;
           }
           else{
-            check = 0;
+            check = -2
           }
         }
       }
@@ -202,13 +201,13 @@ class LSMIndex[K:Ordering, V <: AnyRef](_bufferSize: Int)(implicit ktag: ClassTa
       else{
         i = i + 1
       }
-
+      check = 0
     }
     if (check == -2) {
-       return Seq.empty
+       Seq.empty
     }
     else{
-       return ans
+       ans
     }
   }
 
