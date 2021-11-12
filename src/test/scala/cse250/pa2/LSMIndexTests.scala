@@ -73,7 +73,7 @@ class LSMIndexTest extends AnyFlatSpec {
     }
 
     val j = lsm.apply(100)
-    assert(lsm.apply(100)(1) == "1")
+
 
     assert(lsm._levels(2).get.size == 400)
     lsm.insert(1, "1")
@@ -85,11 +85,39 @@ class LSMIndexTest extends AnyFlatSpec {
       assert(lsm.apply(i)(1) == "1")
     }
     val b = lsm.apply(100)
-    assert(lsm.apply(100)(1) == "1")
 
     assert(lsm._levels(0).get.size == 100)
     assert(lsm._levels(2).get.size == 400)
+    for (i <- 1 to 100) {
+      var  stein = "1"
+      lsm.insert(i, stein)
+      assert(lsm.contains(i))
+      assert(lsm.apply(i)(1) == "1")
+    }
+    assert(lsm._levels(1).get.size == 200)
+    assert(lsm._levels(2).get.size == 400)
+
+    for (i <- 1 to 9) {
+      var  stein = "1"
+      lsm.insert(i, stein)
+      assert(lsm.contains(i))
+      assert(lsm.apply(i)(1) == "1")
+    }
+    val e = lsm.apply(9)
+
+
+    for (i <- 51 to 99) {
+      var  stein = "1"
+      lsm.insert(i, stein)
+      assert(lsm.contains(i))
+      assert(lsm.apply(i)(1) == "1")
+    }
+    val d = lsm.apply(99)
+    assert(lsm._levels(1).get.size == 200)
+    assert(lsm._levels(2).get.size == 400)
+
 
   }
+
 
 }

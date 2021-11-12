@@ -168,13 +168,18 @@ class LSMIndex[K:Ordering, V <: AnyRef](_bufferSize: Int)(implicit ktag: ClassTa
       val x: SearchResult = copy.get.search(key, null.asInstanceOf[V])
       x match {
         case Found(idx) => {
+          var bruh = 0
             var acc1 = idx
             while (acc1 >= 0 &&  acc1 != copy.get.size && copy.get(acc1)._1 == key && copy.get.size - 1 != idx  ) {
               ans = ans :+ copy.get(acc1)._2
               acc1 = acc1 + 1
+              bruh = -2
             }
             var acc = idx
-            acc = acc -1
+            if (bruh == -2) {
+            acc = acc - 1
+              bruh = 0
+           }
             while ( acc >= 0 && acc != copy.get.size  && copy.get(acc)._1 == key && idx != 0 ) {
               ans = ans :+ copy.get(acc)._2
               acc = acc - 1
