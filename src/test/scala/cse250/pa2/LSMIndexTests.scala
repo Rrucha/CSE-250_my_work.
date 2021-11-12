@@ -40,22 +40,55 @@ class LSMIndexTest extends AnyFlatSpec {
    assert(lsm._levels(0).get.size == 100)
    assert(lsm._bufferElementsUsed == 0)
 
-    for (i <- 1 to 99) {
+    for (i <- 1 to 100) {
     var  stein = "1"
       lsm.insert(i, stein)
       assert(lsm.contains(i))
-
     }
-    lsm.insert(100, "1")
-    for (k <- 1 to 99){
+
+    for (k <- 1 to 100){
+      assert(lsm.apply(k)(1) == "1")
+      assert(lsm.contains(k))
       assert(lsm.apply(k)(1) == "1")
     }
-    assert(lsm.apply(100)(1) == "1")
+    val w = lsm.apply(100)
     assert(lsm._levels(0).isEmpty)
     assert(lsm._levels(1).get.size == 200)
     assert(lsm._bufferElementsUsed == 0)
+    for (i <- 1 to 100) {
+      var  stein = "1"
+      lsm.insert(i, stein)
+      assert(lsm.contains(i))
+      assert(lsm.apply(i)(1) == "1")
+    }
+    val v = lsm.apply(100)
+    assert(lsm._levels(0).get.size == 100)
+    assert(lsm._levels(1).get.size == 200)
+    for (i <- 1 to 100) {
+      var  stein = "1"
+      lsm.insert(i, stein)
+      assert(lsm.contains(i))
+      val j = lsm.apply(i)(1)
+      assert(lsm.apply(i)(1) == "1")
+    }
 
+    val j = lsm.apply(100)
+    assert(lsm.apply(100)(1) == "1")
 
+    assert(lsm._levels(2).get.size == 400)
+    lsm.insert(1, "1")
+
+    for (i <- 1 to 100) {
+      var  stein = "1"
+      lsm.insert(i, stein)
+      assert(lsm.contains(i))
+      assert(lsm.apply(i)(1) == "1")
+    }
+    val b = lsm.apply(100)
+    assert(lsm.apply(100)(1) == "1")
+
+    assert(lsm._levels(0).get.size == 100)
+    assert(lsm._levels(2).get.size == 400)
 
   }
 

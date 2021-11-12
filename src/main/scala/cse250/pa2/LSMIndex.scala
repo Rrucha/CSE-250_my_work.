@@ -85,10 +85,10 @@ class LSMIndex[K:Ordering, V <: AnyRef](_bufferSize: Int)(implicit ktag: ClassTa
    */
   def promote(level: Int, layerContents: IndexedSeq[(K, V)]): Unit = {
    if (_levels.isEmpty){
-     return _levels += Option(layerContents)
+     _levels += Option(layerContents)
    }
    else if (_levels.size <= level){
-     return _levels += Option(layerContents)
+      _levels += Option(layerContents)
    }
     else if (_levels(level).nonEmpty){
      val what = MergedIterator.merge[(K,V)](_levels(level).get,layerContents)
@@ -97,7 +97,7 @@ class LSMIndex[K:Ordering, V <: AnyRef](_bufferSize: Int)(implicit ktag: ClassTa
     }
 
     else{
-     return   _levels += Option(layerContents)
+       _levels(level) = Option(layerContents)
 
     }
   }
@@ -113,19 +113,25 @@ class LSMIndex[K:Ordering, V <: AnyRef](_bufferSize: Int)(implicit ktag: ClassTa
     var k = 0
     var check = 0;
     while (k <= _bufferElementsUsed) {
-         if (_buffer(k)._1 == key) {
+      val some = _buffer(k)._1
+      if (_buffer(k)._1 == key) {
           return true
          }
       k = k + 1
     }
     var i = 0
     while(i != _levels.size) {
-     val x : SearchResult =  _levels(i).get.search(key, null.asInstanceOf[V])
+       if(_levels(i) != None){
+      val x: SearchResult = _levels(i).get.search(key, null.asInstanceOf[V])
       x match {
         case Found(idx) => return true;
         case InsertionPoint(idx) => check = -2;
       }
       i = i + 1
+    }
+      else{
+        i = i + 1
+      }
     }
     if (check == -2){
        false
@@ -162,18 +168,17 @@ class LSMIndex[K:Ordering, V <: AnyRef](_bufferSize: Int)(implicit ktag: ClassTa
       val x: SearchResult = copy.get.search(key, null.asInstanceOf[V])
       x match {
         case Found(idx) => {
-
             var acc1 = idx
-            while (( acc1 != 200 && copy.get(acc1)._1 == key) && copy.get.size - 1 != idx  ) {
+            while (acc1 >= 0 &&  acc1 != copy.get.size && copy.get(acc1)._1 == key && copy.get.size - 1 != idx  ) {
               ans = ans :+ copy.get(acc1)._2
               acc1 = acc1 + 1
             }
             var acc = idx
-            while ( (acc != 200 && copy.get(acc)._1 == key ) && idx != 0 ) {
+            acc = acc -1
+            while ( acc >= 0 && acc != copy.get.size  && copy.get(acc)._1 == key && idx != 0 ) {
               ans = ans :+ copy.get(acc)._2
               acc = acc - 1
             }
-
         }
         case InsertionPoint(idx) => check = -2;
       }
@@ -182,6 +187,7 @@ class LSMIndex[K:Ordering, V <: AnyRef](_bufferSize: Int)(implicit ktag: ClassTa
       else{
         i = i + 1
       }
+      check = 0
     }
     if (check == -2) {
        Seq.empty
