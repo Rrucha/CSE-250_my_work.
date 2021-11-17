@@ -283,6 +283,9 @@ loop: We can do a bit of preparation work before we start running the algorithm
 to make the inner loop much faster, turning into an algorithm called the hash 
 join.
 
+**Note:** Although *technically* the runtime of accesses to a `HashTable` are 
+worst-case linear, we will use *expected* runtimes in this 
+
 Consider what happens when we load `tableB` into a HashMap first.  Specifically
 for each record `b` in `tableB`, insert `b` into the HashMap with a key of 
 `getTableBKey(b)` (this is typically called the *build* phase of hash join).  
@@ -292,7 +295,9 @@ val hashTable = mutable.HashMap[K, List[R2]]()
 for(b <- tableB){
   val key = getTableBKey(b)
   if(hashTable.contains(key)){ 
-    hashTable += (key ->  b +: hashTable(key))
+    hashTable(key) = b +: hashTable(key)
+  } else {
+    hashTable(key) = List(b)
   }
 }
 ```
@@ -302,12 +307,16 @@ Note that multiple records of `tableB` may have the same join key (e.g., records
 general, typically, the hash join will store a Sequence of records for each join
 key.
 
-As discussed in class, building a HashMap with $n$ records at a pre-determined 
-load factor $\alpha$ takes $O(n)$ (i.e., $O(|\text{tableB}|)$) time, even 
-accounting for any necessary resizes.
+**Note**: `+:`, the *prepend* operation on an immutable `List` (i.e., a 
+Singly-Linked List) only requires modifying the list head, and runs in $O(1)$ 
+time.
 
-Now, when we loop over the records of `tableA`, we can recover all of the 
-`tableB` records by probing the hash table.
+As discussed in class, building a HashMap with $n$ records at a pre-determined 
+load factor $\alpha$ takes an expected $O(n)$ (i.e., $O(|\text{tableB}|)$) time,
+even accounting for any necessary resizes.
+
+Next, when we loop over the records of `tableA`, we can recover all of the 
+`tableB` records by probing the hash table instead of looping over `tableB`.
 
 ```scala
 for(a <- tableA){
@@ -322,24 +331,33 @@ for(a <- tableA){
 
 We're still looping over every element of `tableA`, but now instead of a 
 full iteration of `tableB`, we do an $O(1)$ hash table lookup (technically two
-in the algorithm above: `contains(key)` and `hashTable(key)`).  Since there 
-might be multiple matches for a given `a` record, we need to iterate over all of
-these.  
+in the algorithm above: `contains(key)` and `hashTable(key)`), which has an 
+*expected* runtime of O(1).  Since there might be multiple matches for a given 
+`a` record, we also need to iterate over all of these.  
 
 Although the worst-case runtime of this step (typically called the *probe* 
 phase) can be $O(|\texttt{tableA}| \cdot |\texttt{tableB}|)$ (i.e., if every `b` 
-record has the same key), it is typically much lower.  It is customary to bound
-the runtime based on the size of the join result (which is often small).  
-Observing that every time through the inner for loop here adds one record to the
-result, the runtime is: $O(|\texttt{tableA}| + |\texttt{result}|)$
+record has the same key), it is typically much lower.  As a result, it is 
+customary to capture the runtime of the hash join by looking at the number of
+records it outputs.  For example, if we know that every record in `tableB`
+joins with at most one record of `tableA` (as is the case for **Pizza by Zip**),
+then we can bound the number of records in the join output by $|tableB|$.
+
+Observe that each iteration of the inner loop (over the records in `tableB`) 
+appends one record to the result.  Thus, the total runtime for this function is
+$$O\left(\sum_{a \in \texttt{tableA}}\left(1 + \sum_{b \in \texttt{tableB}\;:\; a.key = b.key} 1\right)\right)$$
+$$=O\left(\sum_{a \in \texttt{tableA}}1 + \sum_{a \in \texttt{tableA}}\sum_{b \in \texttt{tableB}\;:\; a.key = b.key} 1\right)$$
+$$=O(|\texttt{tableA}| + |\texttt{result}|)$$
 
 ##### Runtime
 
-Combining the runtimes of the build and probe phases, we get an overall runtime
-for the hash join algorithm of:
+Combining the runtimes of the build and probe phases, we get an overall 
+**expected** runtime for the hash join algorithm of:
 $$O(|\texttt{tableB}| + |\texttt{tableA}| + |\texttt{result}|)$$
 
-Regardless of how the tables scale, this function always grows **linearly**.
+Regardless of how the tables scale (and under the common assumption that the 
+size of the output scales linearly with the size of the input), this function 
+always grows **linearly**.
 
 ---
 
