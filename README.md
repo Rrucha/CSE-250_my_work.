@@ -1,7 +1,7 @@
 # Programming Assignment 3: Maps
 
 
-**Due: Friday Dec 3 Before 5:00 PM (30 points)**
+**Due: Friday Dec 10 Before 5:00 PM (30 points)**
 
 **Total Points = 30**
 
