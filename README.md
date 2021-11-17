@@ -1,5 +1,3 @@
-# DRAFT
-
 # Programming Assignment 3: Maps
 
 
@@ -10,9 +8,12 @@
 ## Objectives
 
 In this assignment, you will:
-* Use maps to perform a relational join between two datasets
-* Link open datasets together
-* Learn about privacy issues in Open Data
+
+* Use maps to perform join two datasets together
+* Use maps to compute statistics over a dataset
+* Learn about the limitations of simple data anonymization techniques
+* Learn about privacy issues resulting from data release
+* Work with open data resources
 
 ## Useful Resources
 
@@ -30,6 +31,7 @@ syntax.  You will also want to read the Scala references provided below:
 * [ScalaTest Docs](https://www.scalatest.org/)
 
 Relevant textbook sections:
+
 * Sets and Maps - § 6.2, 6.3 p189-197
 * Hash Tables - § 22 p609-622
 
@@ -118,10 +120,11 @@ score will be computed based on **the most recent submission**.
 ## Relational Database Joins
 
 Relational (SQL) databases like MySQL, Postgresql, SQLite, and others are used 
-extensively throughout cloud infrastructure for data storage and processing.  
-One of the main computational tasks relational databases handle on a regular
-basis is called a join.  Although the task in this assignment is not exactly
-a join, you may find the following both informative and helpful.
+extensively throughout cloud infrastructure for data storage and processing.  One 
+of the main computational tasks relational databases handle on a regular
+basis is called a **join**.  Although the computation you will be asked to 
+implement in this assignment is not exactly a join, you may find the following 
+both informative and helpful when implementing your assignment.
 
 #### Relational Tables
 
@@ -166,8 +169,9 @@ records of two tables together on some field, called the **join key**. For
 each record in one table, we're going to find the corresponding record in the
 other table and produce a new "combined" record.
 
-(To be precise, what we're talking about here is a specific kind of join called
-an equi-join, but this is by far the most common kind)
+*(To be pedantic, what we're talking about here is a specific kind of join called
+an _equi-join_.  However, equi-joins are sufficiently common that it's common
+to refer to equi-joins as simply joins)*
 
 For example, let's join together the **Customer** and **Pizza By Zip** tables on
 their mutual **Zip Code** attribute (e.g., to find the reccomended pizza place
@@ -246,7 +250,7 @@ $|\texttt{tableA}| = |\texttt{tableB}| = n$), then the runtime becomes quadratic
 
 ##### Example
 
-Let's assuming that the records of our example tables are defined as:
+Let's assume that the records of our example tables are defined as:
 
 ```scala
 case class Customer(
@@ -280,11 +284,17 @@ val output = nestedLoopJoin(
 The runtime of the nested-loop join algorithm is high.  To get a better runtime
 we can observe that a large part of the cost is repeatedly running the inner
 loop: We can do a bit of preparation work before we start running the algorithm
-to make the inner loop much faster, turning into an algorithm called the hash 
-join.
+to make the inner loop much faster.  The result is what people who use and build
+relational databases called the "hash join" algorithm.
 
-**Note:** Although *technically* the runtime of accesses to a `HashTable` are 
-worst-case linear, we will use *expected* runtimes in this 
+*(Again, some terminological pedantry: this is specifically the _one-pass hash join_.  A 
+closely related variant is called the two-pass, or "grace" hash join, and is used
+when there isn't enough space to hold all of `tableA` and `tableB` in memory, or
+when the join computation is big enough that it needs to be run across multiple computers --- e.g., 
+"in the cloud")*
+
+**Note:** Although the runtime of accesses to a `HashTable` are 
+worst-case linear, we will use *expected* runtimes in this assignment.
 
 Consider what happens when we load `tableB` into a HashMap first.  Specifically
 for each record `b` in `tableB`, insert `b` into the HashMap with a key of 
@@ -416,6 +426,10 @@ and follow along with the example notebook they provide to understand further.
 
 Template code for the assignment project is provided in `src/main/scala/cse250/pa3`. 
 All functions to be implemented are provided in the class `cse250.pa3.DataTools`.
+A preliminary set of test cases is provided in  `src/test/scala/cse250/pa3`, and
+a set of example data files are provided in  `src/main/resources`. Note that, 
+while you will not be graded on the efficacy of your test cases, **I strongly
+encourage you to build on the provided test cases**.
 
 #### Problem 1: Loading Data (5 points)
 
@@ -436,8 +450,9 @@ Both functions can make the following assumptions:
 
 * The file referenced by `filename` exists.
 * The first line of the CSV file is a header.  
-* Every subsequent line may be split into fields with [[String]]'s split method
-* Columns containing dates are in a format interpretable by [[parseDate]]
+* Every subsequent line may be split into fields with `String`'s split method.
+* Columns containing dates are in a format interpretable by `parseDate` (which 
+  is already defined in `DataTools`).
 * Header fields for the data files are as follows:
 
 Header fields for the health records are:
@@ -455,6 +470,9 @@ Header fields for the voter records are:
 2. "Last Name"
 3. "Birthday"
 4. "Zip Code"
+
+As in PA0, you are encouraged to use [scala.io.Source](https://www.scala-lang.org/api/current/scala/io/Source$.html)
+to load the data.
 
 #### Problem 2: De-Anonymizing Data (20 points)
 
@@ -475,7 +493,7 @@ For this problem you should complete the definition of the
   ): mutable.Map[String, HealthRecord] = ???
 ```
 
-**Runtime**: This function **must** run in $O(|\texttt{voterRecords}| + |\texttt{healthRecords}|)$
+**Runtime**: This *expected* runtime of this function **must** be $O(|\texttt{voterRecords}| + |\texttt{healthRecords}|)$
 
 **Note**: A unique match occurs when exactly one voter record can map to exactly
 one health record and the opposite is also true.
@@ -507,13 +525,13 @@ complete the definition of the `DataTools.computeHealthRecordDist` method:
 * Given the value of `attribute`, you should calculate stats for the list of 
   `HealthRecord` objects as follows:
     * If `attribute == HealthRecordBirthday`, use `HealthRecord`'s `m_Birthday` field.
-    * If `attribute == HealthRecordZipCode`, `HealthRecord`'s `m_ZipCode` field.
+    * If `attribute == HealthRecordZipCode`, use `HealthRecord`'s `m_ZipCode` field.
 * In the output, store a mapping from each unique value to the percentage of the
   records containing that value.
     * The values should be stored as a `String`, regardless of initial type.
     * The percentages should be a value in the range $(0,1]$.
 
-**Runtime**: This function **must** run in $O(|\texttt{healthRecords}|)$
+**Runtime**: The *expected* runtime of this function **must** be $O(|\texttt{healthRecords}|)$
 
 As a follow-up question, which you don't need to answer: why do we not care 
 about trying to anonymize the `VoterRecord` data set?
@@ -532,6 +550,7 @@ will continue to remind you throughout the semester and hope to avoid any incide
 ### What constitutes a violation of academic integrity?
 
 These bullets should be obvious things not to do (but commonly occur):
+
 * Turning in your friend's code/write-up (obvious).
 * Turning in solutions you found on Google with all the variable names changed (should be obvious).  This is a copyright violation, in addition to an AI violation.
 * Turning in solutions you found on Google with all the variable names changed and 2 lines added (should be obvious).  This is also a copyright violation.
@@ -556,8 +575,8 @@ an assignment.  That is the best way to learn and to overcome obstacles.  At the
 time, you need to be sure you do not overstep and not plagiarize.  Discussions pointing
 to relevant course materials are OK.  For example, the following is acceptable advice:
 
-> It would be helpful to review the usage of the stack in the recitation slides from
-> week XX.
+    It would be helpful to review the usage of the stack in the recitation slides 
+    from week XX.
 
 When working with your peers, we ask that you include attribution; In the header 
 comment of the Main function of your submission, please list all peers who you have
@@ -566,9 +585,9 @@ discussed the project with.
 Explaining every step in detail and/or giving pseudocode that solves the problem
 is **not ok**.  For example, the following is **not acceptable** advice:
 
-> I copied the algorithm from the week XX notes into my code at the start of the
-> function, created a function that went through the given data and put it into a list, 
-> called that function, and then sorted the results.
+    I copied the algorithm from the week XX notes into my code at the start of the
+    function, created a function that went through the given data and put it into 
+    a list, called that function, and then sorted the results.
 
 The first example is OK.  The second example, however, is a summary of your code and
 is not acceptable.  Remember that you should never show any of your code to other 
@@ -594,6 +613,7 @@ probably overstepping.
 
 More explicitly, you may use any of the following resources (with proper 
 citation/annotation in your code: 
+
 * Any example files posted on the course webpage or Piazza (from lecture or recitation)
 * Any code that the instructor provides
 * Any code that the TAs provide
@@ -613,18 +633,18 @@ please discuss with the instructor to determine a workaround and, at the very le
 avoid an academic integrity infraction.  For example, you might send an email such
 as the following to the course instructor:
 
-> Clarus T Example<br/>
-> **UBIT**: ctexamp<br/>
-> **Person** #: 123456789
-> 
-> Dear Dr. Kennedy,
-> 
-> I believe that I may have submitted work that is *{ not fully my own | not properly
-> attributed }*.  I wish to retract my submission to preserve academic integrity in
-> the course.
-> 
-> Signed,<br/>
-> &nbsp;&nbsp;Clarus T Example
+    Clarus T Example
+    UBIT: ctexamp
+    Person #: 123456789
+    
+    Dear Dr. Kennedy,
+    
+    I believe that I may have submitted work that is { not fully my own | not 
+    properly attributed }.  I wish to retract my submission to preserve academic 
+    integrity in the course.
+     
+    Signed,
+      Clarus T Example
 
 This policy on assignments is here so that you learn the material and how to think 
 for yourself.  There is no cognitive benefit achieved by submitting solutions someone
@@ -633,6 +653,7 @@ else has written (which likely already exist in some form).
 ## Collaboration Policy
 
 The policy for collaboration on assignments is as follows:
+
 * All work for this course must be original individual work.
 * You must follow the limits on collaboration as defined in the AI policy (i.e., no shared code/etc...)
 * You must identify any collaborators (first and last name) on every assignment.  THis can be in a comment at the top of your code submissions or on the first page at the top of your written work, beside your name.
@@ -645,7 +666,12 @@ as where the example code resides.
 
 
 ## Revision History
-* Summer 2021 - Andrew Hughes (ahughes6@buffalo.edu); With thanks to the Mozilla Foundation
-* Fall 2021 - Oliver Kennedy (okennedy@buffalo.edu)
+* Summer 2021 - Initial project draft developed as part of the [Mozilla Responsible Computer Science Challenge](https://foundation.mozilla.org/en/what-we-fund/awards/responsible-computer-science-challenge/) by:
+    * Joshua Caskie (jmcaskie@buffalo.edu)
+    * Alexander Fernandez (adfernan@buffalo.edu)
+    * Garegin Grigoryan (grigoryan@alfred.edu)
+    * Andrew Hughes (ahughes6@buffalo.edu)
+    * Macy McDonald (macymcdo@buffalo.edu)
+* Fall 2021 - Adapted for CSE-250 by Oliver Kennedy (okennedy@buffalo.edu)
 
 
