@@ -23,6 +23,8 @@ import cse250.objects.{HealthRecord, VoterRecord, HealthRecordAttribute, HealthR
 import java.io.File
 import java.text.DateFormat
 import java.util.Date
+
+import scala.io.Source
 import scala.collection.mutable
 
 object DataTools {
@@ -31,8 +33,8 @@ object DataTools {
    * @param    dateString     A date string in a standard format like MM/DD/YYYY
    * @return                  A [[Date]] encoding dateString
    */
-  private def parseDate(dateString: String): Date = 
-    DateFormat.getDateInstance().parse(dateString)
+  def parseDate(dateString: String): Date = 
+    DateFormat.getDateInstance(DateFormat.SHORT).parse(dateString)
 
 
   /**
@@ -98,7 +100,6 @@ object DataTools {
     healthRecords: Seq[HealthRecord]
   ): mutable.Map[String, HealthRecord] = ???
 
-
   /**
    * Compute a histogram over one of the attributes of HealthRecord
    * @param    records      A [[Sequence]] of [[HealthRecord]]s
@@ -114,6 +115,8 @@ object DataTools {
    * 
    * If attribute == HealthRecordZipCode, use [[HealthRecord]]'s 
    * `m_ZipCode` field.
+   * 
+   * This function **must** run in O(healthRecords.size)
    */
   def computeHealthRecordDist(
     records: Seq[HealthRecord], 

@@ -475,7 +475,7 @@ For this problem you should complete the definition of the
   ): mutable.Map[String, HealthRecord] = ???
 ```
 
-This function **must** run in $O(|\texttt{voterRecords}| + |\texttt{healthRecords}|)$
+**Runtime**: This function **must** run in $O(|\texttt{voterRecords}| + |\texttt{healthRecords}|)$
 
 **Note**: A unique match occurs when exactly one voter record can map to exactly
 one health record and the opposite is also true.
@@ -512,6 +512,8 @@ complete the definition of the `DataTools.computeHealthRecordDist` method:
   records containing that value.
     * The values should be stored as a `String`, regardless of initial type.
     * The percentages should be a value in the range $(0,1]$.
+
+**Runtime**: This function **must** run in $O(|\texttt{healthRecords}|)$
 
 As a follow-up question, which you don't need to answer: why do we not care 
 about trying to anonymize the `VoterRecord` data set?
