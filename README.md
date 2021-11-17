@@ -438,7 +438,7 @@ Header fields for the voter records are:
 3. "Birthday"
 4. "Zip Code"
 
-#### Problem 2: De-Anonymizing Data
+#### Problem 2: De-Anonymizing Data (20 points)
 
 Given the data that we loaded, it is time to illustrate the problem to your 
 colleague. Using the lists of `VoterRecord` and `HealthRecord` objects, produce 
@@ -465,7 +465,7 @@ one health record and the opposite is also true.
 **Hint**: To gain an understanding of a process to solve this problem, you may 
 want to work it out by hand on the small data sets provided.
 
-#### Problem 3: Statistics
+#### Problem 3: Statistics (5 points)
 
 Now that you have your colleague on board, you decide to hand off your data set 
 to the data science team to produce a statistically similar, but secured, data 
