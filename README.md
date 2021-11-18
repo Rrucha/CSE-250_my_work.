@@ -86,7 +86,7 @@ git clone microbase@odin.cse.buffalo.edu:YOUR_UBIT.git
 source directory, run the following commands at the command line.
 
 ```bash
-git remote add project-3 git@github.com:UBOdin/cse-250-pa-maps.git
+git remote add project-3 https://github.com/UBOdin/cse250-maps-anonymization.git
 git fetch project-3
 git merge project-3/main
 ```
