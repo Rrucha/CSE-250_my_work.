@@ -29,10 +29,10 @@ class DataToolsTests extends AnyFlatSpec
   /**
    * Method to compare doubles with a specified degree of precision.
    */
-  val epsilon: Double = 0.001
+  val EPSILON: Double = 0.0001
 
   def compareDoubles(d1: Double, d2: Double): Boolean = {
-    Math.abs(d1 - d2) < epsilon
+    Math.abs(d1 - d2) < EPSILON
   }
 
   "loadHealthRecords" must "Load HealthRecords" in 
