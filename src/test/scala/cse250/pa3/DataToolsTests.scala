@@ -96,7 +96,7 @@ class DataToolsTests extends AnyFlatSpec
 
     val dist = DataTools.computeHealthRecordDist(records, HealthRecordZipCode)
 
-    assert(!(dist contains "Mon Sep 07 00:00:00 EDT 1925"), "You're loading birthdays instead of zip codes")
+    assert(!(dist contains DataTools.parseDate("09/07/1925").toString), "You're loading birthdays instead of zip codes")
     assert(dist contains "14214")
     assert(compareDoubles(dist("14214"), 0.03))
     assert(dist contains "14211")
@@ -112,7 +112,7 @@ class DataToolsTests extends AnyFlatSpec
     val dist = DataTools.computeHealthRecordDist(records, HealthRecordBirthday)
 
     assert(!(dist contains "14214"), "You're loading zip codes instead of birthdays")
-    assert(dist contains "Mon Sep 07 00:00:00 EDT 1925")
-    assert(compareDoubles(dist("Mon Sep 07 00:00:00 EDT 1925"), 0.01))
+    assert(dist contains DataTools.parseDate("09/07/1925").toString)
+    assert(compareDoubles(dist(DataTools.parseDate("09/07/1925").toString), 0.01))
   }
 }
