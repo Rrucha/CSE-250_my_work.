@@ -26,6 +26,15 @@ import cse250.objects.HealthRecordBirthday
  */
 class DataToolsTests extends AnyFlatSpec
 {
+  /**
+   * Method to compare doubles with a specified degree of precision.
+   */
+  val EPSILON: Double = 0.0001
+
+  def compareDoubles(d1: Double, d2: Double): Boolean = {
+    Math.abs(d1 - d2) < EPSILON
+  }
+
   "loadHealthRecords" must "Load HealthRecords" in 
   {
     val records = DataTools.loadHealthRecords(
@@ -89,9 +98,9 @@ class DataToolsTests extends AnyFlatSpec
 
     assert(!(dist contains "Mon Sep 07 00:00:00 EDT 1925"), "You're loading birthdays instead of zip codes")
     assert(dist contains "14214")
-    assert(dist("14214") == 0.03)
+    assert(compareDoubles(dist("14214"), 0.03))
     assert(dist contains "14211")
-    assert(dist("14211") == 0.05)
+    assert(compareDoubles(dist("14211"), 0.05))
   }
 
   "computeHealthRecordDist" must "Compute Statistics for Birthday" in 
@@ -104,6 +113,6 @@ class DataToolsTests extends AnyFlatSpec
 
     assert(!(dist contains "14214"), "You're loading zip codes instead of birthdays")
     assert(dist contains "Mon Sep 07 00:00:00 EDT 1925")
-    assert(dist("Mon Sep 07 00:00:00 EDT 1925") == 0.01)
+    assert(compareDoubles(dist("Mon Sep 07 00:00:00 EDT 1925"), 0.01))
   }
 }
