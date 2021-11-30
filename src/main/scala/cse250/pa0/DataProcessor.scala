@@ -15,7 +15,7 @@ package cse250.pa0
  * Person#: 50355134
  *
  * Collaborators (include UBIT name of each, comma separated):
- * UBIT:
+ * UBIT: rruchasi
  */
 
 
@@ -120,13 +120,10 @@ object DataProcessor {
 
     for (i <- head.indices) {
 
-
       if  (req_head.contains(head(i))) {
         val keys: String = head(i)
         val values: String = rowData(i)
-
         acc.fields += (keys -> values)
-
 
       }
     }

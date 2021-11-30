@@ -162,6 +162,12 @@ class LSMIndexTest extends AnyFlatSpec {
     val g = lsm.apply(99)
 
 
+//<<<<<<< HEAD
+//=======
+    lsm.insert(1, "foo")
+    assert(lsm.contains(1))
+    assert(lsm(1).head == "foo")
+//>>>>>>> project-3/main
   }
 
 
