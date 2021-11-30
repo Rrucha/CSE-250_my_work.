@@ -65,15 +65,15 @@ object DataTools {
       )
     }
   def loadHealthRecords(filename: File): Seq[HealthRecord] = {
-      val inputFile = Source.fromFile(filename)
-        val lines = inputFile.getLines()
+       val inputFile = Source.fromFile(filename)
+       val lines = inputFile.getLines()
        lines.drop(1)
        var ans : Seq[HealthRecord] = Seq()
         for (line <- lines) {
           val rowData = line.split(",")
           val birthday : Date  = parseDate(rowData(0))
-         val zipcode : String =   rowData(1)
-         val glasses  : Boolean = BOOL(rowData(2))
+          val zipcode : String =   rowData(1)
+          val glasses  : Boolean = BOOL(rowData(2))
           val dog : Boolean =   BOOL(rowData(3))
           val hair: Boolean =   BOOL(rowData(4))
           val eyes : Boolean =   BOOL(rowData(5))
@@ -141,14 +141,6 @@ object DataTools {
           val name = i.fullName
           ans(name) = j
         }
-        else if ( i.m_Birthday.toString == " " && i.m_ZipCode == j.m_ZipCode  ){
-          val name = i.fullName
-          ans(name) = j
-        }
-        else if (i.m_Birthday == j.m_Birthday && i.m_ZipCode == "") {
-          val name = i.fullName
-          ans(name) = j
-        }
       }
     }
     ans
@@ -183,32 +175,32 @@ object DataTools {
     for (j <- records) {
       var compare = ""
       if (attribute == HealthRecordBirthday) {
-        compare = j.m_Birthday.toString
-        if (ans.contains(compare)) {
-          var current = ans(compare)
-          current = current + 1
-          ans(compare) = current
-        }
-        else {
-          ans += (compare -> 1)
-        }
-       val raw_num = ans(compare)
-        val percentage: Double = (raw_num / len)
-        ans2(compare) = percentage
+              compare = j.m_Birthday.toString
+              if (ans.contains(compare)) {
+                  var current = ans(compare)
+                  current = current + 1
+                  ans(compare) = current
+              }
+              else {
+                  ans += (compare -> 1)
+              }
+              val raw_num = ans(compare)
+              val percentage: Double = (raw_num / len)
+              ans2(compare) = percentage
       }
       else if (attribute == HealthRecordZipCode) {
-        compare = j.m_ZipCode
-        if ( ans.contains(compare) ) {
-          var current = ans(compare)
-          current = current + 1
-          ans(compare) = current
-        }
-        else {
-          ans += (compare -> 1)
-        }
-        val raw_num = ans(compare)
-        val percentage: Double = (raw_num / len)
-        ans2(compare) = percentage
+              compare = j.m_ZipCode
+              if ( ans.contains(compare) ) {
+                  var current = ans(compare)
+                  current = current + 1
+                  ans(compare) = current
+              }
+              else {
+                  ans += (compare -> 1)
+              }
+              val raw_num = ans(compare)
+              val percentage: Double = (raw_num / len)
+              ans2(compare) = percentage
       }
     }
     ans2
