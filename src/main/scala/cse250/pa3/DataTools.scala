@@ -135,13 +135,15 @@ object DataTools {
    */
   def identifyPersons(voterRecords: Seq[VoterRecord], healthRecords: Seq[HealthRecord]): mutable.Map[String, HealthRecord] = {
     val ans: mutable.Map[String, HealthRecord] = new mutable.HashMap[String, HealthRecord]
-    for (i <- voterRecords){
-      for (j <- healthRecords){
-        if (i.m_Birthday == j.m_Birthday && i.m_ZipCode == j.m_ZipCode ) {
+    val Vlen = voterRecords.length
+    val Blen = healthRecords.length
+    for (i <- voterRecords ){
+      for( j <- 0 until Blen)
+        if (healthRecords(j).m_Birthday == i.m_Birthday){
           val name = i.fullName
-          ans(name) = j
+          ans(name) = healthRecords(j)
+
         }
-      }
     }
     ans
   }
