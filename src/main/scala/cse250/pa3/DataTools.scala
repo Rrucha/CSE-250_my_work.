@@ -145,19 +145,51 @@ object DataTools {
    */
   def identifyPersons(voterRecords: Seq[VoterRecord], healthRecords: Seq[HealthRecord]): mutable.Map[String, HealthRecord] = {
     val ans: mutable.Map[String, HealthRecord] = new mutable.HashMap[String, HealthRecord]
-    val Voter_length = voterRecords.length
-    val Health_length = healthRecords.length
-    for (i <- 0 until Voter_length){
-       for (j <- 0 until Health_length){
-         val aa = healthRecords(j)
-         val ab = voterRecords(i)
-
-        if (aa.m_Birthday == ab.m_Birthday && aa.m_ZipCode == ab.m_ZipCode) {
-          val name = ab.fullName
-          ans(name) = aa
-       }
+    val vote_map: mutable.Map[String, VoterRecord] = new mutable.HashMap[String, VoterRecord]
+    val duplicate_vote_map: mutable.Map[String, VoterRecord] = new mutable.HashMap[String, VoterRecord]
+  //  val Voter_length : Int = voterRecords.length
+   // val Health_length : Int = healthRecords.length
+    for (i <- voterRecords){
+      if (vote_map.contains(i.m_ZipCode) ) {
+       val vote_value = vote_map(i.m_ZipCode)
+        if (vote_value.m_Birthday != i.m_Birthday){
+          vote_map(i.m_ZipCode) = i
+        }
+        else{
+          duplicate_vote_map(i.m_ZipCode) = i
+        }
       }
+      else{
+        vote_map(i.m_ZipCode) = i
+      }
+
+      // val name = ab.fullName
+       //   ans(name) = aa
      }
+   for (j <- healthRecords) {
+     if ( vote_map.contains(j.m_ZipCode)) {
+       if (duplicate_vote_map.contains(j.m_ZipCode)) {
+         if (duplicate_vote_map(j.m_ZipCode).m_Birthday == j.m_Birthday) {
+           vote_map.remove(j.m_ZipCode)
+         }
+
+         else {
+           val value = vote_map(j.m_ZipCode)
+           if (value.m_Birthday == j.m_Birthday) {
+             val name = value.fullName
+             ans(name) = j
+           }
+         }
+       }
+       else {
+         val value = vote_map(j.m_ZipCode)
+         if (value.m_Birthday == j.m_Birthday) {
+           val name = value.fullName
+           ans(name) = j
+         }
+       }
+     }
+   }
     ans
   }
 
