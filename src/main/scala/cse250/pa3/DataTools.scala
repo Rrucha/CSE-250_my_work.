@@ -137,15 +137,17 @@ object DataTools {
     val ans: mutable.Map[String, HealthRecord] = new mutable.HashMap[String, HealthRecord]
     val Vlen = voterRecords.length
     val Blen = healthRecords.length
-    for (i <- 0 until Vlen ){
-      for( j <- 0 until Blen) {
+    for (i <- voterRecords ){
 
-        if (healthRecords(j).m_Birthday ==  voterRecords(i).m_Birthday && healthRecords(j).m_ZipCode ==  voterRecords(i).m_ZipCode){
-          val name = voterRecords(i).fullName
+
+        val aa = healthRecords.filter { _.m_ZipCode == i.m_ZipCode}
+        println(aa)
+        if (aa.head.m_Birthday == i.m_Birthday){
+            val name = i.fullName
+
           if(!ans.contains(name)) {
-            ans(name) = healthRecords(j)
+            ans(name) = aa.head
           }
-        }
       }
      }
     ans
