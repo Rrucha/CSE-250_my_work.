@@ -144,49 +144,28 @@ object DataTools {
    * This function **must** run in O(voterRecords.size + healthRecords.size)
    */
   def identifyPersons(voterRecords: Seq[VoterRecord], healthRecords: Seq[HealthRecord]): mutable.Map[String, HealthRecord] = {
-    val ans: mutable.Map[String, HealthRecord] = new mutable.HashMap[String, HealthRecord]
-    val vote_map: mutable.Map[String, VoterRecord] = new mutable.HashMap[String, VoterRecord]
-    val duplicate_vote_map: mutable.Map[String, VoterRecord] = new mutable.HashMap[String, VoterRecord]
+    val ans: mutable.HashMap[String, HealthRecord] = new mutable.HashMap[String, HealthRecord]
+    val vote_map: mutable.HashMap[String, (Date, VoterRecord)] = new mutable.HashMap[String, (Date,VoterRecord)]
+    val duplicate_vote_map: mutable.HashMap[String, VoterRecord] = new mutable.HashMap[String, VoterRecord]
   //  val Voter_length : Int = voterRecords.length
    // val Health_length : Int = healthRecords.length
     for (i <- voterRecords){
       if (vote_map.contains(i.m_ZipCode) ) {
        val vote_value = vote_map(i.m_ZipCode)
-        if (vote_value.m_Birthday != i.m_Birthday){
-          vote_map(i.m_ZipCode) = i
-        }
-        else{
-          duplicate_vote_map(i.m_ZipCode) = i
-        }
       }
       else{
-        vote_map(i.m_ZipCode) = i
+        vote_map(i.m_ZipCode) = (i.m_Birthday,i)
       }
 
       // val name = ab.fullName
        //   ans(name) = aa
      }
    for (j <- healthRecords) {
-     if ( vote_map.contains(j.m_ZipCode)) {
-       if (duplicate_vote_map.contains(j.m_ZipCode)) {
-         if (duplicate_vote_map(j.m_ZipCode).m_Birthday == j.m_Birthday) {
-           vote_map.remove(j.m_ZipCode)
-         }
-
-         else {
-           val value = vote_map(j.m_ZipCode)
-           if (value.m_Birthday == j.m_Birthday) {
-             val name = value.fullName
-             ans(name) = j
-           }
-         }
-       }
-       else {
-         val value = vote_map(j.m_ZipCode)
-         if (value.m_Birthday == j.m_Birthday) {
-           val name = value.fullName
-           ans(name) = j
-         }
+     if (vote_map.contains(j.m_ZipCode)) {
+       val value = vote_map(j.m_ZipCode)
+       if (value._1 == j.m_Birthday) {
+         val name = value._2.fullName
+         ans(name) = j
        }
      }
    }
