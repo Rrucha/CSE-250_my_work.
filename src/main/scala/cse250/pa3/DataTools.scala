@@ -146,20 +146,25 @@ object DataTools {
   def identifyPersons(voterRecords: Seq[VoterRecord], healthRecords: Seq[HealthRecord]): mutable.Map[String, HealthRecord] = {
     val ans: mutable.HashMap[String, HealthRecord] = new mutable.HashMap[String, HealthRecord]
     val vote_map: mutable.HashMap[String, (Date, VoterRecord)] = new mutable.HashMap[String, (Date,VoterRecord)]
-    val duplicate_vote_map: mutable.HashMap[String, VoterRecord] = new mutable.HashMap[String, VoterRecord]
+    val duplicate_vote_map: mutable.HashMap[String, (Date, VoterRecord)] = new mutable.HashMap[String, (Date, VoterRecord)]
   //  val Voter_length : Int = voterRecords.length
    // val Health_length : Int = healthRecords.length
     for (i <- voterRecords){
       if (vote_map.contains(i.m_ZipCode) ) {
-       val vote_value = vote_map(i.m_ZipCode)
+        val value = vote_map(i.m_ZipCode)
+        if (value._1 == i.m_Birthday) {
+        duplicate_vote_map(i.m_ZipCode) = (i.m_Birthday,i)
+        vote_map.remove(i.m_ZipCode)
+          }
       }
       else{
-        vote_map(i.m_ZipCode) = (i.m_Birthday,i)
+        if (! duplicate_vote_map.contains(i.m_ZipCode)) {
+          vote_map(i.m_ZipCode) = (i.m_Birthday, i)
+        }
       }
 
-      // val name = ab.fullName
-       //   ans(name) = aa
      }
+
    for (j <- healthRecords) {
      if (vote_map.contains(j.m_ZipCode)) {
        val value = vote_map(j.m_ZipCode)
