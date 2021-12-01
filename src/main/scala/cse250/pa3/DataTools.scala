@@ -71,13 +71,18 @@ object DataTools {
        var ans : Seq[HealthRecord] = Seq()
         for (line <- lines) {
           val rowData = line.split(",")
-          val birthday : Date  = parseDate(rowData(0))
+      //    var birthday: Date = parseDate(rowData(0))
+            var birthday: Date = null
+         if (rowData(0).nonEmpty) {
+            birthday = parseDate(rowData(0))
+        }
           val zipcode : String =   rowData(1)
           val glasses  : Boolean = BOOL(rowData(2))
           val dog : Boolean =   BOOL(rowData(3))
           val hair: Boolean =   BOOL(rowData(4))
           val eyes : Boolean =   BOOL(rowData(5))
-          ans = ans :+  HealthRecord(birthday,zipcode,glasses,dog,hair,eyes)
+          val add = HealthRecord(birthday,zipcode,glasses,dog,hair,eyes)
+          ans = ans :+  add
         }
      ans;
   }
@@ -108,9 +113,14 @@ object DataTools {
       val rowData = line.split(",")
       val firstName : String  = rowData(0)
       val lastName : String =   rowData(1)
-      val birthday : Date  = parseDate(rowData(2))
+      var birthday: Date = null
+
+    if (rowData(2).nonEmpty) {
+       birthday = parseDate(rowData(2))
+    }
       val zipcode  : String = rowData(3)
-     ans = ans :+  VoterRecord(firstName,lastName,birthday,zipcode)
+      val add =  VoterRecord(firstName,lastName,birthday,zipcode)
+     ans = ans :+  add
     }
     ans;
   }
@@ -136,14 +146,12 @@ object DataTools {
   def identifyPersons(voterRecords: Seq[VoterRecord], healthRecords: Seq[HealthRecord]): mutable.Map[String, HealthRecord] = {
     val ans: mutable.Map[String, HealthRecord] = new mutable.HashMap[String, HealthRecord]
     for (i <- voterRecords ){
-        val aa :Seq[HealthRecord]= healthRecords.filter { _.m_ZipCode == i.m_ZipCode}
-        val ab :Seq[HealthRecord] = aa.filter { _.m_Birthday == i.m_Birthday}
-
-            val name = i.fullName
-          if(!ans.contains(name) && ab.size == 1)  {
-            ans(name) = ab.head
-          }
-
+       for (j <- healthRecords){
+        if (i.m_Birthday == j.m_Birthday && i.m_ZipCode == i.m_ZipCode) {
+          val name = i.fullName
+          ans(name) = j
+       }
+      }
      }
     ans
   }

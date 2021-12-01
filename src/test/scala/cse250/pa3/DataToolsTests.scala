@@ -117,4 +117,26 @@ class DataToolsTests extends AnyFlatSpec
     assert(dist contains DataTools.parseDate("09/07/1925").toString)
     assert(compareDoubles(dist(DataTools.parseDate("09/07/1925").toString), 0.01))
   }
+
+  "identifyPersons" must "Identify Persons 3" in
+    {
+      val healt = DataTools.loadHealthRecords(
+        new File("src/test/resources/health.csv")
+      )
+      val vote = DataTools.loadVoterRecords(
+        new File("src/test/resources/voter.csv")
+      )
+
+      val deanonymized = DataTools.identifyPersons(vote, healt)
+
+      /*  The 10-row test data has matches for **every** record.  This
+          will not usually be the case! */
+      for(v <- vote) {
+        assert(deanonymized.keySet contains v.fullName)
+      }
+
+      assert(deanonymized("NIA GONZALEZ").m_DogAllergy == false)
+      assert(deanonymized("NIA GONZALEZ").m_BlueEyes == false)
+      assert(deanonymized("NIA GONZALEZ").m_BrownHair == true)
+    }
 }
