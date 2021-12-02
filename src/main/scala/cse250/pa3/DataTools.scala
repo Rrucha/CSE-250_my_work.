@@ -146,7 +146,6 @@ object DataTools {
   def identifyPersons(voterRecords: Seq[VoterRecord], healthRecords: Seq[HealthRecord]): mutable.Map[String, HealthRecord] = {
     val ans: mutable.Map[String, HealthRecord] = mutable.Map()
     val vote_map: mutable.HashMap[(String,Date), VoterRecord] = new mutable.HashMap[(String ,Date),VoterRecord]
-    val no_sol : mutable.HashMap[Date, (String,VoterRecord)] = new mutable.HashMap[Date, (String, VoterRecord)]
     val duplicate_vote_map: mutable.HashMap[(String,Date), VoterRecord] = new mutable.HashMap[(String ,Date),VoterRecord]
     val birth :  mutable.HashMap[Date, VoterRecord] = new mutable.HashMap[Date, VoterRecord]
     val dup_birth :  mutable.HashMap[Date, VoterRecord] = new mutable.HashMap[Date, VoterRecord]
@@ -173,7 +172,6 @@ object DataTools {
                   /** if the the Birthdays are also same "they are duplicate " * */
                    duplicate_vote_map((i.m_ZipCode,i.m_Birthday)) = i
                    vote_map.remove((i.m_ZipCode,i.m_Birthday))
-
             }
                 /** checking if the zipcode as key does not exists * */
             else {
@@ -206,7 +204,7 @@ object DataTools {
          }
        }
      }
-      if (j.m_ZipCode != null) {
+     else if (j.m_ZipCode != null) {
         if (j.m_Birthday != null) {
           val key = (j.m_ZipCode, j.m_Birthday)
           if (vote_map.contains(key)) {
