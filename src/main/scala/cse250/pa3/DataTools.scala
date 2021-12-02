@@ -144,7 +144,7 @@ object DataTools {
    * This function **must** run in O(voterRecords.size + healthRecords.size)
    */
   def identifyPersons(voterRecords: Seq[VoterRecord], healthRecords: Seq[HealthRecord]): mutable.Map[String, HealthRecord] = {
-    val ans: mutable.HashMap[String, HealthRecord] = new mutable.HashMap[String, HealthRecord]
+    val ans: mutable.Map[String, HealthRecord] = new mutable.HashMap[String, HealthRecord]
     val vote_map: mutable.HashMap[String, (Date, VoterRecord)] = new mutable.HashMap[String, (Date,VoterRecord)]
     val no_sol : mutable.HashMap[Date, (String,VoterRecord)] = new mutable.HashMap[Date, (String, VoterRecord)]
     val duplicate_vote_map: mutable.HashMap[String, (Date, VoterRecord)] = new mutable.HashMap[String, (Date, VoterRecord)]
@@ -152,62 +152,92 @@ object DataTools {
     for (i <- voterRecords){
       /**checking if the zipcode as key already exists **/
       if (i.m_ZipCode == null){
-        if (!null_zmap.contains(i.m_Birthday)) {
-          null_zmap(i.m_Birthday) = (i.m_ZipCode, i)
+             if (i.m_Birthday != null) {
+               if (!null_zmap.contains(i.m_Birthday)) {
+                 null_zmap(i.m_Birthday) = (i.m_ZipCode, i)
+               }
+             }
+      }
+      else if (i.m_ZipCode != null) {
+          if (i.m_Birthday != null) {
+            if (vote_map.contains(i.m_ZipCode)) {
+                  val value = vote_map(i.m_ZipCode)
+                  /** if the the Birthdays are also same "they are duplicate " * */
+                  if (value._1 == i.m_Birthday) {
+                    /** Adding duplicate in  duplicate_vote_map is gonna help keep track of duplicates */
+                    duplicate_vote_map(i.m_ZipCode) = (i.m_Birthday, i)
+                    vote_map.remove(i.m_ZipCode)
+                  }
+                  else {
+                    /** checking if the zip is not in duplicate map */
+                    if (!duplicate_vote_map.contains(i.m_ZipCode)) {
+                      no_sol(i.m_Birthday) = (i.m_ZipCode, i)
+                    }
+                    else {
+                      /** if it is in duplicate map then birthday is not same */
+                      val value = duplicate_vote_map(i.m_ZipCode)
+                      if (value._1 != i.m_Birthday) {
+                        no_sol(i.m_Birthday) = (i.m_ZipCode, i)
+                      }
+                    }
+                  }
+            }
+
+                /** checking if the zipcode as key does not exists * */
+            else {
+                  /** checking if the zip is not in duplicate map */
+                  if (!duplicate_vote_map.contains(i.m_ZipCode)) {
+                    vote_map(i.m_ZipCode) = (i.m_Birthday, i)
+                  }
+                  else {
+                    /** if it is in duplicate map then birthday is not same */
+                    val value = duplicate_vote_map(i.m_ZipCode)
+                    if (value._1 != i.m_Birthday) {
+                      no_sol(i.m_Birthday) = (i.m_ZipCode, i)
+                    }
+                  }
+            }
+        }
+        if (i.m_Birthday == null) {
+          if (vote_map.contains(i.m_ZipCode)) {
+            val value = vote_map(i.m_ZipCode)
+            /** if the the Birthdays are also same "they are duplicate " * */
+            if (value._1 == null) {
+              /** checking if the zip is not in duplicate map */
+              if (!duplicate_vote_map.contains(i.m_ZipCode)) {
+                vote_map(i.m_ZipCode) = (null, i)
+              }
+            }
+          }
         }
       }
-      if (vote_map.contains(i.m_ZipCode) ) {
-                val value = vote_map(i.m_ZipCode)
-                /**if the the Birthdays are also same "they are duplicate " **/
-                if (value._1 == i.m_Birthday) {
-                      /** Adding duplicate in  duplicate_vote_map is gonna help keep track of duplicates */
-                     duplicate_vote_map(i.m_ZipCode) = (i.m_Birthday,i)
-                     vote_map.remove(i.m_ZipCode)
-                  }
-                else{
-                      /**checking if the zip is not in duplicate map */
-                      if (!duplicate_vote_map.contains(i.m_ZipCode)) {
-                        no_sol(i.m_Birthday) = (i.m_ZipCode, i)
-                      }
-                      else{
-                      /** if it is in duplicate map then birthday is not same */
-                      val value = duplicate_vote_map(i.m_ZipCode)
-                        if (value._1 != i.m_Birthday){
-                          no_sol(i.m_Birthday) = (i.m_ZipCode, i)
-                        }
-                  }
-                }
-      }
-      /**checking if the zipcode as key does not exists **/
-      else{
-                /**checking if the zip is not in duplicate map */
-                if (!duplicate_vote_map.contains(i.m_ZipCode)) {
-                    vote_map(i.m_ZipCode) = (i.m_Birthday, i)
-                }
-                else{
-                      /** if it is in duplicate map then birthday is not same */
-                      val value = duplicate_vote_map(i.m_ZipCode)
-                      if (value._1 != i.m_Birthday){
-                        no_sol(i.m_Birthday) = (i.m_ZipCode, i)
-                      }
-                }
-      }
-     }
+   }
    for (j <- healthRecords) {
-         if (vote_map.contains(j.m_ZipCode)) {
-               val value = vote_map(j.m_ZipCode)
-               if (value._1 == j.m_Birthday) {
-                 val name = value._2.fullName
-                 ans(name) = j
-               }
+      if (j.m_ZipCode != null) {
+           if (vote_map.contains(j.m_ZipCode)) {
+             val value = vote_map(j.m_ZipCode)
+             if (value._1 == j.m_Birthday) {
+               val name = value._2.fullName
+               ans(name) = j
+             }
+           }
+        if (no_sol.contains(j.m_Birthday)) {
+          val value = no_sol(j.m_Birthday)
+          if (value._1 == j.m_ZipCode) {
+            val name = value._2.fullName
+            ans(name) = j
+          }
+        }
+      }
+     if (j.m_ZipCode == null) {
+       if (null_zmap.contains(j.m_Birthday)) {
+         val value = null_zmap(j.m_Birthday)
+         if (value._1 == j.m_ZipCode) {
+           val name = value._2.fullName
+           ans(name) = j
          }
-         if (no_sol.contains(j.m_Birthday)) {
-               val value = no_sol(j.m_Birthday)
-               if (value._1 == j.m_ZipCode) {
-                 val name = value._2.fullName
-                 ans(name) = j
-               }
-         }
+       }
+     }
    }
     ans
  }
@@ -236,13 +266,11 @@ object DataTools {
     val len : Int = records.length
     val ans: mutable.Map[String, Double] = new mutable.HashMap[String, Double]
     val ans2: mutable.Map[String, Double] = new mutable.HashMap[String, Double]
-    var recordingB: Map[String, ArrayBuffer[Int]] = Map()
-    var recordingZ: Map[String, ArrayBuffer[Int]] = Map()
     for (j <- records) {
       var compare = ""
       if (attribute == HealthRecordBirthday) {
               compare = j.m_Birthday.toString
-              if (ans.contains(compare)) {
+              if (ans.contains(compare)){
                   var current = ans(compare)
                   current = current + 1
                   ans(compare) = current
