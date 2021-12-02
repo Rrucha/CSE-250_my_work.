@@ -204,13 +204,15 @@ object DataTools {
              val value = birth(j.m_Birthday)
              val name = value.fullName
              ans(name) = j
-             dup_check_birth(j.m_Birthday) = j
+
            }
+           dup_check_birth(j.m_Birthday) = j
+         }
            else{
              ans.remove(birth(j.m_Birthday).fullName)
              birth.remove(j.m_Birthday)
            }
-         }
+
        }
      }
      if (j.m_ZipCode != null) {
@@ -235,10 +237,10 @@ object DataTools {
                val value = zip(j.m_ZipCode)
                val name = value.fullName
                ans(name) = j
-                dup_check_zip(j.m_ZipCode) = j
               }
+              dup_check_zip(j.m_ZipCode) = j
             }
-         else{
+            else{
               ans.remove(zip(j.m_ZipCode).fullName)
               zip.remove(j.m_ZipCode)
             }
