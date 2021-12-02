@@ -151,51 +151,60 @@ object DataTools {
     for (i <- voterRecords){
       /**checking if the zipcode as key already exists **/
       if (vote_map.contains(i.m_ZipCode) ) {
-        val value = vote_map(i.m_ZipCode)
-        /**if the the Birthdays are also same "they are duplicate " **/
-        if (value._1 == i.m_Birthday) {
-          /** Adding duplicate in  duplicate_vote_map is gonna help keep track of duplicates */
-         duplicate_vote_map(i.m_ZipCode) = (i.m_Birthday,i)
-         vote_map.remove(i.m_ZipCode)
-          }
-        else{
-          /**checking if the zip is not in duplicate map */
-          if (!duplicate_vote_map.contains(i.m_ZipCode)) {
-            no_sol(i.m_Birthday) = (i.m_ZipCode, i)
-          }
-          else{
-          /** if it is in duplicate map then birthday is not same */
-          val value = duplicate_vote_map(i.m_ZipCode)
-            if (value._1 != i.m_Birthday){
-              no_sol(i.m_Birthday) = (i.m_ZipCode, i)
-            }
-          }
-        }
+                val value = vote_map(i.m_ZipCode)
+                /**if the the Birthdays are also same "they are duplicate " **/
+                if (value._1 == i.m_Birthday) {
+                      /** Adding duplicate in  duplicate_vote_map is gonna help keep track of duplicates */
+                     duplicate_vote_map(i.m_ZipCode) = (i.m_Birthday,i)
+                     vote_map.remove(i.m_ZipCode)
+                  }
+                else{
+                      /**checking if the zip is not in duplicate map */
+                      if (!duplicate_vote_map.contains(i.m_ZipCode)) {
+                        no_sol(i.m_Birthday) = (i.m_ZipCode, i)
+                      }
+                      else{
+                      /** if it is in duplicate map then birthday is not same */
+                      val value = duplicate_vote_map(i.m_ZipCode)
+                        if (value._1 != i.m_Birthday){
+                          no_sol(i.m_Birthday) = (i.m_ZipCode, i)
+                        }
+                  }
+                }
       }
+      /**checking if the zipcode as key does not exists **/
       else{
-        if (!duplicate_vote_map.contains(i.m_ZipCode)) {
-          vote_map(i.m_ZipCode) = (i.m_Birthday, i)
-        }
+                /**checking if the zip is not in duplicate map */
+                if (!duplicate_vote_map.contains(i.m_ZipCode)) {
+                    vote_map(i.m_ZipCode) = (i.m_Birthday, i)
+                }
+                else{
+                      /** if it is in duplicate map then birthday is not same */
+                      val value = duplicate_vote_map(i.m_ZipCode)
+                      if (value._1 != i.m_Birthday){
+                        no_sol(i.m_Birthday) = (i.m_ZipCode, i)
+                      }
+                }
       }
      }
    for (j <- healthRecords) {
-     if (vote_map.contains(j.m_ZipCode)) {
-       val value = vote_map(j.m_ZipCode)
-       if (value._1 == j.m_Birthday) {
-         val name = value._2.fullName
-         ans(name) = j
-       }
-     }
-     if (no_sol.contains(j.m_Birthday)) {
-       val value = no_sol(j.m_Birthday)
-       if (value._1 == j.m_ZipCode) {
-         val name = value._2.fullName
-         ans(name) = j
-       }
-     }
+         if (vote_map.contains(j.m_ZipCode)) {
+               val value = vote_map(j.m_ZipCode)
+               if (value._1 == j.m_Birthday) {
+                 val name = value._2.fullName
+                 ans(name) = j
+               }
+         }
+         if (no_sol.contains(j.m_Birthday)) {
+               val value = no_sol(j.m_Birthday)
+               if (value._1 == j.m_ZipCode) {
+                 val name = value._2.fullName
+                 ans(name) = j
+               }
+         }
    }
     ans
-  }
+ }
 
   /**
    * Compute a histogram over one of the attributes of HealthRecord
