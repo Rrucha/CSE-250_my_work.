@@ -70,7 +70,7 @@ object DataTools {
        lines.drop(1)
        var ans : Seq[HealthRecord] = Seq()
         for (line <- lines) {
-          val rowData = line.split(",")
+          val rowData = line.split(",",6)
       //    var birthday: Date = parseDate(rowData(0))
             var birthday: Date = null
          if (rowData(0).nonEmpty) {
@@ -192,7 +192,6 @@ object DataTools {
               if (!dup_zip.contains(i.m_ZipCode))
                 zip(i.m_ZipCode) = i
             }
-
           }
       }
    }
@@ -204,7 +203,6 @@ object DataTools {
              val value = birth(j.m_Birthday)
              val name = value.fullName
              ans(name) = j
-
            }
            dup_check_birth(j.m_Birthday) = j
          }
