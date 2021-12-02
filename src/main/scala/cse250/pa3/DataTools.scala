@@ -197,10 +197,12 @@ object DataTools {
    }
    for (j <- healthRecords) {
      if (j.m_ZipCode == null) {
-       if (birth.contains(j.m_Birthday)) {
-         val value = birth(j.m_Birthday)
-         val name = value.fullName
-         ans(name) = j
+       if (j.m_Birthday != null) {
+         if (birth.contains(j.m_Birthday)) {
+           val value = birth(j.m_Birthday)
+           val name = value.fullName
+           ans(name) = j
+         }
        }
      }
 
