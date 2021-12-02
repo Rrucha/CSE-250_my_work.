@@ -157,7 +157,7 @@ object DataTools {
         if (i.m_Birthday != null) {
          if (birth.contains(i.m_Birthday)){
            dup_birth(i.m_Birthday) = i
-           birth.remove(i.m_Birthday)
+           birth.-(i.m_Birthday)
          }
           else{
            if (!dup_birth.contains(i.m_Birthday))
@@ -171,7 +171,7 @@ object DataTools {
                  // val value = vote_map((i.m_ZipCode,i.m_Birthday))
                   /** if the the Birthdays are also same "they are duplicate " * */
                    duplicate_vote_map((i.m_ZipCode,i.m_Birthday)) = i
-                   vote_map.remove((i.m_ZipCode,i.m_Birthday))
+                   vote_map.-((i.m_ZipCode,i.m_Birthday))
             }
                 /** checking if the zipcode as key does not exists * */
             else {
@@ -183,7 +183,7 @@ object DataTools {
           if (i.m_Birthday == null) {
             if (zip.contains(i.m_ZipCode)){
               dup_zip(i.m_ZipCode) = i
-              zip.remove(i.m_ZipCode)
+              zip.-(i.m_ZipCode)
             }
             else{
               if (!dup_zip.contains(i.m_ZipCode))
@@ -204,7 +204,7 @@ object DataTools {
          }
        }
      }
-     else if (j.m_ZipCode != null) {
+      if (j.m_ZipCode != null) {
         if (j.m_Birthday != null) {
           val key = (j.m_ZipCode, j.m_Birthday)
           if (vote_map.contains(key) && !duplicate_vote_map.contains(key)) {
