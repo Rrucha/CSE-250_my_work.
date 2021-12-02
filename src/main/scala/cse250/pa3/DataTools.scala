@@ -180,8 +180,8 @@ object DataTools {
                 vote_map((i.m_ZipCode, i.m_Birthday)) = i
               }
             }
-        }
-        if (i.m_Birthday == null) {
+           }
+          if (i.m_Birthday == null) {
 
             if (zip.contains(i.m_ZipCode)){
               dup_zip(i.m_ZipCode) = i
@@ -189,10 +189,10 @@ object DataTools {
             }
             else{
               if (!dup_zip.contains(i.m_ZipCode))
-                birth(i.m_Birthday) = i
+                zip(i.m_ZipCode) = i
             }
 
-        }
+          }
       }
    }
    for (j <- healthRecords) {
@@ -205,7 +205,6 @@ object DataTools {
          }
        }
      }
-
       if (j.m_ZipCode != null) {
         if (j.m_Birthday != null) {
           if (vote_map.contains((j.m_ZipCode, j.m_Birthday))) {
