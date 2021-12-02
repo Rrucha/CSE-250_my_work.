@@ -176,7 +176,9 @@ object DataTools {
             }
                 /** checking if the zipcode as key does not exists * */
             else {
-              vote_map((i.m_ZipCode,i.m_Birthday)) = i
+              if (!duplicate_vote_map.contains((i.m_ZipCode,i.m_Birthday))) {
+                vote_map((i.m_ZipCode, i.m_Birthday)) = i
+              }
             }
         }
         if (i.m_Birthday == null) {
