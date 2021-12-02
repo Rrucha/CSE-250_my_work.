@@ -144,7 +144,7 @@ object DataTools {
    * This function **must** run in O(voterRecords.size + healthRecords.size)
    */
   def identifyPersons(voterRecords: Seq[VoterRecord], healthRecords: Seq[HealthRecord]): mutable.Map[String, HealthRecord] = {
-    val ans: mutable.Map[String, HealthRecord] = new mutable.HashMap[String, HealthRecord]
+    val ans: mutable.Map[String, HealthRecord] = mutable.Map()
     val vote_map: mutable.HashMap[String, (Date, VoterRecord)] = new mutable.HashMap[String, (Date,VoterRecord)]
     val no_sol : mutable.HashMap[Date, (String,VoterRecord)] = new mutable.HashMap[Date, (String, VoterRecord)]
     val duplicate_vote_map: mutable.HashMap[String, (Date, VoterRecord)] = new mutable.HashMap[String, (Date, VoterRecord)]
