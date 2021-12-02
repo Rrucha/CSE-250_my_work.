@@ -151,6 +151,7 @@ object DataTools {
     val dup_birth :  mutable.HashMap[Date, VoterRecord] = new mutable.HashMap[Date, VoterRecord]
     val zip :  mutable.HashMap[String, VoterRecord] = new mutable.HashMap[ String, VoterRecord]
     val dup_zip :  mutable.HashMap[String, VoterRecord] = new mutable.HashMap[ String, VoterRecord]
+    val dup_check: mutable.HashMap[(String,Date), HealthRecord] = new mutable.HashMap[(String ,Date),HealthRecord]
     for (i <- voterRecords){
       /**checking if the zipcode as key already exists **/
       if (i.m_ZipCode == null) {
@@ -204,25 +205,28 @@ object DataTools {
          }
        }
      }
-      if (j.m_ZipCode != null) {
-        if (j.m_Birthday != null) {
-          val key = (j.m_ZipCode, j.m_Birthday)
-          if (vote_map.contains(key) && !duplicate_vote_map.contains(key)) {
-            val value = vote_map(key)
-            val name = value.fullName
-            ans(name) = j
-            vote_map.remove(key)
-          }
-        }
-        else if (j.m_Birthday == null) {
-          if (zip.contains(j.m_ZipCode) && !dup_zip.contains(j.m_ZipCode)) {
-            val value = zip(j.m_ZipCode)
-            val name = value.fullName
-            ans(name) = j
-            zip.remove(j.m_ZipCode)
-          }
-        }
-      }
+     if (j.m_ZipCode != null) {
+       if (j.m_Birthday != null) {
+         val key = (j.m_ZipCode, j.m_Birthday)
+         if (!dup_check.contains(key)) {
+           if (vote_map.contains(key) && !duplicate_vote_map.contains(key)) {
+             val value = vote_map(key)
+             val name = value.fullName
+             ans(name) = j
+             vote_map.remove(key)
+           }
+           else if (j.m_Birthday == null) {
+             if (zip.contains(j.m_ZipCode) && !dup_zip.contains(j.m_ZipCode)) {
+               val value = zip(j.m_ZipCode)
+               val name = value.fullName
+               ans(name) = j
+               zip.remove(j.m_ZipCode)
+             }
+           }
+           dup_check(key) = j
+         }
+       }
+     }
    }
     ans
  }
@@ -269,7 +273,7 @@ object DataTools {
       }
       else if (attribute == HealthRecordZipCode) {
               compare = j.m_ZipCode
-              if ( ans.contains(compare) ) {
+              if (ans.contains(compare)) {
                   var current = ans(compare)
                   current = current + 1
                   ans(compare) = current
