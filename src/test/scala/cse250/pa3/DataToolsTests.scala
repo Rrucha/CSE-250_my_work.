@@ -120,6 +120,7 @@ class DataToolsTests extends AnyFlatSpec
 
   "identifyPersons" must "Identify Persons 4" in
     {
+      println("".nonEmpty)
       val healt = DataTools.loadHealthRecords(
         new File("src/test/resources/health.csv")
       )

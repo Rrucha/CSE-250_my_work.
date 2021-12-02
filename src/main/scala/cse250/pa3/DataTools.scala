@@ -110,7 +110,7 @@ object DataTools {
     var ans : Seq[VoterRecord] = Seq()
     lines.drop(1)
     for (line <- lines) {
-      val rowData = line.split(",",4)
+      val rowData = line.split(",")
       val firstName : String  = rowData(0)
       val lastName : String =   rowData(1)
       var birthday: Date = null
