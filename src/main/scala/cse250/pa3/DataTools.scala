@@ -149,8 +149,10 @@ object DataTools {
     val duplicate_vote_map: mutable.HashMap[(String,Date), VoterRecord] = new mutable.HashMap[(String ,Date),VoterRecord]
     val birth :  mutable.HashMap[Date, VoterRecord] = new mutable.HashMap[Date, VoterRecord]
     val dup_birth :  mutable.HashMap[Date, VoterRecord] = new mutable.HashMap[Date, VoterRecord]
+    val dup_check_birth :  mutable.HashMap[Date, HealthRecord] = new mutable.HashMap[Date, HealthRecord]
     val zip :  mutable.HashMap[String, VoterRecord] = new mutable.HashMap[ String, VoterRecord]
     val dup_zip :  mutable.HashMap[String, VoterRecord] = new mutable.HashMap[ String, VoterRecord]
+    val dup_check_zip :  mutable.HashMap[String, HealthRecord] = new mutable.HashMap[ String, HealthRecord]
     val dup_check: mutable.HashMap[(String,Date), HealthRecord] = new mutable.HashMap[(String ,Date),HealthRecord]
     for (i <- voterRecords){
       /**checking if the zipcode as key already exists **/
@@ -197,11 +199,17 @@ object DataTools {
    for (j <- healthRecords) {
      if (j.m_ZipCode == null) {
        if (j.m_Birthday != null) {
-         if (birth.contains(j.m_Birthday) && !dup_birth.contains(j.m_Birthday)) {
-           val value = birth(j.m_Birthday)
-           val name = value.fullName
-           ans(name) = j
-           birth.remove(j.m_Birthday)
+         if (!dup_check_birth.contains(j.m_Birthday)) {
+           if (birth.contains(j.m_Birthday) && !dup_birth.contains(j.m_Birthday)) {
+             val value = birth(j.m_Birthday)
+             val name = value.fullName
+             ans(name) = j
+             dup_check_birth(j.m_Birthday) = j
+           }
+           else{
+             ans.remove(birth(j.m_Birthday).fullName)
+             birth.remove(j.m_Birthday)
+           }
          }
        }
      }
@@ -213,18 +221,27 @@ object DataTools {
              val value = vote_map(key)
              val name = value.fullName
              ans(name) = j
-             vote_map.remove(key)
-           }
-           else if (j.m_Birthday == null) {
-             if (zip.contains(j.m_ZipCode) && !dup_zip.contains(j.m_ZipCode)) {
-               val value = zip(j.m_ZipCode)
-               val name = value.fullName
-               ans(name) = j
-               zip.remove(j.m_ZipCode)
-             }
            }
            dup_check(key) = j
          }
+         else {
+           ans.remove(vote_map(key).fullName)
+           vote_map.remove(key)
+         }
+       }
+           else if (j.m_Birthday == null) {
+            if (!dup_check_zip.contains(j.m_ZipCode)) {
+              if (zip.contains(j.m_ZipCode) && !dup_zip.contains(j.m_ZipCode)) {
+               val value = zip(j.m_ZipCode)
+               val name = value.fullName
+               ans(name) = j
+                dup_check_zip(j.m_ZipCode) = j
+              }
+            }
+         else{
+              ans.remove(zip(j.m_ZipCode).fullName)
+              zip.remove(j.m_ZipCode)
+            }
        }
      }
    }
