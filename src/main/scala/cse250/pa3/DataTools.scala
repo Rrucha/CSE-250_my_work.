@@ -148,8 +148,14 @@ object DataTools {
     val vote_map: mutable.HashMap[String, (Date, VoterRecord)] = new mutable.HashMap[String, (Date,VoterRecord)]
     val no_sol : mutable.HashMap[Date, (String,VoterRecord)] = new mutable.HashMap[Date, (String, VoterRecord)]
     val duplicate_vote_map: mutable.HashMap[String, (Date, VoterRecord)] = new mutable.HashMap[String, (Date, VoterRecord)]
+    val null_zmap :  mutable.HashMap[Date, (String,VoterRecord)] = new mutable.HashMap[Date, (String, VoterRecord)]
     for (i <- voterRecords){
       /**checking if the zipcode as key already exists **/
+      if (i.m_ZipCode == null){
+        if (!null_zmap.contains(i.m_Birthday)) {
+          null_zmap(i.m_Birthday) = (i.m_ZipCode, i)
+        }
+      }
       if (vote_map.contains(i.m_ZipCode) ) {
                 val value = vote_map(i.m_ZipCode)
                 /**if the the Birthdays are also same "they are duplicate " **/
