@@ -155,11 +155,11 @@ object DataTools {
       /**checking if the zipcode as key already exists **/
       if (i.m_ZipCode == null) {
         if (i.m_Birthday != null) {
-         if (birth.contains(i.m_Birthday)){
+         if (birth.contains(i.m_Birthday) && !dup_birth.contains(i.m_Birthday)){
            dup_birth(i.m_Birthday) = i
            birth.-(i.m_Birthday)
          }
-          else{
+         else if (!birth.contains(i.m_Birthday)){
            if (!dup_birth.contains(i.m_Birthday))
            birth(i.m_Birthday) = i
          }
