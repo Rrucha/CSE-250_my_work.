@@ -110,7 +110,7 @@ object DataTools {
     var ans : Seq[VoterRecord] = Seq()
     lines.drop(1)
     for (line <- lines) {
-      val rowData = line.split(",")
+      val rowData = line.split(",",4)
       val firstName : String  = rowData(0)
       val lastName : String =   rowData(1)
       var birthday: Date = null
@@ -156,7 +156,7 @@ object DataTools {
     val dup_check: mutable.HashMap[(String,Date), HealthRecord] = new mutable.HashMap[(String ,Date),HealthRecord]
     for (i <- voterRecords){
       /**checking if the zipcode as key already exists **/
-      if (i.m_ZipCode == null) {
+      if (i.m_ZipCode == "") {
         if (i.m_Birthday != null) {
          if (birth.contains(i.m_Birthday) && !dup_birth.contains(i.m_Birthday)){
            dup_birth(i.m_Birthday) = i
@@ -168,7 +168,7 @@ object DataTools {
          }
         }
       }
-      else if (i.m_ZipCode != null) {
+      else if (i.m_ZipCode != "") {
           if (i.m_Birthday != null) {
             if (vote_map.contains(i.m_ZipCode,i.m_Birthday)) {
                  // val value = vote_map((i.m_ZipCode,i.m_Birthday))
@@ -197,7 +197,7 @@ object DataTools {
       }
    }
    for (j <- healthRecords) {
-     if (j.m_ZipCode == null) {
+     if (j.m_ZipCode == "") {
        if (j.m_Birthday != null) {
          if (!dup_check_birth.contains(j.m_Birthday)) {
            if (birth.contains(j.m_Birthday) && !dup_birth.contains(j.m_Birthday)) {
@@ -215,7 +215,7 @@ object DataTools {
 
        }
      }
-     if (j.m_ZipCode != null) {
+     if (j.m_ZipCode != "") {
        if (j.m_Birthday != null) {
          val key = (j.m_ZipCode, j.m_Birthday)
          if (!dup_check.contains(key)) {
@@ -231,7 +231,7 @@ object DataTools {
            vote_map.remove(key)
          }
        }
-           else if (j.m_Birthday == null) {
+       else if (j.m_Birthday == null) {
             if (!dup_check_zip.contains(j.m_ZipCode)) {
               if (zip.contains(j.m_ZipCode) && !dup_zip.contains(j.m_ZipCode)) {
                val value = zip(j.m_ZipCode)
@@ -270,7 +270,6 @@ object DataTools {
    */
   def computeHealthRecordDist(records: Seq[HealthRecord], attribute: HealthRecordAttribute
   ): mutable.Map[String, Double] = {
-
     val len : Int = records.length
     val ans: mutable.Map[String, Double] = new mutable.HashMap[String, Double]
     val ans2: mutable.Map[String, Double] = new mutable.HashMap[String, Double]
