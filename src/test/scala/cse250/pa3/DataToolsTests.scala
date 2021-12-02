@@ -126,7 +126,6 @@ class DataToolsTests extends AnyFlatSpec
       val vote = DataTools.loadVoterRecords(
         new File("src/test/resources/Voter-Records-100.csv")
       )
-
       val deanonymized = DataTools.identifyPersons(vote, healt)
 
       /*  The 10-row test data has matches for **every** record.  This
@@ -134,9 +133,8 @@ class DataToolsTests extends AnyFlatSpec
       for(v <- vote) {
         assert(deanonymized.keySet contains v.fullName)
       }
-
  //     assert(deanonymized("NIA GONZALEZ").m_DogAllergy == false)
   //    assert(deanonymized("NIA GONZALEZ").m_BlueEyes == false)
  //     assert(deanonymized("NIA GONZALEZ").m_BrownHair == true)
-    }**/g
+    }**/
 }
