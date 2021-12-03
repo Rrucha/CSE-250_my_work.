@@ -81,6 +81,7 @@ class DataToolsTests extends AnyFlatSpec
 
     /*  The 10-row test data has matches for **every** record.  This 
         will not usually be the case! */
+    println(deanonymized.keySet)
     for(v <- voter) {
       assert(deanonymized.keySet contains v.fullName)
     }

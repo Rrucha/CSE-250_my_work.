@@ -234,7 +234,7 @@ object DataTools {
        if (j.m_Birthday != null) {
          val key = (j.m_ZipCode, j.m_Birthday)
          if (!dup_check.contains(key)) {
-           if ( vote_map.contains(key)  && !duplicate_vote_map.contains(key)) {
+           if ( vote_map.contains(key)  ) {
              val value = vote_map(key)
              val name = value.fullName
              ans(name) = j
