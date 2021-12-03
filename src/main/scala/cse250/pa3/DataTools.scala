@@ -203,20 +203,23 @@ object DataTools {
    for (j <- healthRecords) {
      if (j.m_ZipCode == null) {
        if (j.m_Birthday != null) {
-           if (birth.contains(j.m_Birthday) && !check_birth.contains(j.m_Birthday)) {
+         val key = j.m_Birthday
+           if (birth.contains(j.m_Birthday) ) {
              val value = birth(j.m_Birthday)
              if (value.size == 1){
                val name = value.head.fullName
                ans(name) = j
-               check_birth(j.m_Birthday) = List(j)
              }
+             check_birth(j.m_Birthday) = List(j)
            }
-
-           else {
-           if (birth.contains(j.m_Birthday) && ans.contains(birth(j.m_Birthday).head.fullName)) {
-             ans.remove(birth(j.m_Birthday).head.fullName)
+          if (check_birth.contains(key)){
+               val value =  birth(j.m_Birthday)
+               if (value.size != 1){
+                 if (birth.contains(j.m_Birthday) && ans.contains(birth(j.m_Birthday).head.fullName)) {
+                   ans.remove(birth(j.m_Birthday).head.fullName)
+                 }
+               }
              }
-           }
        }
 
      }
@@ -228,29 +231,35 @@ object DataTools {
              if (value.size == 1) {
                val name = value.head.fullName
                ans(name) = j
-               dup(key) = List(j)
              }
+             dup(key) = List(j)
            }
 
-         else {
-           if ( vote_map.contains(key) && ans.contains(vote_map(key).head.fullName)) {
-             ans.remove(vote_map(key).head.fullName)
+         if (dup.contains(key)){
+           val value =  dup(key)
+           if (value.size != 1){
+             if (dup.contains(key) && ans.contains(vote_map(key).head.fullName)) {
+               ans.remove(vote_map(key).head.fullName)
+             }
            }
          }
        }
        else if (j.m_Birthday == null) {
-
+         val key = j.m_ZipCode
          if (zip.contains(j.m_ZipCode) && !check_zip.contains(j.m_ZipCode)) {
            val value = zip(j.m_ZipCode)
            if (value.size == 1) {
              val name = value.head.fullName
              ans(name) = j
-             check_zip(j.m_ZipCode) = List(j)
            }
+           check_zip(j.m_ZipCode) = List(j)
          }
-         else {
-           if ( zip.contains(j.m_ZipCode) && ans.contains(zip(j.m_ZipCode).head.fullName)) {
-             ans.remove(zip(j.m_ZipCode).head.fullName)
+         if (check_zip.contains(key)){
+           val value =  zip(key)
+           if (value.size != 1){
+             if (zip.contains(key) && ans.contains(zip(key).head.fullName)) {
+               ans.remove(zip(key).head.fullName)
+             }
            }
          }
        }
