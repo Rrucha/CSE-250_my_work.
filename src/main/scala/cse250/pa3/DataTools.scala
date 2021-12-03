@@ -212,10 +212,10 @@ object DataTools {
          }
            else {
            check_birth(j.m_Birthday) = j
-           if (ans.contains(birth(j.m_Birthday).fullName)) {
-             ans.remove(birth(j.m_Birthday).fullName)
            }
-           }
+         if ( check_birth.contains(j.m_Birthday) && ans.contains(birth(j.m_Birthday).fullName) ) {
+           ans.remove(birth(j.m_Birthday).fullName)
+         }
        }
 
      }
@@ -247,11 +247,13 @@ object DataTools {
             }
             else{
                  check_zip(j.m_ZipCode) = j
-                 if (ans.contains(zip(j.m_ZipCode).fullName)) {
-                    ans.remove(zip(j.m_ZipCode).fullName)
-                  }
             }
+
+          if ( check_zip.contains(j.m_ZipCode) && ans.contains(zip(j.m_ZipCode).fullName) ) {
+                ans.remove(zip(j.m_ZipCode).fullName)
+           }
        }
+
      }
    }
     ans
