@@ -172,6 +172,7 @@ object DataTools {
             }
             else {
               if (birth.contains(i.m_Birthday)) {
+                dup_birth(i.m_Birthday) = i
                 birth.remove(i.m_Birthday)
               }
             }
@@ -191,6 +192,7 @@ object DataTools {
           /** checking if the zipcode as key does not exists * */
           else {
             if (vote_map.contains(key)) {
+              duplicate_vote_map(key) = i
               vote_map.remove(key)
             }
           }
@@ -205,6 +207,7 @@ object DataTools {
           }
           else {
             if (zip.contains(i.m_ZipCode)) {
+              dup_zip(i.m_ZipCode) = i
               zip.remove(i.m_ZipCode)
             }
           }
