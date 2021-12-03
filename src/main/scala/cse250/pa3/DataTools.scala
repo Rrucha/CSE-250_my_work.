@@ -179,16 +179,19 @@ object DataTools {
       }
       else if (i.m_ZipCode != null) {
         if (i.m_Birthday != null) {
-          if (vote_map.contains(i.m_ZipCode, i.m_Birthday) && !duplicate_vote_map.contains((i.m_ZipCode, i.m_Birthday))) {
-            // val value = vote_map((i.m_ZipCode,i.m_Birthday))
-            /** if the the Birthdays are also same "they are duplicate " * */
-            duplicate_vote_map((i.m_ZipCode, i.m_Birthday)) = i
-            vote_map.remove((i.m_ZipCode, i.m_Birthday))
+        val key = (i.m_ZipCode, i.m_Birthday)
+          if (!duplicate_vote_map.contains(key)) {
+          if (!vote_map.contains(key) ) {
+              // val value = vote_map((i.m_ZipCode,i.m_Birthday))
+              /** if the the Birthdays are also same "they are duplicate " * */
+               vote_map(key) = i
+            }
+            duplicate_vote_map(key) = i
           }
           /** checking if the zipcode as key does not exists * */
           else {
-            if (!duplicate_vote_map.contains((i.m_ZipCode, i.m_Birthday))) {
-              vote_map((i.m_ZipCode, i.m_Birthday)) = i
+            if (!vote_map.contains((i.m_ZipCode, i.m_Birthday))) {
+              vote_map.remove(key)
             }
           }
         }
