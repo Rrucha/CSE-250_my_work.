@@ -219,7 +219,6 @@ object DataTools {
              val value = birth(j.m_Birthday)
              val name = value.fullName
              ans(name) = j
-
            }
            dup_check_birth(j.m_Birthday) = j
          }
@@ -228,6 +227,9 @@ object DataTools {
              ans.remove(birth(j.m_Birthday).fullName)
            }
            }
+       }
+       else if (j.m_Birthday == null){
+
        }
      }
      if (j.m_ZipCode != null) {
