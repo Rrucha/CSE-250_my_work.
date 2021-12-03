@@ -244,7 +244,7 @@ object DataTools {
             }
             else{
                  if (ans.contains(zip(j.m_ZipCode).fullName)) {
-                     ans.remove(zip(j.m_ZipCode).fullName)
+                    ans.remove(zip(j.m_ZipCode).fullName)
                   }
             }
        }
