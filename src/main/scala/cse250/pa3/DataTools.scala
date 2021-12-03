@@ -156,7 +156,7 @@ object DataTools {
     val birth :  mutable.HashMap[Date, VoterRecord] = new mutable.HashMap[Date, VoterRecord]
     val dup_birth :  mutable.HashMap[Date, VoterRecord] = new mutable.HashMap[Date, VoterRecord]
     val check_birth :  mutable.HashMap[Date, HealthRecord] = new mutable.HashMap[Date, HealthRecord]
-    val dup_check_birth :  mutable.HashMap[Date, HealthRecord] = new mutable.HashMap[Date, HealthRecord]
+    val dup:  mutable.HashMap[(String,Date), HealthRecord] = new mutable.HashMap[(String,Date), HealthRecord]
     val zip :  mutable.HashMap[String, VoterRecord] = new mutable.HashMap[ String, VoterRecord]
     val dup_zip :  mutable.HashMap[String, VoterRecord] = new mutable.HashMap[ String, VoterRecord]
     val dup_check_zip :  mutable.HashMap[String, HealthRecord] = new mutable.HashMap[ String, HealthRecord]
@@ -220,15 +220,15 @@ object DataTools {
        if (j.m_Birthday != null) {
          val key = (j.m_ZipCode, j.m_Birthday)
 
-           if (vote_map.contains(key) && !duplicate_vote_map.contains(key)) {
+           if (vote_map.contains(key) && !duplicate_vote_map.contains(key) && dup.contains(key)) {
              val value = vote_map(key)
              val name = value.fullName
              ans(name) = j
-             dup_check(key) = j
+             dup(key) = j
            }
 
          else {
-           if (ans.contains(vote_map(key).fullName)) {
+           if ( vote_map.contains(key) && ans.contains(vote_map(key).fullName)) {
              ans.remove(vote_map(key).fullName)
            }
          }
