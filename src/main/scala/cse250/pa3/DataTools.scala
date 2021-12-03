@@ -76,7 +76,7 @@ object DataTools {
          if (rowData(0).nonEmpty) {
             birthday = parseDate(rowData(0))
         }
-          var zipcode  : String = null
+          var zipcode  : String = "1"
           if (rowData(1).nonEmpty) {
             zipcode   = rowData(1)
           }
@@ -121,7 +121,7 @@ object DataTools {
     if (rowData(2).nonEmpty) {
        birthday = parseDate(rowData(2))
     }
-      var zipcode  : String = null
+      var zipcode  : String = "1"
       if (rowData(3).nonEmpty) {
          zipcode   = rowData(3)
       }
@@ -244,7 +244,7 @@ object DataTools {
             }
             else{
                  if (ans.contains(zip(j.m_ZipCode).fullName)) {
-                    ans.remove(zip(j.m_ZipCode).fullName)
+                     ans.remove(zip(j.m_ZipCode).fullName)
                   }
             }
        }
