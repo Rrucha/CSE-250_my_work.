@@ -2,7 +2,6 @@ Birthday,Zip Code,Wear Glasses?,Allergic to Dogs?,Brown Hair?,Blue Eyes?
 6/10/1968,,No,Yes,No,No
 6/10/1988,,No,Yes,No,
 ,1234,,,,
-,1234,,,,
 ,1235,,,,
 9/23/1996,,No,Yes,Yes,No
 9/23/1996,14261,Yes,No,No,No
@@ -14,3 +13,4 @@ Birthday,Zip Code,Wear Glasses?,Allergic to Dogs?,Brown Hair?,Blue Eyes?
 2/20/1957,14223,Yes,Yes,Yes,No
 3/14/1987,14212,No,No,No,No
 ,1,,,,
+3/14/1987,14212,No,No,No,No
