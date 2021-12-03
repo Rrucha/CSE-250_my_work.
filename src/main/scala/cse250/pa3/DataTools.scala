@@ -190,7 +190,7 @@ object DataTools {
           }
           /** checking if the zipcode as key does not exists * */
           else {
-            if (!vote_map.contains((i.m_ZipCode, i.m_Birthday))) {
+            if (vote_map.contains((i.m_ZipCode, i.m_Birthday))) {
               vote_map.remove(key)
             }
           }
