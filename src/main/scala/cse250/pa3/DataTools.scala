@@ -76,7 +76,10 @@ object DataTools {
          if (rowData(0).nonEmpty) {
             birthday = parseDate(rowData(0))
         }
-          val zipcode : String =   rowData(1)
+          var zipcode  : String = null
+          if (rowData(1).nonEmpty) {
+            zipcode   = rowData(1)
+          }
           val glasses  : Boolean = BOOL(rowData(2))
           val dog : Boolean =   BOOL(rowData(3))
           val hair: Boolean =   BOOL(rowData(4))
@@ -110,7 +113,7 @@ object DataTools {
     var ans : Seq[VoterRecord] = Seq()
     lines.drop(1)
     for (line <- lines) {
-      val rowData = line.split(",")
+      val rowData = line.split(",",4)
       val firstName : String  = rowData(0)
       val lastName : String =   rowData(1)
       var birthday: Date = null
@@ -118,7 +121,10 @@ object DataTools {
     if (rowData(2).nonEmpty) {
        birthday = parseDate(rowData(2))
     }
-      val zipcode  : String = rowData(3)
+      var zipcode  : String = null
+      if (rowData(3).nonEmpty) {
+         zipcode   = rowData(3)
+      }
       val add =  VoterRecord(firstName,lastName,birthday,zipcode)
      ans = ans :+  add
     }
@@ -156,7 +162,7 @@ object DataTools {
     val dup_check: mutable.HashMap[(String,Date), HealthRecord] = new mutable.HashMap[(String ,Date),HealthRecord]
     for (i <- voterRecords){
       /**checking if the zipcode as key already exists **/
-      if (i.m_ZipCode == "") {
+      if (i.m_ZipCode == null) {
         if (i.m_Birthday != null) {
          if (birth.contains(i.m_Birthday) && !dup_birth.contains(i.m_Birthday)){
            dup_birth(i.m_Birthday) = i
@@ -168,7 +174,7 @@ object DataTools {
          }
         }
       }
-      else if (i.m_ZipCode != "") {
+      else if (i.m_ZipCode != null) {
           if (i.m_Birthday != null) {
             if (vote_map.contains(i.m_ZipCode,i.m_Birthday)) {
                  // val value = vote_map((i.m_ZipCode,i.m_Birthday))
@@ -192,17 +198,19 @@ object DataTools {
               if (!dup_zip.contains(i.m_ZipCode))
                 zip(i.m_ZipCode) = i
             }
+
           }
       }
    }
    for (j <- healthRecords) {
-     if (j.m_ZipCode == "") {
+     if (j.m_ZipCode == null) {
        if (j.m_Birthday != null) {
          if (!dup_check_birth.contains(j.m_Birthday)) {
            if (birth.contains(j.m_Birthday) && !dup_birth.contains(j.m_Birthday)) {
              val value = birth(j.m_Birthday)
              val name = value.fullName
              ans(name) = j
+
            }
            dup_check_birth(j.m_Birthday) = j
          }
@@ -213,7 +221,7 @@ object DataTools {
 
        }
      }
-     if (j.m_ZipCode != "") {
+     if (j.m_ZipCode != null) {
        if (j.m_Birthday != null) {
          val key = (j.m_ZipCode, j.m_Birthday)
          if (!dup_check.contains(key)) {

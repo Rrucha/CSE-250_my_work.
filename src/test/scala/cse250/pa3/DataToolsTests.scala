@@ -120,7 +120,7 @@ class DataToolsTests extends AnyFlatSpec
 
   "identifyPersons" must "Identify Persons 4" in
     {
-      println("".nonEmpty)
+   //   println("".nonEmpty)
       val healt = DataTools.loadHealthRecords(
         new File("src/test/resources/health.csv")
       )
@@ -131,7 +131,7 @@ class DataToolsTests extends AnyFlatSpec
 
       /*  The 10-row test data has matches for **every** record.  This
           will not usually be the case! */
-      println(deanonymized.keySet)
+     // println(deanonymized.keySet)
       for(v <- vote) {
         assert(deanonymized.keySet contains v.fullName)
       }
