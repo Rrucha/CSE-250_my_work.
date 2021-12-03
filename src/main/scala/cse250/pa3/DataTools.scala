@@ -166,7 +166,7 @@ object DataTools {
         if (i.m_Birthday != null) {
          if (birth.contains(i.m_Birthday) ){
            dup_birth(i.m_Birthday) = i
-           birth.-(i.m_Birthday)
+           birth.remove(i.m_Birthday)
          }
          else if (!birth.contains(i.m_Birthday)){
            if (!dup_birth.contains(i.m_Birthday))
@@ -175,31 +175,31 @@ object DataTools {
         }
       }
       else if (i.m_ZipCode != null) {
-          if (i.m_Birthday != null) {
-            if (vote_map.contains(i.m_ZipCode,i.m_Birthday)) {
-                 // val value = vote_map((i.m_ZipCode,i.m_Birthday))
-                  /** if the the Birthdays are also same "they are duplicate " * */
-                   duplicate_vote_map((i.m_ZipCode,i.m_Birthday)) = i
-                   vote_map.-((i.m_ZipCode,i.m_Birthday))
-            }
-                /** checking if the zipcode as key does not exists * */
-            else {
-              if (!duplicate_vote_map.contains((i.m_ZipCode,i.m_Birthday))) {
-                vote_map((i.m_ZipCode, i.m_Birthday)) = i
-              }
-            }
-           }
-          if (i.m_Birthday == null) {
-            if (zip.contains(i.m_ZipCode)){
-              dup_zip(i.m_ZipCode) = i
-              zip.-(i.m_ZipCode)
-            }
-            else{
-              if (!dup_zip.contains(i.m_ZipCode))
-                zip(i.m_ZipCode) = i
-            }
-
+        if (i.m_Birthday != null) {
+          if (vote_map.contains(i.m_ZipCode, i.m_Birthday) && !duplicate_vote_map.contains((i.m_ZipCode, i.m_Birthday))) {
+            // val value = vote_map((i.m_ZipCode,i.m_Birthday))
+            /** if the the Birthdays are also same "they are duplicate " * */
+            duplicate_vote_map((i.m_ZipCode, i.m_Birthday)) = i
+            vote_map.remove((i.m_ZipCode, i.m_Birthday))
           }
+          /** checking if the zipcode as key does not exists * */
+          else {
+            if (!duplicate_vote_map.contains((i.m_ZipCode, i.m_Birthday))) {
+              vote_map((i.m_ZipCode, i.m_Birthday)) = i
+            }
+          }
+        }
+
+        else if (i.m_Birthday == null) {
+          if (zip.contains(i.m_ZipCode)) {
+            dup_zip(i.m_ZipCode) = i
+            zip.remove(i.m_ZipCode)
+          }
+          else {
+            if (!dup_zip.contains(i.m_ZipCode))
+              zip(i.m_ZipCode) = i
+          }
+        }
       }
    }
    for (j <- healthRecords) {
