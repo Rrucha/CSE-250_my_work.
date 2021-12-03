@@ -190,7 +190,7 @@ object DataTools {
           }
           /** checking if the zipcode as key does not exists * */
           else {
-            if (vote_map.contains((i.m_ZipCode, i.m_Birthday))) {
+            if (vote_map.contains(key)) {
               vote_map.remove(key)
             }
           }
@@ -234,7 +234,7 @@ object DataTools {
        if (j.m_Birthday != null) {
          val key = (j.m_ZipCode, j.m_Birthday)
          if (!dup_check.contains(key)) {
-           if ( vote_map.contains(key) ) {
+           if ( vote_map.contains(key)  && duplicate_vote_map.contains(key)) {
              val value = vote_map(key)
              val name = value.fullName
              ans(name) = j
@@ -250,16 +250,16 @@ object DataTools {
        else if (j.m_Birthday == null) {
             if (!dup_check_zip.contains(j.m_ZipCode)) {
               if (zip.contains(j.m_ZipCode)) {
-               val value = zip(j.m_ZipCode)
-               val name = value.fullName
-               ans(name) = j
+                   val value = zip(j.m_ZipCode)
+                   val name = value.fullName
+                   ans(name) = j
               }
               dup_check_zip(j.m_ZipCode) = j
             }
             else{
-             if (ans.contains(zip(j.m_ZipCode).fullName)) {
-                ans.remove(zip(j.m_ZipCode).fullName)
-              }
+                 if (ans.contains(zip(j.m_ZipCode).fullName)) {
+                    ans.remove(zip(j.m_ZipCode).fullName)
+                  }
             }
        }
      }
