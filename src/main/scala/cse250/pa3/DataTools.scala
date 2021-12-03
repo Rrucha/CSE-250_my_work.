@@ -164,85 +164,65 @@ object DataTools {
       /**checking if the zipcode as key already exists **/
       if (i.m_ZipCode == null) {
           if (i.m_Birthday != null) {
-            if (!dup_birth.contains(i.m_Birthday)) {
               if (!birth.contains(i.m_Birthday)) {
                 birth(i.m_Birthday) = i
               }
-              dup_birth(i.m_Birthday) = i
-            }
-            else {
-              if (birth.contains(i.m_Birthday)) {
-                birth.remove(i.m_Birthday)
+             else if (birth.contains(i.m_Birthday)) {
+                dup_birth(i.m_Birthday) = i
               }
-            }
           }
       }
       else if (i.m_ZipCode != null) {
         if (i.m_Birthday != null) {
-        val key = (i.m_ZipCode, i.m_Birthday)
-          if (!duplicate_vote_map.contains(key)) {
-          if (!vote_map.contains(key) ) {
-              // val value = vote_map((i.m_ZipCode,i.m_Birthday))
-              /** if the the Birthdays are also same "they are duplicate " * */
-               vote_map(key) = i
-            }
-            duplicate_vote_map(key) = i
+          val key = (i.m_ZipCode, i.m_Birthday)
+          if (!vote_map.contains(key)) {
+            // val value = vote_map((i.m_ZipCode,i.m_Birthday))
+            /** if the the Birthdays are also same "they are duplicate " * */
+            vote_map(key) = i
           }
           /** checking if the zipcode as key does not exists * */
-          else {
-            if (vote_map.contains(key)) {
-              vote_map.remove(key)
-            }
+          else if (vote_map.contains(key)) {
+            duplicate_vote_map(key) = i
           }
         }
 
         else if (i.m_Birthday == null) {
-          if (!dup_zip.contains(i.m_ZipCode)) {
             if (!zip.contains(i.m_ZipCode)) {
               zip(i.m_ZipCode) = i
             }
-            dup_zip(i.m_ZipCode) = i
-          }
-          else {
-            if (zip.contains(i.m_ZipCode)) {
-              zip.remove(i.m_ZipCode)
+          else if (zip.contains(i.m_ZipCode)) {
+              dup_zip(i.m_ZipCode) = i
             }
-          }
         }
       }
    }
    for (j <- healthRecords) {
      if (j.m_ZipCode == null) {
        if (j.m_Birthday != null) {
-         if (!dup_check_birth.contains(j.m_Birthday)) {
-           if (birth.contains(j.m_Birthday) ) {
+
+           if (birth.contains(j.m_Birthday) && !dup_birth.contains(j.m_Birthday )) {
              val value = birth(j.m_Birthday)
              val name = value.fullName
              ans(name) = j
            }
-           dup_check_birth(j.m_Birthday) = j
-         }
            else {
-           if (ans.contains(birth(j.m_Birthday).fullName)) {
-             ans.remove(birth(j.m_Birthday).fullName)
+             if (ans.contains(birth(j.m_Birthday).fullName)) {
+                ans.remove(birth(j.m_Birthday).fullName)
            }
            }
        }
-       else if (j.m_Birthday == null){
 
-       }
      }
      if (j.m_ZipCode != null) {
        if (j.m_Birthday != null) {
          val key = (j.m_ZipCode, j.m_Birthday)
-         if (!dup_check.contains(key)) {
-           if ( vote_map.contains(key)  ) {
+
+           if ( vote_map.contains(key) && !duplicate_vote_map.contains(key)  ) {
              val value = vote_map(key)
              val name = value.fullName
              ans(name) = j
            }
-           dup_check(key) = j
-         }
+
          else {
            if (ans.contains(vote_map(key).fullName)) {
              ans.remove(vote_map(key).fullName)
@@ -250,14 +230,12 @@ object DataTools {
          }
        }
        else if (j.m_Birthday == null) {
-            if (!dup_check_zip.contains(j.m_ZipCode)) {
-              if (zip.contains(j.m_ZipCode) ) {
+
+              if (zip.contains(j.m_ZipCode) && !dup_zip.contains(j.m_ZipCode)) {
                    val value = zip(j.m_ZipCode)
                    val name = value.fullName
                    ans(name) = j
               }
-              dup_check_zip(j.m_ZipCode) = j
-            }
             else{
                  if (ans.contains(zip(j.m_ZipCode).fullName)) {
                     ans.remove(zip(j.m_ZipCode).fullName)
