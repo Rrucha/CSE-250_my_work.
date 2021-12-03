@@ -245,7 +245,9 @@ object DataTools {
               dup_check_zip(j.m_ZipCode) = j
             }
             else{
-              ans.remove(zip(j.m_ZipCode).fullName)
+             if (ans.contains(zip(j.m_ZipCode).fullName)) {
+                ans.remove(zip(j.m_ZipCode).fullName)
+              }
             }
        }
      }
