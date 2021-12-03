@@ -155,10 +155,12 @@ object DataTools {
     val duplicate_vote_map: mutable.HashMap[(String,Date), VoterRecord] = new mutable.HashMap[(String ,Date),VoterRecord]
     val birth :  mutable.HashMap[Date, VoterRecord] = new mutable.HashMap[Date, VoterRecord]
     val dup_birth :  mutable.HashMap[Date, VoterRecord] = new mutable.HashMap[Date, VoterRecord]
+    val check_birth :  mutable.HashMap[Date, HealthRecord] = new mutable.HashMap[Date, HealthRecord]
     val dup_check_birth :  mutable.HashMap[Date, HealthRecord] = new mutable.HashMap[Date, HealthRecord]
     val zip :  mutable.HashMap[String, VoterRecord] = new mutable.HashMap[ String, VoterRecord]
     val dup_zip :  mutable.HashMap[String, VoterRecord] = new mutable.HashMap[ String, VoterRecord]
     val dup_check_zip :  mutable.HashMap[String, HealthRecord] = new mutable.HashMap[ String, HealthRecord]
+    val check_zip :  mutable.HashMap[String, HealthRecord] = new mutable.HashMap[ String, HealthRecord]
     val dup_check: mutable.HashMap[(String,Date), HealthRecord] = new mutable.HashMap[(String ,Date),HealthRecord]
     for (i <- voterRecords){
       /**checking if the zipcode as key already exists **/
@@ -190,7 +192,7 @@ object DataTools {
             if (!zip.contains(i.m_ZipCode)) {
               zip(i.m_ZipCode) = i
             }
-          else if (zip.contains(i.m_ZipCode)) {
+            else if (zip.contains(i.m_ZipCode)) {
               dup_zip(i.m_ZipCode) = i
             }
         }
@@ -200,7 +202,7 @@ object DataTools {
      if (j.m_ZipCode == null) {
        if (j.m_Birthday != null) {
          if (!dup_check_birth.contains(j.m_Birthday)) {
-           if (birth.contains(j.m_Birthday) && !dup_birth.contains(j.m_Birthday) ) {
+           if (birth.contains(j.m_Birthday) && !dup_birth.contains(j.m_Birthday) && !check_birth.contains(j.m_Birthday)) {
              val value = birth(j.m_Birthday)
              val name = value.fullName
              ans(name) = j
@@ -209,6 +211,7 @@ object DataTools {
            dup_check_birth(j.m_Birthday) = j
          }
            else {
+           check_birth(j.m_Birthday) = j
            if (ans.contains(birth(j.m_Birthday).fullName)) {
              ans.remove(birth(j.m_Birthday).fullName)
            }
@@ -235,7 +238,7 @@ object DataTools {
        }
        else if (j.m_Birthday == null) {
             if (!dup_check_zip.contains(j.m_ZipCode)) {
-              if (zip.contains(j.m_ZipCode) && !dup_zip.contains(j.m_ZipCode)) {
+              if (zip.contains(j.m_ZipCode) && !dup_zip.contains(j.m_ZipCode) && !check_zip.contains(j.m_ZipCode)) {
                    val value = zip(j.m_ZipCode)
                    val name = value.fullName
                    ans(name) = j
@@ -243,6 +246,7 @@ object DataTools {
               dup_check_zip(j.m_ZipCode) = j
             }
             else{
+                 check_zip(j.m_ZipCode) = j
                  if (ans.contains(zip(j.m_ZipCode).fullName)) {
                     ans.remove(zip(j.m_ZipCode).fullName)
                   }
