@@ -216,7 +216,6 @@ object DataTools {
          }
            else{
              ans.remove(birth(j.m_Birthday).fullName)
-             birth.remove(j.m_Birthday)
            }
 
        }
@@ -234,7 +233,6 @@ object DataTools {
          }
          else {
            ans.remove(vote_map(key).fullName)
-           vote_map.remove(key)
          }
        }
        else if (j.m_Birthday == null) {
@@ -248,7 +246,6 @@ object DataTools {
             }
             else{
               ans.remove(zip(j.m_ZipCode).fullName)
-              zip.remove(j.m_ZipCode)
             }
        }
      }
