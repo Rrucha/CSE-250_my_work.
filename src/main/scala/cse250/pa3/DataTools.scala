@@ -214,10 +214,11 @@ object DataTools {
            }
            dup_check_birth(j.m_Birthday) = j
          }
-           else{
+           else {
+           if (ans.contains(birth(j.m_Birthday).fullName)) {
              ans.remove(birth(j.m_Birthday).fullName)
            }
-
+           }
        }
      }
      if (j.m_ZipCode != null) {
@@ -232,7 +233,9 @@ object DataTools {
            dup_check(key) = j
          }
          else {
-           ans.remove(vote_map(key).fullName)
+           if (ans.contains(vote_map(key).fullName)) {
+             ans.remove(vote_map(key).fullName)
+           }
          }
        }
        else if (j.m_Birthday == null) {
