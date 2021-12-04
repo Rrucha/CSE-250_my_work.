@@ -221,11 +221,11 @@ object DataTools {
        if (j.m_Birthday != null) {
          val key = (j.m_ZipCode, j.m_Birthday)
          if (!dup.contains(key) && check_birth.contains(j.m_Birthday) && ALL_health_birth.contains(j.m_Birthday)){
-           ans.remove(birth(j.m_Birthday).head.fullName)
+
           check_birth.remove(j.m_Birthday)
          }
          if (!dup.contains(key) && check_zip.contains(j.m_ZipCode) && ALL_health_zip.contains(j.m_ZipCode)){
-           ans.remove(zip(j.m_ZipCode).head.fullName)
+
            check_zip.remove(j.m_ZipCode)
          }
 
