@@ -167,10 +167,10 @@ object DataTools {
       if (i.m_ZipCode != null) {
         if (i.m_Birthday != null) {
           val key = (i.m_ZipCode, i.m_Birthday)
-          if (!vote_map.contains(key) && ALL_voter_birth.contains(i.m_Birthday)){
+          if (!vote_map.contains(key) && birth.contains(i.m_Birthday) && ALL_voter_birth.contains(i.m_Birthday)){
             birth.remove(i.m_Birthday)
           }
-          if (!vote_map.contains(key) && ALL_voter_zip.contains(i.m_ZipCode)){
+          if (!vote_map.contains(key) && zip.contains(i.m_ZipCode) && ALL_voter_zip.contains(i.m_ZipCode)){
             zip.remove(i.m_ZipCode)
           }
           if (!vote_map.contains(key)) {
@@ -223,6 +223,13 @@ object DataTools {
      if (j.m_ZipCode != null) {
        if (j.m_Birthday != null) {
          val key = (j.m_ZipCode, j.m_Birthday)
+         if (!dup.contains(key) && check_birth.contains(j.m_Birthday) && ALL_health_birth.contains(j.m_Birthday)){
+           ans.remove(birth(j.m_Birthday).head.fullName)
+         }
+         if (!dup.contains(key) && check_zip.contains(j.m_ZipCode) && ALL_health_zip.contains(j.m_ZipCode)){
+           ans.remove(zip(j.m_ZipCode).head.fullName)
+         }
+
            if (vote_map.contains(key)  && !dup.contains(key)) {
              val value = vote_map(key)
              if (value.size == 1) {
@@ -241,11 +248,12 @@ object DataTools {
          }
        }
        else if (j.m_Birthday == null) {
-         if (zip.contains(j.m_ZipCode) && !check_zip.contains(j.m_ZipCode) && !ALL_health_zip.contains(j.m_ZipCode)) {
+         if (zip.contains(j.m_ZipCode) && !check_zip.contains(j.m_ZipCode) &&  !check_zip.contains(j.m_ZipCode) && !ALL_health_zip.contains(j.m_ZipCode)) {
            val value = zip(j.m_ZipCode)
            if (value.size == 1) {
              val name = value.head.fullName
              ans(name) = j
+             ALL_health_zip(j.m_ZipCode) = List(j)
            }
            check_zip(j.m_ZipCode) = List(j)
          }
@@ -258,11 +266,12 @@ object DataTools {
      }
      else if (j.m_ZipCode == null) {
        if (j.m_Birthday != null) {
-         if (birth.contains(j.m_Birthday) && !check_birth.contains(j.m_Birthday) && !ALL_health_birth.contains(j.m_Birthday)) {
+         if (birth.contains(j.m_Birthday) && !check_birth.contains(j.m_Birthday) && !ALL_health_birth.contains(j.m_Birthday) &&  !ALL_health_birth.contains(j.m_Birthday) ) {
            val value = birth(j.m_Birthday)
            if (value.size == 1){
              val name = value.head.fullName
              ans(name) = j
+             ALL_health_birth(j.m_Birthday) = List(j)
            }
            check_birth(j.m_Birthday) = List(j)
          }
