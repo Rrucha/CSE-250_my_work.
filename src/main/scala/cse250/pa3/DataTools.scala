@@ -152,6 +152,8 @@ object DataTools {
   def identifyPersons(voterRecords: Seq[VoterRecord], healthRecords: Seq[HealthRecord]): mutable.Map[String, HealthRecord] = {
     val ans: mutable.Map[String, HealthRecord] = mutable.Map()
     val vote_map: mutable.HashMap[(String,Date), List[VoterRecord]] = new mutable.HashMap[(String ,Date),List[VoterRecord]]
+    val vote_bir: mutable.HashMap[(Date), List[VoterRecord]] = new mutable.HashMap[(Date),List[VoterRecord]]
+    val vote_zip: mutable.HashMap[(String), List[VoterRecord]] = new mutable.HashMap[(String),List[VoterRecord]]
     val birth :  mutable.HashMap[Date, List[VoterRecord]] = new mutable.HashMap[Date, List[VoterRecord]]
  //   val ALL_voter_birth :  mutable.HashMap[Date, List[VoterRecord]] = new mutable.HashMap[Date, List[VoterRecord]]
  //   val ALL_health_birth :  mutable.HashMap[Date, List[HealthRecord]] = new mutable.HashMap[Date, List[HealthRecord]]
@@ -167,16 +169,18 @@ object DataTools {
       if (i.m_ZipCode != null) {
         if (i.m_Birthday != null) {
           val key = (i.m_ZipCode, i.m_Birthday)
-          if (!vote_map.contains(key) && birth.contains(i.m_Birthday) /**&& ALL_voter_birth.contains(i.m_Birthday)**/) {
+        /**  if (!vote_map.contains(key) && birth.contains(i.m_Birthday) /**&& ALL_voter_birth.contains(i.m_Birthday)**/) {
             birth.remove(i.m_Birthday)
           }
           if (!vote_map.contains(key) && zip.contains(i.m_ZipCode) /** && ALL_voter_zip.contains(i.m_ZipCode)**/) {
             zip.remove(i.m_ZipCode)
-          }
+          }**/
           if (!vote_map.contains(key)) {
             // val value = vote_map((i.m_ZipCode,i.m_Birthday))
             /** if the the Birthdays are also same "they are duplicate " * */
             vote_map(key) = List(i)
+            vote_bir(i.m_Birthday) = List(i)
+            vote_zip(i.m_ZipCode) = List(i)
           //  ALL_voter_birth(i.m_Birthday) = List(i)
        //     ALL_voter_zip(i.m_ZipCode) = List(i)
           }
@@ -184,6 +188,8 @@ object DataTools {
           /** checking if the zipcode as key does not exists * */
           else {
             vote_map(key) = i +: vote_map(key)
+            vote_bir(i.m_Birthday) = i +:  vote_bir(i.m_Birthday)
+            vote_zip(i.m_ZipCode) = i +:   vote_zip(i.m_ZipCode)
           //  ALL_voter_birth(i.m_Birthday) = i +: ALL_voter_birth(i.m_Birthday)
           //  ALL_voter_zip(i.m_ZipCode) = i +: ALL_voter_zip(i.m_ZipCode)
           }
@@ -296,9 +302,10 @@ object DataTools {
        if (j.m_ZipCode != null) {
           if (j.m_Birthday == null) {
                val key = (j.m_ZipCode, null)
-            if (vote_map.contains(key) ){
+            val key2 = (j.m_ZipCode)
+            if (vote_zip.contains(key2) ){
                  if ( !dup.contains(key)) {
-                   val value = vote_map(key)
+                   val value = vote_zip(key2)
                    if (value.size == 1) {
                      val name = value.head.fullName
                      ans(name) = j
@@ -306,7 +313,7 @@ object DataTools {
                    dup(key) = List(j)
                    //  ALL_health_birth(j.m_Birthday) = List(j)
                    //  ALL_health_zip(j.m_ZipCode) = List(j)
-                   vote_map.remove(key)
+                   vote_zip.remove(key2)
                  }
                  else {
                    if (ans.contains(vote_map(key).head.fullName)) {
@@ -334,10 +341,11 @@ object DataTools {
      }
      else if (j.m_ZipCode == null) {
        if (j.m_Birthday != null) {
-         val key = ("",j.m_Birthday)
-         if (vote_map.contains(key) ){
+         val key = (j.m_ZipCode,j.m_Birthday)
+         val key2 = (j.m_Birthday)
+         if (vote_bir.contains(key2) ){
            if ( !dup.contains(key)) {
-             val value = vote_map(key)
+             val value = vote_bir(key2)
              if (value.size == 1) {
                val name = value.head.fullName
                ans(name) = j
@@ -345,7 +353,7 @@ object DataTools {
              dup(key) = List(j)
              //  ALL_health_birth(j.m_Birthday) = List(j)
              //  ALL_health_zip(j.m_ZipCode) = List(j)
-             vote_map.remove(key)
+             vote_bir.remove(key2)
            }
 
            else {
