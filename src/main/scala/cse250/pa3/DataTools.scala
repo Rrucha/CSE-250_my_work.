@@ -196,9 +196,8 @@ object DataTools {
               ALL_voter_zip(i.m_ZipCode) = List(i)
             }
             else  {
-              if (!ALL_voter_zip.contains(key)) {
                 zip(key) = i +: zip(key)
-              }
+
             }
         }
       }
@@ -211,9 +210,7 @@ object DataTools {
               ALL_voter_birth(i.m_Birthday) = List(i)
             }
             else {
-              if (!ALL_voter_birth.contains(key)) {
                 birth(key) = i +: birth(key)
-              }
             }
           }
         }
@@ -260,6 +257,7 @@ object DataTools {
          else {
            if ( zip.contains(j.m_ZipCode) && ans.contains(zip(j.m_ZipCode).head.fullName)) {
              ans.remove(zip(j.m_ZipCode).head.fullName)
+
            }
          }
        }
@@ -278,6 +276,7 @@ object DataTools {
          else{
            if (birth.contains(j.m_Birthday) && ans.contains(birth(j.m_Birthday).head.fullName)) {
              ans.remove(birth(j.m_Birthday).head.fullName)
+
            }
          }
 
