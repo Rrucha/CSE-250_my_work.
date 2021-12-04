@@ -334,6 +334,7 @@ object DataTools {
                          // ALL_health_zip(j.m_ZipCode) = List(j)
                        }
                        check_zip(j.m_ZipCode) = List(j)
+                        zip.remove(j.m_ZipCode)
                  }
                  else {
                        if ( ans.contains(zip(j.m_ZipCode).head.fullName)) {
@@ -369,7 +370,7 @@ object DataTools {
            }
          }
          else if (birth.contains(j.m_Birthday)) {
-           if ( !check_birth.contains(j.m_Birthday)/** &&  !ALL_health_birth.contains(j.m_Birthday)* */) {
+           if ( !check_birth.contains(j.m_Birthday) /** &&  !ALL_health_birth.contains(j.m_Birthday)* */) {
              val value = birth(j.m_Birthday)
              if (value.size == 1) {
                val name = value.head.fullName
@@ -377,6 +378,7 @@ object DataTools {
                // ALL_health_birth(j.m_Birthday) = List(j)
              }
              check_birth(j.m_Birthday) = List(j)
+             birth.remove(j.m_Birthday)
            }
            else {
              if ( ans.contains(birth(j.m_Birthday).head.fullName)) {
