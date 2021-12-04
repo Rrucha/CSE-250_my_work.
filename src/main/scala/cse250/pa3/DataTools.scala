@@ -164,20 +164,8 @@ object DataTools {
     val dup_check: mutable.HashMap[(String,Date),List[HealthRecord] ] = new mutable.HashMap[(String ,Date), List[HealthRecord] ]
     for (i <- voterRecords){
       /**checking if the zipcode as key already exists **/
-      if (i.m_ZipCode == null) {
-        if (i.m_Birthday != null) {
-          val key = i.m_Birthday
-          if (key != null) {
-            if (!birth.contains(key)) {
-              birth(key) = List(i)
-            }
-            else {
-              birth(key) = i +: birth(key)
-            }
-          }
-        }
-      }
-      else if (i.m_ZipCode != null) {
+
+      if (i.m_ZipCode != null) {
         if (i.m_Birthday != null) {
           val key = (i.m_ZipCode, i.m_Birthday)
           if (!vote_map.contains(key)) {
@@ -201,27 +189,22 @@ object DataTools {
             }
         }
       }
+      else  if (i.m_ZipCode == null) {
+        if (i.m_Birthday != null) {
+          val key = i.m_Birthday
+          if (key != null) {
+            if (!birth.contains(key)) {
+              birth(key) = List(i)
+            }
+            else {
+              birth(key) = i +: birth(key)
+            }
+          }
+        }
+      }
    }
    for (j <- healthRecords) {
-     if (j.m_ZipCode == null) {
-       if (j.m_Birthday != null) {
-           if (birth.contains(j.m_Birthday) ) {
-             val value = birth(j.m_Birthday)
-             if (value.size == 1){
-               val name = value.head.fullName
-               ans(name) = j
-             }
-             check_birth(j.m_Birthday) = List(j)
-           }
-         else{
-             if (birth.contains(j.m_Birthday) && ans.contains(birth(j.m_Birthday).head.fullName)) {
-                   ans.remove(birth(j.m_Birthday).head.fullName)
-                 }
-               }
 
-       }
-
-     }
      if (j.m_ZipCode != null) {
        if (j.m_Birthday != null) {
          val key = (j.m_ZipCode, j.m_Birthday)
@@ -256,6 +239,25 @@ object DataTools {
            }
          }
        }
+     }
+     else if (j.m_ZipCode == null) {
+       if (j.m_Birthday != null) {
+         if (birth.contains(j.m_Birthday) ) {
+           val value = birth(j.m_Birthday)
+           if (value.size == 1){
+             val name = value.head.fullName
+             ans(name) = j
+           }
+           check_birth(j.m_Birthday) = List(j)
+         }
+         else{
+           if (birth.contains(j.m_Birthday) && ans.contains(birth(j.m_Birthday).head.fullName)) {
+             ans.remove(birth(j.m_Birthday).head.fullName)
+           }
+         }
+
+       }
+
      }
    }
     ans
