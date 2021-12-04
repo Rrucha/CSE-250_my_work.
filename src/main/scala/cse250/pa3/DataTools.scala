@@ -254,6 +254,8 @@ object DataTools {
                  //  ALL_health_birth(j.m_Birthday) = List(j)
                  //  ALL_health_zip(j.m_ZipCode) = List(j)
                  vote_map.remove(key)
+                 vote_zip.remove(j.m_ZipCode)
+                 vote_bir.remove(j.m_Birthday)
                }
 
                else {
