@@ -167,6 +167,12 @@ object DataTools {
       if (i.m_ZipCode != null) {
         if (i.m_Birthday != null) {
           val key = (i.m_ZipCode, i.m_Birthday)
+          if (!vote_map.contains(key) && ALL_voter_birth.contains(i.m_Birthday)){
+            birth.remove(i.m_Birthday)
+          }
+          if (!vote_map.contains(key) && ALL_voter_zip.contains(i.m_ZipCode)){
+            zip.remove(i.m_ZipCode)
+          }
           if (!vote_map.contains(key)) {
             // val value = vote_map((i.m_ZipCode,i.m_Birthday))
             /** if the the Birthdays are also same "they are duplicate " * */
@@ -180,12 +186,14 @@ object DataTools {
             ALL_voter_birth(i.m_Birthday) = i +: ALL_voter_birth(i.m_Birthday)
             ALL_voter_zip(i.m_ZipCode) = i +: ALL_voter_zip(i.m_ZipCode)
           }
+
         }
 
         else if (i.m_Birthday == null) {
          val key = i.m_ZipCode
             if (!zip.contains(key) && !ALL_voter_zip.contains(key)) {
               zip(key) = List(i)
+              ALL_voter_zip(i.m_ZipCode) = List(i)
             }
             else  {
               if (!ALL_voter_zip.contains(key)) {
@@ -200,6 +208,7 @@ object DataTools {
           if (key != null) {
             if (!birth.contains(key) && !ALL_voter_birth.contains(key) ) {
               birth(key) = List(i)
+              ALL_voter_birth(i.m_Birthday) = List(i)
             }
             else {
               if (!ALL_voter_birth.contains(key)) {
