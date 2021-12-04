@@ -313,6 +313,7 @@ object DataTools {
                    dup(key) = List(j)
                    //  ALL_health_birth(j.m_Birthday) = List(j)
                    //  ALL_health_zip(j.m_ZipCode) = List(j)
+                   vote_map.remove(key)
                    vote_zip.remove(key2)
                  }
                  else {
@@ -353,6 +354,7 @@ object DataTools {
              dup(key) = List(j)
              //  ALL_health_birth(j.m_Birthday) = List(j)
              //  ALL_health_zip(j.m_ZipCode) = List(j)
+             vote_map.remove(key)
              vote_bir.remove(key2)
            }
 
