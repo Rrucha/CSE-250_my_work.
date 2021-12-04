@@ -153,137 +153,224 @@ object DataTools {
     val ans: mutable.Map[String, HealthRecord] = mutable.Map()
     val vote_map: mutable.HashMap[(String,Date), List[VoterRecord]] = new mutable.HashMap[(String ,Date),List[VoterRecord]]
     val birth :  mutable.HashMap[Date, List[VoterRecord]] = new mutable.HashMap[Date, List[VoterRecord]]
-    val ALL_voter_birth :  mutable.HashMap[Date, List[VoterRecord]] = new mutable.HashMap[Date, List[VoterRecord]]
-    val ALL_health_birth :  mutable.HashMap[Date, List[HealthRecord]] = new mutable.HashMap[Date, List[HealthRecord]]
+ //   val ALL_voter_birth :  mutable.HashMap[Date, List[VoterRecord]] = new mutable.HashMap[Date, List[VoterRecord]]
+ //   val ALL_health_birth :  mutable.HashMap[Date, List[HealthRecord]] = new mutable.HashMap[Date, List[HealthRecord]]
     val check_birth :  mutable.HashMap[Date, List[HealthRecord]] = new mutable.HashMap[Date, List[HealthRecord]]
     val dup:  mutable.HashMap[(String,Date), List[HealthRecord]] = new mutable.HashMap[(String,Date), List[HealthRecord]]
     val zip :  mutable.HashMap[String, List[VoterRecord]] = new mutable.HashMap[ String, List[VoterRecord]]
-    val ALL_voter_zip :  mutable.HashMap[String, List[VoterRecord]] = new mutable.HashMap[ String, List[VoterRecord]]
-    val ALL_health_zip :  mutable.HashMap[String, List[HealthRecord]] = new mutable.HashMap[ String, List[HealthRecord]]
+ //   val ALL_voter_zip :  mutable.HashMap[String, List[VoterRecord]] = new mutable.HashMap[ String, List[VoterRecord]]
+  //  val ALL_health_zip :  mutable.HashMap[String, List[HealthRecord]] = new mutable.HashMap[ String, List[HealthRecord]]
     val check_zip :  mutable.HashMap[String, List[HealthRecord] ]= new mutable.HashMap[ String,  List[HealthRecord] ]
 
-    for (i <- voterRecords){
-      /**checking if the zipcode as key already exists **/
+    for (i <- voterRecords) {
+      /** checking if the zipcode as key already exists * */
       if (i.m_ZipCode != null) {
         if (i.m_Birthday != null) {
           val key = (i.m_ZipCode, i.m_Birthday)
-          if (!vote_map.contains(key) && birth.contains(i.m_Birthday) && ALL_voter_birth.contains(i.m_Birthday)){
+          if (!vote_map.contains(key) && birth.contains(i.m_Birthday) /**&& ALL_voter_birth.contains(i.m_Birthday)**/) {
             birth.remove(i.m_Birthday)
           }
-          if (!vote_map.contains(key) && zip.contains(i.m_ZipCode) && ALL_voter_zip.contains(i.m_ZipCode)){
+          if (!vote_map.contains(key) && zip.contains(i.m_ZipCode) /** && ALL_voter_zip.contains(i.m_ZipCode)**/) {
             zip.remove(i.m_ZipCode)
           }
           if (!vote_map.contains(key)) {
             // val value = vote_map((i.m_ZipCode,i.m_Birthday))
             /** if the the Birthdays are also same "they are duplicate " * */
             vote_map(key) = List(i)
-            ALL_voter_birth(i.m_Birthday) = List(i)
-            ALL_voter_zip(i.m_ZipCode) = List(i)
+          //  ALL_voter_birth(i.m_Birthday) = List(i)
+       //     ALL_voter_zip(i.m_ZipCode) = List(i)
           }
+
           /** checking if the zipcode as key does not exists * */
-          else  {
-            vote_map(key) = i +:  vote_map(key)
-            ALL_voter_birth(i.m_Birthday) = i +: ALL_voter_birth(i.m_Birthday)
-            ALL_voter_zip(i.m_ZipCode) = i +: ALL_voter_zip(i.m_ZipCode)
+          else {
+            vote_map(key) = i +: vote_map(key)
+          //  ALL_voter_birth(i.m_Birthday) = i +: ALL_voter_birth(i.m_Birthday)
+          //  ALL_voter_zip(i.m_ZipCode) = i +: ALL_voter_zip(i.m_ZipCode)
           }
 
-        }
-
-        else if (i.m_Birthday == null) {
-         val key = i.m_ZipCode
-            if (!zip.contains(key) && !ALL_voter_zip.contains(key)) {
-              zip(key) = List(i)
-              ALL_voter_zip(i.m_ZipCode) = List(i)
-            }
-            else  {
-                zip(key) = i +: zip(key)
-
-            }
         }
       }
-      else  if (i.m_ZipCode == null) {
-        if (i.m_Birthday != null) {
-          val key = i.m_Birthday
-          if (key != null) {
-            if (!birth.contains(key) && !ALL_voter_birth.contains(key) ) {
-              birth(key) = List(i)
-              ALL_voter_birth(i.m_Birthday) = List(i)
+    }
+      for (i <- voterRecords) {
+        if (i.m_ZipCode != null) {
+          if (i.m_Birthday == null) {
+            val key = i.m_ZipCode
+            if (!zip.contains(key) /** && !ALL_voter_zip.contains(key) **/) {
+              zip(key) = List(i)
+             // ALL_voter_zip(i.m_ZipCode) = List(i)
             }
             else {
+              zip(key) = i +: zip(key)
+
+            }
+          }
+        }
+        else if (i.m_ZipCode == null) {
+          if (i.m_Birthday != null) {
+            val key = i.m_Birthday
+            if (key != null) {
+              if (!birth.contains(key) /** && !ALL_voter_birth.contains(key) **/) {
+                birth(key) = List(i)
+           //     ALL_voter_birth(i.m_Birthday) = List(i)
+              }
+              else {
                 birth(key) = i +: birth(key)
+              }
             }
           }
         }
       }
-   }
+
    for (j <- healthRecords) {
      if (j.m_ZipCode != null) {
        if (j.m_Birthday != null) {
          val key = (j.m_ZipCode, j.m_Birthday)
-         if (!dup.contains(key) && check_birth.contains(j.m_Birthday) && ALL_health_birth.contains(j.m_Birthday)){
+         val Bkey = j.m_Birthday
+         val Zkey = j.m_ZipCode
 
-          check_birth.remove(j.m_Birthday)
+         /** if (!dup.contains(key) && check_birth.contains(j.m_Birthday) /** && ALL_health_birth.contains(j.m_Birthday)**/) {
+          * ans.remove(birth(j.m_Birthday).head.fullName)
+          * check_birth.remove(j.m_Birthday)
+          * }
+          * if (!dup.contains(key) && check_zip.contains(j.m_ZipCode) /** && ALL_health_zip.contains(j.m_ZipCode)**/) {
+          * ans.remove(zip(j.m_ZipCode).head.fullName)
+          * // check_zip.remove(j.m_ZipCode)
+          * } * */
+
+         if (vote_map.contains(key) ){
+               if ( !dup.contains(key)) {
+                 val value = vote_map(key)
+                 if (value.size == 1) {
+                   val name = value.head.fullName
+                   ans(name) = j
+                 }
+                 dup(key) = List(j)
+                 //  ALL_health_birth(j.m_Birthday) = List(j)
+                 //  ALL_health_zip(j.m_ZipCode) = List(j)
+                 vote_map.remove(key)
+               }
+
+               else {
+                 if (ans.contains(vote_map(key).head.fullName)) {
+                   ans.remove(vote_map(key).head.fullName)
+                 }
+               }
          }
-         if (!dup.contains(key) && check_zip.contains(j.m_ZipCode) && ALL_health_zip.contains(j.m_ZipCode)){
+        else if (birth.contains(Bkey) ){
+           if ( !check_birth.contains(Bkey)) {
+             val value = birth(Bkey)
+             if (value.size == 1) {
+               val name = value.head.fullName
+               ans(name) = j
+             }
+             check_birth(Bkey) = List(j)
+             birth.remove(Bkey)
+           }
+           else{
+             if (birth.contains(j.m_Birthday) && ans.contains(birth(j.m_Birthday).head.fullName)) {
+               ans.remove(birth(j.m_Birthday).head.fullName)
+             }
+           }
 
-           check_zip.remove(j.m_ZipCode)
          }
-
-           if (vote_map.contains(key)  && !dup.contains(key)) {
+         else if (zip.contains(Zkey) ){
+           if ( !check_zip.contains(Zkey)) {
+             val value = zip(Zkey)
+             if (value.size == 1) {
+               val name = value.head.fullName
+               ans(name) = j
+             }
+             check_zip(Zkey) = List(j)
+             zip.remove(Zkey)
+           }
+           else {
+             if ( zip.contains(j.m_ZipCode) && ans.contains(zip(j.m_ZipCode).head.fullName)) {
+               ans.remove(zip(j.m_ZipCode).head.fullName)
+             }
+           }
+         }
+       }
+     }
+   }
+     for (j <- healthRecords) {
+       if (j.m_ZipCode != null) {
+          if (j.m_Birthday == null) {
+               val key = (j.m_ZipCode, null)
+            if (vote_map.contains(key) ){
+                 if ( !dup.contains(key)) {
+                   val value = vote_map(key)
+                   if (value.size == 1) {
+                     val name = value.head.fullName
+                     ans(name) = j
+                   }
+                   dup(key) = List(j)
+                   //  ALL_health_birth(j.m_Birthday) = List(j)
+                   //  ALL_health_zip(j.m_ZipCode) = List(j)
+                   vote_map.remove(key)
+                 }
+                 else {
+                   if (ans.contains(vote_map(key).head.fullName)) {
+                     ans.remove(vote_map(key).head.fullName)
+                   }
+                 }
+            }
+            else if (zip.contains(j.m_ZipCode)) {
+                 if ( !check_zip.contains(j.m_ZipCode) && !check_zip.contains(j.m_ZipCode)/** && !ALL_health_zip.contains(j.m_ZipCode)* */) {
+                       val value = zip(j.m_ZipCode)
+                       if (value.size == 1) {
+                         val name = value.head.fullName
+                         ans(name) = j
+                         // ALL_health_zip(j.m_ZipCode) = List(j)
+                       }
+                       check_zip(j.m_ZipCode) = List(j)
+                 }
+                 else {
+                       if ( ans.contains(zip(j.m_ZipCode).head.fullName)) {
+                         ans.remove(zip(j.m_ZipCode).head.fullName)
+                       }
+                 }
+            }
+          }
+     }
+     else if (j.m_ZipCode == null) {
+       if (j.m_Birthday != null) {
+         val key = ("",j.m_Birthday)
+         if (vote_map.contains(key) ){
+           if ( !dup.contains(key)) {
              val value = vote_map(key)
              if (value.size == 1) {
                val name = value.head.fullName
                ans(name) = j
              }
              dup(key) = List(j)
-             ALL_health_birth(j.m_Birthday) = List(j)
-             ALL_health_zip(j.m_ZipCode) = List(j)
+             //  ALL_health_birth(j.m_Birthday) = List(j)
+             //  ALL_health_zip(j.m_ZipCode) = List(j)
+             vote_map.remove(key)
            }
 
-         else {
-             if (vote_map.contains(key) && ans.contains(vote_map(key).head.fullName)) {
+           else {
+             if (ans.contains(vote_map(key).head.fullName)) {
                ans.remove(vote_map(key).head.fullName)
              }
+           }
+         }
+         else if (birth.contains(j.m_Birthday)) {
+           if ( !check_birth.contains(j.m_Birthday)/** &&  !ALL_health_birth.contains(j.m_Birthday)* */) {
+             val value = birth(j.m_Birthday)
+             if (value.size == 1) {
+               val name = value.head.fullName
+               ans(name) = j
+               // ALL_health_birth(j.m_Birthday) = List(j)
+             }
+             check_birth(j.m_Birthday) = List(j)
+           }
+           else {
+             if ( ans.contains(birth(j.m_Birthday).head.fullName)) {
+               ans.remove(birth(j.m_Birthday).head.fullName)
+             }
+           }
          }
        }
-       else if (j.m_Birthday == null) {
-         if (zip.contains(j.m_ZipCode) && !check_zip.contains(j.m_ZipCode) &&  !check_zip.contains(j.m_ZipCode) && !ALL_health_zip.contains(j.m_ZipCode)) {
-           val value = zip(j.m_ZipCode)
-           if (value.size == 1) {
-             val name = value.head.fullName
-             ans(name) = j
-             ALL_health_zip(j.m_ZipCode) = List(j)
-           }
-           check_zip(j.m_ZipCode) = List(j)
-         }
-         else {
-           if ( zip.contains(j.m_ZipCode) && ans.contains(zip(j.m_ZipCode).head.fullName)) {
-             ans.remove(zip(j.m_ZipCode).head.fullName)
-
-           }
-         }
-       }
-     }
-     else if (j.m_ZipCode == null) {
-       if (j.m_Birthday != null) {
-         if (birth.contains(j.m_Birthday) && !check_birth.contains(j.m_Birthday) && !ALL_health_birth.contains(j.m_Birthday) &&  !ALL_health_birth.contains(j.m_Birthday) ) {
-           val value = birth(j.m_Birthday)
-           if (value.size == 1){
-             val name = value.head.fullName
-             ans(name) = j
-             ALL_health_birth(j.m_Birthday) = List(j)
-           }
-           check_birth(j.m_Birthday) = List(j)
-         }
-         else{
-           if (birth.contains(j.m_Birthday) && ans.contains(birth(j.m_Birthday).head.fullName)) {
-             ans.remove(birth(j.m_Birthday).head.fullName)
-
-           }
-         }
-
-       }
-
      }
    }
     ans
