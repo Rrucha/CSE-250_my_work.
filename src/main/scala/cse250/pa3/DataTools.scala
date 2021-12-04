@@ -317,6 +317,7 @@ object DataTools {
                    //  ALL_health_zip(j.m_ZipCode) = List(j)
                    vote_map.remove(key)
                    vote_zip.remove(key2)
+                   vote_bir.remove(j.m_Birthday)
                  }
                  else {
                    if (ans.contains(vote_map(key).head.fullName)) {
@@ -358,6 +359,7 @@ object DataTools {
              //  ALL_health_zip(j.m_ZipCode) = List(j)
              vote_map.remove(key)
              vote_bir.remove(key2)
+             vote_zip.remove(j.m_ZipCode)
            }
 
            else {
